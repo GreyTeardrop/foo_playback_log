@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Recent SQLite News</title>
+<style type="text/css">
+body {
+    margin: auto;
+    font-family: "Verdana" "sans-serif";
+    padding: 8px 1%;
+}
+
+a { color: #45735f }
+a:visited { color: #734559 }
+
+.logo { position:absolute; margin:3px; }
+.tagline {
+  float:right;
+  text-align:right;
+  font-style:italic;
+  width:240px;
+  margin:12px;
+  margin-top:58px;
+}
+
+.toolbar {
+  font-variant: small-caps;
+  text-align: center;
+  line-height: 1.6em;
+  margin: 0;
+  padding:1px 8px;
+}
+.toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
+.toolbar a:visited { color: white; }
+.toolbar a:hover { color: #80a796; background: white; }
+
+.content    { margin: 5%; }
+.content dt { font-weight:bold; }
+.content dd { margin-bottom: 25px; margin-left:20%; }
+.content ul { padding:0px; padding-left: 15px; margin:0px; }
+
+/* rounded corners */
+.se  { background: url(images/se.png) 100% 100% no-repeat #80a796}
+.sw  { background: url(images/sw.png) 0% 100% no-repeat }
+.ne  { background: url(images/ne.png) 100% 0% no-repeat }
+.nw  { background: url(images/nw.png) 0% 0% no-repeat }
+
+</style>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  
+</head>
+<body>
+<div><!-- container div to satisfy validator -->
+
+<a href="index.html">
+<img class="logo" src="images/SQLite.gif" alt="SQLite Logo"
+ border="0"></a>
+<div><!-- IE hack to prevent disappearing logo--></div>
+<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
+
+<table width=100% style="clear:both"><tr><td>
+  <div class="se"><div class="sw"><div class="ne"><div class="nw">
+  <div class="toolbar">
+    <a href="about.html">About</a>
+    <a href="sitemap.html">Sitemap</a>
+    <a href="docs.html">Documentation</a>
+    <a href="download.html">Download</a>
+    <a href="copyright.html">License</a>
+    <a href="news.html">News</a>
+    <a href="http://www.sqlite.org/cvstrac/index">Developers</a>
+    <a href="support.html">Support</a>
+  </div></div></div></div></div>
+</td></tr></table>
+  
+
+
+<h2>Recent News</h2>
+
+
+<a name="2008_feb_6"></a>
+<h3>2008-Feb-6 - Version 3.5.6</h3>
+<p>
+  Version 3.5.6 fixes a minor regression in 3.5.5 - a regression that
+  had nothing to do with the massive change ove the virtual machine
+  to a register-based design.
+  No problems have been reported with the new virtual machine.  This
+  release of SQLite is considered stable and ready for production use.
+</p>
+<hr width="50%">
+<a name="2008_jan_31"></a>
+<h3>2008-Jan-31 - Version 3.5.5</h3>
+<p>
+  Version 3.5.5 changes over 8% of the core source code of SQLite in order
+  to convert the internal virtual machine from a stack-based design into
+  a register-based design.  This change will allow future optimizations
+  and will avoid an entire class of stack overflow bugs that have caused
+  problems in the past.  Even though this change is large, extensive testing
+  has found zero errors in the new virtual machine and so we believe this
+  to be a very stable release.
+</p>
+<hr width="50%">
+<a name="2007_dec_14"></a>
+<h3>2007-Dec-14 - Version 3.5.4</h3>
+<p>
+  Version 3.5.4 fixes an long-standing but obscure bug in UPDATE and
+  DELETE which might cause database corruption.  (See <a href="http://www.sqlite.org/cvstrac/tktview?tn=2832">ticket #2832</a>.)
+  Upgrading is recommended for all users.</p>
+
+<p>  This release also brings the processing of ORDER BY statements into
+  compliance with standard SQL.  This could, in theory, cause problems
+  for existing applications that depend on the older, buggy behavior.
+  See <a href="http://www.sqlite.org/cvstrac/tktview?tn=2822">ticket #2822</a> for additional information.
+</p>
+<hr width="50%">
+<a name="2007_dec_12"></a>
+<h3>2007-Dec-12 - SQLite Consortium Announced</h3>
+<p>
+  The <a href="consortium.html">SQLite Consortium</a> was launched
+  today with <a href="http://www.mozilla.org/">Mozilla</a> and
+  <a href="http://www.symbian.com/">Symbian</a> as charter members.
+  As noted in the <a href="pressrelease-20071212.html">press release</a>,
+  the Consortium's goal is to promote the continuing vitality and
+  independence of SQLite.  
+</p>
+<hr width="50%">
+<a name="2007_nov_27"></a>
+<h3>2007-Nov-27 - Version 3.5.3</h3>
+<p>
+  This is an incremental release that fixes several minor problems.
+  Upgrading is optional.  If Version 3.5.2 or 3.5.1 is working fine
+  for you, then there is no pressing need to change to 3.5.3.</p>
+
+<p>  The prebuilt binaries and the amalgamation found on the 
+  <a href="download.html">download</a> page include the FTS3 fulltext
+  search extension module.  We are doing this on an experimental
+  basis and are not promising to provide prebuilt binaries with
+  FTS3 in the future.
+</p>
+<hr width="50%">
+
+
+<a href="oldnews.html">Old news...</a>
+
+<hr><small<i>
+This page last modified 2008/02/06 14:37:25 UTC
+</i></small></div></body></html>

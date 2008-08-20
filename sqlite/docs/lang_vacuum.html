@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>SQLite Query Language: VACUUM</title>
+<style type="text/css">
+body {
+    margin: auto;
+    font-family: "Verdana" "sans-serif";
+    padding: 8px 1%;
+}
+
+a { color: #45735f }
+a:visited { color: #734559 }
+
+.logo { position:absolute; margin:3px; }
+.tagline {
+  float:right;
+  text-align:right;
+  font-style:italic;
+  width:240px;
+  margin:12px;
+  margin-top:58px;
+}
+
+.toolbar {
+  font-variant: small-caps;
+  text-align: center;
+  line-height: 1.6em;
+  margin: 0;
+  padding:1px 8px;
+}
+.toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
+.toolbar a:visited { color: white; }
+.toolbar a:hover { color: #80a796; background: white; }
+
+.content    { margin: 5%; }
+.content dt { font-weight:bold; }
+.content dd { margin-bottom: 25px; margin-left:20%; }
+.content ul { padding:0px; padding-left: 15px; margin:0px; }
+
+/* rounded corners */
+.se  { background: url(images/se.png) 100% 100% no-repeat #80a796}
+.sw  { background: url(images/sw.png) 0% 100% no-repeat }
+.ne  { background: url(images/ne.png) 100% 0% no-repeat }
+.nw  { background: url(images/nw.png) 0% 0% no-repeat }
+
+</style>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  
+</head>
+<body>
+<div><!-- container div to satisfy validator -->
+
+<a href="index.html">
+<img class="logo" src="images/SQLite.gif" alt="SQLite Logo"
+ border="0"></a>
+<div><!-- IE hack to prevent disappearing logo--></div>
+<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
+
+<table width=100% style="clear:both"><tr><td>
+  <div class="se"><div class="sw"><div class="ne"><div class="nw">
+  <div class="toolbar">
+    <a href="about.html">About</a>
+    <a href="sitemap.html">Sitemap</a>
+    <a href="docs.html">Documentation</a>
+    <a href="download.html">Download</a>
+    <a href="copyright.html">License</a>
+    <a href="news.html">News</a>
+    <a href="http://www.sqlite.org/cvstrac/index">Developers</a>
+    <a href="support.html">Support</a>
+  </div></div></div></div></div>
+</td></tr></table>
+  
+<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a>
+<h3>VACUUM</h3>
+<table cellpadding="10">
+<tr><td align="right" valign="top">
+<i><font color="#ff3434">sql-statement</font></i>&nbsp;::=</td>
+<td><b><font color="#2c2cf0">VACUUM</font></b></td></tr>
+</table>
+
+
+<p>The VACUUM command is an SQLite extension modeled after a similar
+command found in PostgreSQL.  If VACUUM is invoked with the name of a
+table or index then it is suppose to clean up the named table or index.
+In version 1.0 of SQLite, the VACUUM command would invoke 
+<b>gdbm_reorganize()</b> to clean up the backend database file.</p>
+
+<p>
+VACUUM became a no-op when the GDBM backend was removed from
+SQLITE in version 2.0.0.
+VACUUM was reimplemented in version 2.8.1.
+</p>
+
+<p>When an object (table, index, or trigger) is dropped from the 
+database, it leaves behind empty space.  This makes the database 
+file larger than it needs to be, but can speed up inserts.  In time 
+inserts and deletes can leave the database file structure fragmented, 
+which slows down disk access to the database contents.
+
+The VACUUM command cleans
+the main database by copying its contents to a temporary database file and 
+reloading the original database file from the copy.  This eliminates 
+free pages,  aligns table data to be contiguous, and otherwise cleans 
+up the database file structure.</p>
+
+<p>The VACUUM command may change the 
+<a href="lang_createtable.html#rowid">ROWID</a> of entires in tables that do
+not have an explicit INTEGER PRIMARY KEY.</p>
+
+<p>VACUUM only works on the main database.
+It is not possible to VACUUM an attached database file.</p>
+
+<p>The VACUUM command will fail if there is an active transaction.
+The VACUUM command is a no-op for in-memory databases.</p>
+
+<p>As of SQLite version 3.1, an alternative to using the VACUUM command
+is auto-vacuum mode, enabled using the 
+<a href="pragma.html#pragma_auto_vacuum">auto_vacuum pragma</a>.
+When auto-vacuum is enabled for a database, large deletes cause
+the size of the database file to shrink.  However, auto-vacuum
+also causes excess fragmentation of the database file.  And auto-vacuum
+does not compact partially filled pages of the database as VACUUM
+does.
+</p>
+
+
+<DIV class="pdf_section">
+<hr><small<i>
+This page last modified 2007/12/20 21:09:25 UTC
+</i></small></div></body></html>

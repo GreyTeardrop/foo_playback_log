@@ -1,0 +1,668 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>sqlite3: A command-line access program for SQLite databases</title>
+<style type="text/css">
+body {
+    margin: auto;
+    font-family: "Verdana" "sans-serif";
+    padding: 8px 1%;
+}
+
+a { color: #45735f }
+a:visited { color: #734559 }
+
+.logo { position:absolute; margin:3px; }
+.tagline {
+  float:right;
+  text-align:right;
+  font-style:italic;
+  width:240px;
+  margin:12px;
+  margin-top:58px;
+}
+
+.toolbar {
+  font-variant: small-caps;
+  text-align: center;
+  line-height: 1.6em;
+  margin: 0;
+  padding:1px 8px;
+}
+.toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
+.toolbar a:visited { color: white; }
+.toolbar a:hover { color: #80a796; background: white; }
+
+.content    { margin: 5%; }
+.content dt { font-weight:bold; }
+.content dd { margin-bottom: 25px; margin-left:20%; }
+.content ul { padding:0px; padding-left: 15px; margin:0px; }
+
+/* rounded corners */
+.se  { background: url(images/se.png) 100% 100% no-repeat #80a796}
+.sw  { background: url(images/sw.png) 0% 100% no-repeat }
+.ne  { background: url(images/ne.png) 100% 0% no-repeat }
+.nw  { background: url(images/nw.png) 0% 0% no-repeat }
+
+</style>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  
+</head>
+<body>
+<div><!-- container div to satisfy validator -->
+
+<a href="index.html">
+<img class="logo" src="images/SQLite.gif" alt="SQLite Logo"
+ border="0"></a>
+<div><!-- IE hack to prevent disappearing logo--></div>
+<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
+
+<table width=100% style="clear:both"><tr><td>
+  <div class="se"><div class="sw"><div class="ne"><div class="nw">
+  <div class="toolbar">
+    <a href="about.html">About</a>
+    <a href="sitemap.html">Sitemap</a>
+    <a href="docs.html">Documentation</a>
+    <a href="download.html">Download</a>
+    <a href="copyright.html">License</a>
+    <a href="news.html">News</a>
+    <a href="http://www.sqlite.org/cvstrac/index">Developers</a>
+    <a href="support.html">Support</a>
+  </div></div></div></div></div>
+</td></tr></table>
+  
+
+
+<h2>sqlite3: A command-line access program for SQLite databases</h2>
+
+<p>The SQLite library includes a simple command-line utility named
+<b>sqlite3</b> that allows the user to manually enter and execute SQL
+commands against an SQLite database.  This document provides a brief
+introduction on how to use <b>sqlite3</b>.
+
+<h3>Getting Started</h3>
+
+<p>To start the <b>sqlite3</b> program, just type "sqlite3" followed by
+the name the file that holds the SQLite database.  If the file does
+not exist, a new one is created automatically.
+The <b>sqlite3</b> program will
+then prompt you to enter SQL.  Type in SQL statements (terminated by a
+semicolon), press "Enter" and the SQL will be executed.</p>
+
+<p>For example, to create a new SQLite database named "ex1" 
+with a single table named "tbl1", you might do this:</p>
+
+
+<blockquote><tt>
+$&nbsp;<b>sqlite3&nbsp;ex1</b><br>
+SQLite&nbsp;version&nbsp;3.3.10<br>
+Enter&nbsp;".help"&nbsp;for&nbsp;instructions<br>
+sqlite&gt;&nbsp;<b>create&nbsp;table&nbsp;tbl1(one&nbsp;varchar(10),&nbsp;two&nbsp;smallint);</b><br>
+sqlite&gt;&nbsp;<b>insert&nbsp;into&nbsp;tbl1&nbsp;values('hello!',10);</b><br>
+sqlite&gt;&nbsp;<b>insert&nbsp;into&nbsp;tbl1&nbsp;values('goodbye',&nbsp;20);</b><br>
+sqlite&gt;&nbsp;<b>select&nbsp;*&nbsp;from&nbsp;tbl1;</b><br>
+hello!|10<br>
+goodbye|20<br>
+sqlite&gt;
+</tt></blockquote>
+
+
+<p>You can terminate the sqlite3 program by typing your systems
+End-Of-File character (usually a Control-D) or the interrupt
+character (usually a Control-C).</p>
+
+<p>Make sure you type a semicolon at the end of each SQL command!
+The sqlite3 program looks for a semicolon to know when your SQL command is
+complete.  If you omit the semicolon, sqlite3 will give you a
+continuation prompt and wait for you to enter more text to be
+added to the current SQL command.  This feature allows you to
+enter SQL commands that span multiple lines.  For example:</p>
+
+
+
+<blockquote><tt>
+sqlite&gt;&nbsp;<b>CREATE&nbsp;TABLE&nbsp;tbl2&nbsp;(</b><br>
+&nbsp;&nbsp;&nbsp;...&gt;&nbsp;<b>&nbsp;&nbsp;f1&nbsp;varchar(30)&nbsp;primary&nbsp;key,</b><br>
+&nbsp;&nbsp;&nbsp;...&gt;&nbsp;<b>&nbsp;&nbsp;f2&nbsp;text,</b><br>
+&nbsp;&nbsp;&nbsp;...&gt;&nbsp;<b>&nbsp;&nbsp;f3&nbsp;real</b><br>
+&nbsp;&nbsp;&nbsp;...&gt;&nbsp;<b>);</b><br>
+sqlite&gt;
+</tt></blockquote>
+
+
+<h3>Aside: Querying the SQLITE_MASTER table</h3>
+
+<p>The database schema in an SQLite database is stored in
+a special table named "sqlite_master".
+You can execute "SELECT" statements against the
+special sqlite_master table just like any other table
+in an SQLite database.  For example:</p>
+
+
+<blockquote><tt>
+$&nbsp;<b>sqlite3&nbsp;ex1</b><br>
+SQlite&nbsp;vresion&nbsp;3.3.10<br>
+Enter&nbsp;".help"&nbsp;for&nbsp;instructions<br>
+sqlite&gt;&nbsp;<b>select&nbsp;*&nbsp;from&nbsp;sqlite_master;</b><br>
+&nbsp;&nbsp;&nbsp;&nbsp;type&nbsp;=&nbsp;table<br>
+&nbsp;&nbsp;&nbsp;&nbsp;name&nbsp;=&nbsp;tbl1<br>
+tbl_name&nbsp;=&nbsp;tbl1<br>
+rootpage&nbsp;=&nbsp;3<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sql&nbsp;=&nbsp;create&nbsp;table&nbsp;tbl1(one&nbsp;varchar(10),&nbsp;two&nbsp;smallint)<br>
+sqlite&gt;
+</tt></blockquote>
+
+
+<p>
+But you cannot execute DROP TABLE, UPDATE, INSERT or DELETE against
+the sqlite_master table.  The sqlite_master
+table is updated automatically as you create or drop tables and
+indices from the database.  You can not make manual changes
+to the sqlite_master table.
+</p>
+
+<p>
+The schema for TEMPORARY tables is not stored in the "sqlite_master" table
+since TEMPORARY tables are not visible to applications other than the
+application that created the table.  The schema for TEMPORARY tables
+is stored in another special table named "sqlite_temp_master".  The
+"sqlite_temp_master" table is temporary itself.
+</p>
+
+<h3>Special commands to sqlite3</h3>
+
+<p>
+Most of the time, sqlite3 just reads lines of input and passes them
+on to the SQLite library for execution.
+But if an input line begins with a dot ("."), then
+that line is intercepted and interpreted by the sqlite3 program itself.
+These "dot commands" are typically used to change the output format
+of queries, or to execute certain prepackaged query statements.
+</p>
+
+<p>
+For a listing of the available dot commands, you can enter ".help"
+at any time.  For example:
+</p>
+
+
+<blockquote><tt>
+sqlite&gt;&nbsp;<b>.help</b><br>
+.bail&nbsp;ON|OFF&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Stop&nbsp;after&nbsp;hitting&nbsp;an&nbsp;error.&nbsp;&nbsp;Default&nbsp;OFF<br>
+.databases&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;List&nbsp;names&nbsp;and&nbsp;files&nbsp;of&nbsp;attached&nbsp;databases<br>
+.dump&nbsp;?TABLE?&nbsp;...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dump&nbsp;the&nbsp;database&nbsp;in&nbsp;an&nbsp;SQL&nbsp;text&nbsp;format<br>
+.echo&nbsp;ON|OFF&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Turn&nbsp;command&nbsp;echo&nbsp;on&nbsp;or&nbsp;off<br>
+.exit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Exit&nbsp;this&nbsp;program<br>
+.explain&nbsp;ON|OFF&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Turn&nbsp;output&nbsp;mode&nbsp;suitable&nbsp;for&nbsp;EXPLAIN&nbsp;on&nbsp;or&nbsp;off.<br>
+.header(s)&nbsp;ON|OFF&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Turn&nbsp;display&nbsp;of&nbsp;headers&nbsp;on&nbsp;or&nbsp;off<br>
+.help&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Show&nbsp;this&nbsp;message<br>
+.import&nbsp;FILE&nbsp;TABLE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Import&nbsp;data&nbsp;from&nbsp;FILE&nbsp;into&nbsp;TABLE<br>
+.indices&nbsp;TABLE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Show&nbsp;names&nbsp;of&nbsp;all&nbsp;indices&nbsp;on&nbsp;TABLE<br>
+.load&nbsp;FILE&nbsp;?ENTRY?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Load&nbsp;an&nbsp;extension&nbsp;library<br>
+.mode&nbsp;MODE&nbsp;?TABLE?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Set&nbsp;output&nbsp;mode&nbsp;where&nbsp;MODE&nbsp;is&nbsp;one&nbsp;of:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;csv&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Comma-separated&nbsp;values<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;column&nbsp;&nbsp;&nbsp;Left-aligned&nbsp;columns.&nbsp;&nbsp;(See&nbsp;.width)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;html&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HTML&nbsp;&lt;table&gt;&nbsp;code<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;insert&nbsp;&nbsp;&nbsp;SQL&nbsp;insert&nbsp;statements&nbsp;for&nbsp;TABLE<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;line&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;One&nbsp;value&nbsp;per&nbsp;line<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;list&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Values&nbsp;delimited&nbsp;by&nbsp;.separator&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tabs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tab-separated&nbsp;values<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tcl&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TCL&nbsp;list&nbsp;elements<br>
+.nullvalue&nbsp;STRING&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Print&nbsp;STRING&nbsp;in&nbsp;place&nbsp;of&nbsp;NULL&nbsp;values<br>
+.output&nbsp;FILENAME&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Send&nbsp;output&nbsp;to&nbsp;FILENAME<br>
+.output&nbsp;stdout&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Send&nbsp;output&nbsp;to&nbsp;the&nbsp;screen<br>
+.prompt&nbsp;MAIN&nbsp;CONTINUE&nbsp;&nbsp;Replace&nbsp;the&nbsp;standard&nbsp;prompts<br>
+.quit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Exit&nbsp;this&nbsp;program<br>
+.read&nbsp;FILENAME&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Execute&nbsp;SQL&nbsp;in&nbsp;FILENAME<br>
+.schema&nbsp;?TABLE?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Show&nbsp;the&nbsp;CREATE&nbsp;statements<br>
+.separator&nbsp;STRING&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Change&nbsp;separator&nbsp;used&nbsp;by&nbsp;output&nbsp;mode&nbsp;and&nbsp;.import<br>
+.show&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Show&nbsp;the&nbsp;current&nbsp;values&nbsp;for&nbsp;various&nbsp;settings<br>
+.tables&nbsp;?PATTERN?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;List&nbsp;names&nbsp;of&nbsp;tables&nbsp;matching&nbsp;a&nbsp;LIKE&nbsp;pattern<br>
+.timeout&nbsp;MS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Try&nbsp;opening&nbsp;locked&nbsp;tables&nbsp;for&nbsp;MS&nbsp;milliseconds<br>
+.width&nbsp;NUM&nbsp;NUM&nbsp;...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Set&nbsp;column&nbsp;widths&nbsp;for&nbsp;"column"&nbsp;mode<br>
+sqlite&gt;
+</tt></blockquote>
+
+
+<h3>Changing Output Formats</h3>
+
+<p>The sqlite3 program is able to show the results of a query
+in eight different formats: "csv", "column", "html", "insert",
+"line", "tabs", and "tcl".
+You can use the ".mode" dot command to switch between these output
+formats.</p>
+
+<p>The default output mode is "list".  In
+list mode, each record of a query result is written on one line of
+output and each column within that record is separated by a specific
+separator string.  The default separator is a pipe symbol ("|").
+List mode is especially useful when you are going to send the output
+of a query to another program (such as AWK) for additional processing.</p>
+
+
+<blockquote><tt>
+sqlite&gt;&nbsp;<b>.mode&nbsp;list</b><br>
+sqlite&gt;&nbsp;<b>select&nbsp;*&nbsp;from&nbsp;tbl1;</b><br>
+hello|10<br>
+goodbye|20<br>
+sqlite&gt;
+</tt></blockquote>
+
+
+<p>You can use the ".separator" dot command to change the separator
+for list mode.  For example, to change the separator to a comma and
+a space, you could do this:</p>
+
+
+<blockquote><tt>
+sqlite&gt;&nbsp;<b>.separator&nbsp;",&nbsp;"</b><br>
+sqlite&gt;&nbsp;<b>select&nbsp;*&nbsp;from&nbsp;tbl1;</b><br>
+hello,&nbsp;10<br>
+goodbye,&nbsp;20<br>
+sqlite&gt;
+</tt></blockquote>
+
+
+<p>In "line" mode, each column in a row of the database
+is shown on a line by itself.  Each line consists of the column
+name, an equal sign and the column data.  Successive records are
+separated by a blank line.  Here is an example of line mode
+output:</p>
+
+
+<blockquote><tt>
+sqlite&gt;&nbsp;<b>.mode&nbsp;line</b><br>
+sqlite&gt;&nbsp;<b>select&nbsp;*&nbsp;from&nbsp;tbl1;</b><br>
+one&nbsp;=&nbsp;hello<br>
+two&nbsp;=&nbsp;10<br>
+<br>
+one&nbsp;=&nbsp;goodbye<br>
+two&nbsp;=&nbsp;20<br>
+sqlite&gt;
+</tt></blockquote>
+
+
+<p>In column mode, each record is shown on a separate line with the
+data aligned in columns.  For example:</p>
+
+
+<blockquote><tt>
+sqlite&gt;&nbsp;<b>.mode&nbsp;column</b><br>
+sqlite&gt;&nbsp;<b>select&nbsp;*&nbsp;from&nbsp;tbl1;</b><br>
+one&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;two&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+----------&nbsp;&nbsp;----------<br>
+hello&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+goodbye&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+sqlite&gt;
+</tt></blockquote>
+
+
+<p>By default, each column is at least 10 characters wide. 
+Data that is too wide to fit in a column is truncated.  You can
+adjust the column widths using the ".width" command.  Like this:</p>
+
+
+<blockquote><tt>
+sqlite&gt;&nbsp;<b>.width&nbsp;12&nbsp;6</b><br>
+sqlite&gt;&nbsp;<b>select&nbsp;*&nbsp;from&nbsp;tbl1;</b><br>
+one&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;two&nbsp;&nbsp;&nbsp;<br>
+------------&nbsp;&nbsp;------<br>
+hello&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10&nbsp;&nbsp;&nbsp;&nbsp;<br>
+goodbye&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;20&nbsp;&nbsp;&nbsp;&nbsp;<br>
+sqlite&gt;
+</tt></blockquote>
+
+
+<p>The ".width" command in the example above sets the width of the first
+column to 12 and the width of the second column to 6.  All other column
+widths were unaltered.  You can gives as many arguments to ".width" as
+necessary to specify the widths of as many columns as are in your
+query results.</p>
+
+<p>If you specify a column a width of 0, then the column
+width is automatically adjusted to be the maximum of three
+numbers: 10, the width of the header, and the width of the
+first row of data.  This makes the column width self-adjusting.
+The default width setting for every column is this 
+auto-adjusting 0 value.</p>
+
+<p>The column labels that appear on the first two lines of output
+can be turned on and off using the ".header" dot command.  In the
+examples above, the column labels are on.  To turn them off you
+could do this:</p>
+
+
+<blockquote><tt>
+sqlite&gt;&nbsp;<b>.header&nbsp;off</b><br>
+sqlite&gt;&nbsp;<b>select&nbsp;*&nbsp;from&nbsp;tbl1;</b><br>
+hello&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10&nbsp;&nbsp;&nbsp;&nbsp;<br>
+goodbye&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;20&nbsp;&nbsp;&nbsp;&nbsp;<br>
+sqlite&gt;
+</tt></blockquote>
+
+
+<p>Another useful output mode is "insert".  In insert mode, the output
+is formatted to look like SQL INSERT statements.  You can use insert
+mode to generate text that can later be used to input data into a 
+different database.</p>
+
+<p>When specifying insert mode, you have to give an extra argument
+which is the name of the table to be inserted into.  For example:</p>
+
+
+<blockquote><tt>
+sqlite&gt;&nbsp;<b>.mode&nbsp;insert&nbsp;new_table</b><br>
+sqlite&gt;&nbsp;<b>select&nbsp;*&nbsp;from&nbsp;tbl1;</b><br>
+INSERT&nbsp;INTO&nbsp;'new_table'&nbsp;VALUES('hello',10);<br>
+INSERT&nbsp;INTO&nbsp;'new_table'&nbsp;VALUES('goodbye',20);<br>
+sqlite&gt;
+</tt></blockquote>
+
+
+
+<p>The last output mode is "html".  In this mode, sqlite3 writes
+the results of the query as an XHTML table.  The beginning
+&lt;TABLE&gt; and the ending &lt;/TABLE&gt; are not written, but
+all of the intervening &lt;TR&gt;s, &lt;TH&gt;s, and &lt;TD&gt;s
+are.  The html output mode is envisioned as being useful for
+CGI.</p>
+
+
+
+<h3>Writing results to a file</h3>
+
+<p>By default, sqlite3 sends query results to standard output.  You
+can change this using the ".output" command.  Just put the name of
+an output file as an argument to the .output command and all subsequent
+query results will be written to that file.  Use ".output stdout" to
+begin writing to standard output again.  For example:</p>
+
+
+<blockquote><tt>
+sqlite&gt;&nbsp;<b>.mode&nbsp;list</b><br>
+sqlite&gt;&nbsp;<b>.separator&nbsp;|</b><br>
+sqlite&gt;&nbsp;<b>.output&nbsp;test_file_1.txt</b><br>
+sqlite&gt;&nbsp;<b>select&nbsp;*&nbsp;from&nbsp;tbl1;</b><br>
+sqlite&gt;&nbsp;<b>.exit</b><br>
+$&nbsp;<b>cat&nbsp;test_file_1.txt</b><br>
+hello|10<br>
+goodbye|20<br>
+$
+</tt></blockquote>
+
+
+
+<h3>Querying the database schema</h3>
+
+<p>The sqlite3 program provides several convenience commands that
+are useful for looking at the schema of the database.  There is
+nothing that these commands do that cannot be done by some other
+means.  These commands are provided purely as a shortcut.</p>
+
+<p>For example, to see a list of the tables in the database, you
+can enter ".tables".</p>
+
+
+
+<blockquote><tt>
+sqlite&gt;&nbsp;<b>.tables</b><br>
+tbl1<br>
+tbl2<br>
+sqlite&gt;
+</tt></blockquote>
+
+
+
+<p>The ".tables" command is similar to setting list mode then
+executing the following query:</p>
+
+<blockquote><pre>
+SELECT name FROM sqlite_master 
+WHERE type IN ('table','view') AND name NOT LIKE 'sqlite_%'
+UNION ALL 
+SELECT name FROM sqlite_temp_master 
+WHERE type IN ('table','view') 
+ORDER BY 1
+</pre></blockquote>
+
+<p>In fact, if you look at the source code to the sqlite3 program
+(found in the source tree in the file src/shell.c) you'll find
+exactly the above query.</p>
+
+<p>The ".indices" command works in a similar way to list all of
+the indices for a particular table.  The ".indices" command takes
+a single argument which is the name of the table for which the
+indices are desired.  Last, but not least, is the ".schema" command.
+With no arguments, the ".schema" command shows the original CREATE TABLE
+and CREATE INDEX statements that were used to build the current database.
+If you give the name of a table to ".schema", it shows the original
+CREATE statement used to make that table and all if its indices.
+We have:</p>
+
+
+<blockquote><tt>
+sqlite&gt;&nbsp;<b>.schema</b><br>
+create&nbsp;table&nbsp;tbl1(one&nbsp;varchar(10),&nbsp;two&nbsp;smallint)<br>
+CREATE&nbsp;TABLE&nbsp;tbl2&nbsp;(<br>
+&nbsp;&nbsp;f1&nbsp;varchar(30)&nbsp;primary&nbsp;key,<br>
+&nbsp;&nbsp;f2&nbsp;text,<br>
+&nbsp;&nbsp;f3&nbsp;real<br>
+)<br>
+sqlite&gt;&nbsp;<b>.schema&nbsp;tbl2</b><br>
+CREATE&nbsp;TABLE&nbsp;tbl2&nbsp;(<br>
+&nbsp;&nbsp;f1&nbsp;varchar(30)&nbsp;primary&nbsp;key,<br>
+&nbsp;&nbsp;f2&nbsp;text,<br>
+&nbsp;&nbsp;f3&nbsp;real<br>
+)<br>
+sqlite&gt;
+</tt></blockquote>
+
+
+
+<p>The ".schema" command accomplishes the same thing as setting
+list mode, then entering the following query:</p>
+
+<blockquote><pre>
+SELECT sql FROM 
+   (SELECT * FROM sqlite_master UNION ALL
+    SELECT * FROM sqlite_temp_master)
+WHERE type!='meta'
+ORDER BY tbl_name, type DESC, name
+</pre></blockquote>
+
+<p>Or, if you give an argument to ".schema" because you only
+want the schema for a single table, the query looks like this:</p>
+
+<blockquote><pre>
+SELECT sql FROM
+   (SELECT * FROM sqlite_master UNION ALL
+    SELECT * FROM sqlite_temp_master)
+WHERE type!='meta' AND sql NOT NULL AND name NOT LIKE 'sqlite_%'
+ORDER BY substr(type,2,1), name
+</pre></blockquote>
+
+<p>
+You can supply an argument to the .schema command.  If you do, the
+query looks like this:
+</p>
+
+<blockquote><pre>
+SELECT sql FROM
+   (SELECT * FROM sqlite_master UNION ALL
+    SELECT * FROM sqlite_temp_master)
+WHERE tbl_name LIKE '%s'
+  AND type!='meta' AND sql NOT NULL AND name NOT LIKE 'sqlite_%'
+ORDER BY substr(type,2,1), name
+</pre></blockquote>
+
+<p>The "%s" in the query is replace by your argument.  This allows you
+to view the schema for some subset of the database.</p>
+
+
+
+<blockquote><tt>
+sqlite&gt;&nbsp;<b>.schema&nbsp;%abc%</b>
+</tt></blockquote>
+
+
+
+<p>
+Along these same lines,
+the ".table" command also accepts a pattern as its first argument.
+If you give an argument to the .table command, a "%" is both
+appended and prepended and a LIKE clause is added to the query.
+This allows you to list only those tables that match a particular
+pattern.</p>
+
+<p>The ".databases" command shows a list of all databases open in
+the current connection.  There will always be at least 2.  The first
+one is "main", the original database opened.  The second is "temp",
+the database used for temporary tables. There may be additional 
+databases listed for databases attached using the ATTACH statement.
+The first output column is the name the database is attached with, 
+and the second column is the filename of the external file.</p>
+
+
+<blockquote><tt>
+sqlite&gt;&nbsp;<b>.databases</b>
+</tt></blockquote>
+
+
+
+<h3>Converting An Entire Database To An ASCII Text File</h3>
+
+<p>Use the ".dump" command to convert the entire contents of a
+database into a single ASCII text file.  This file can be converted
+back into a database by piping it back into <b>sqlite3</b>.</p>
+
+<p>A good way to make an archival copy of a database is this:</p>
+
+
+
+<blockquote><tt>
+$&nbsp;<b>echo&nbsp;'.dump'&nbsp;|&nbsp;sqlite3&nbsp;ex1&nbsp;|&nbsp;gzip&nbsp;-c&nbsp;&gt;ex1.dump.gz</b>
+</tt></blockquote>
+
+
+
+<p>This generates a file named <b>ex1.dump.gz</b> that contains everything
+you need to reconstruct the database at a later time, or on another
+machine.  To reconstruct the database, just type:</p>
+
+
+
+<blockquote><tt>
+$&nbsp;<b>zcat&nbsp;ex1.dump.gz&nbsp;|&nbsp;sqlite3&nbsp;ex2</b>
+</tt></blockquote>
+
+
+
+<p>The text format is pure SQL so you
+can also use the .dump command to export an SQLite database
+into other popular SQL database engines.  Like this:</p>
+
+
+
+<blockquote><tt>
+$&nbsp;<b>createdb&nbsp;ex2</b><br>
+$&nbsp;<b>sqlite3&nbsp;ex1&nbsp;.dump&nbsp;|&nbsp;psql&nbsp;ex2</b>
+</tt></blockquote>
+
+
+
+<h3>Other Dot Commands</h3>
+
+<p>The ".explain" dot command can be used to set the output mode
+to "column" and to set the column widths to values that are reasonable
+for looking at the output of an EXPLAIN command.  The EXPLAIN command
+is an SQLite-specific SQL extension that is useful for debugging.  If any
+regular SQL is prefaced by EXPLAIN, then the SQL command is parsed and
+analyzed but is not executed.  Instead, the sequence of virtual machine
+instructions that would have been used to execute the SQL command are
+returned like a query result.  For example:</p>
+
+
+<blockquote><tt>
+sqlite&gt;&nbsp;<b>.explain</b><br>
+sqlite&gt;&nbsp;<b>explain&nbsp;delete&nbsp;from&nbsp;tbl1&nbsp;where&nbsp;two&lt;20;</b><br>
+addr&nbsp;&nbsp;opcode&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+----&nbsp;&nbsp;------------&nbsp;&nbsp;-----&nbsp;&nbsp;-----&nbsp;&nbsp;-------------------------------------&nbsp;&nbsp;&nbsp;<br>
+0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ListOpen&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Open&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tbl1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Next&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Field&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Integer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ge&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Key&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ListWrite&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Goto&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Noop&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+10&nbsp;&nbsp;&nbsp;&nbsp;ListRewind&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+11&nbsp;&nbsp;&nbsp;&nbsp;ListRead&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;14&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+12&nbsp;&nbsp;&nbsp;&nbsp;Delete&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+13&nbsp;&nbsp;&nbsp;&nbsp;Goto&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;11&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+14&nbsp;&nbsp;&nbsp;&nbsp;ListClose&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0
+</tt></blockquote>
+
+
+
+
+<p>The ".timeout" command sets the amount of time that the <b>sqlite3</b>
+program will wait for locks to clear on files it is trying to access
+before returning an error.  The default value of the timeout is zero so
+that an error is returned immediately if any needed database table or
+index is locked.</p>
+
+<p>And finally, we mention the ".exit" command which causes the
+sqlite3 program to exit.</p>
+
+<h3>Using sqlite3 in a shell script</h3>
+
+<p>
+One way to use sqlite3 in a shell script is to use "echo" or
+"cat" to generate a sequence of commands in a file, then invoke sqlite3
+while redirecting input from the generated command file.  This
+works fine and is appropriate in many circumstances.  But as
+an added convenience, sqlite3 allows a single SQL command to be
+entered on the command line as a second argument after the
+database name.  When the sqlite3 program is launched with two
+arguments, the second argument is passed to the SQLite library
+for processing, the query results are printed on standard output
+in list mode, and the program exits.  This mechanism is designed
+to make sqlite3 easy to use in conjunction with programs like
+"awk".  For example:</p>
+
+
+<blockquote><tt>
+$&nbsp;<b>sqlite3&nbsp;ex1&nbsp;'select&nbsp;*&nbsp;from&nbsp;tbl1'&nbsp;|</b><br>
+&gt;&nbsp;<b>&nbsp;awk&nbsp;'{printf&nbsp;"&lt;tr&gt;&lt;td&gt;%s&lt;td&gt;%s\n",$1,$2&nbsp;}'</b><br>
+&lt;tr&gt;&lt;td&gt;hello&lt;td&gt;10<br>
+&lt;tr&gt;&lt;td&gt;goodbye&lt;td&gt;20<br>
+$
+</tt></blockquote>
+
+
+
+<h3>Ending shell commands</h3>
+
+<p>
+SQLite commands are normally terminated by a semicolon.  In the shell 
+you can also use the word "GO" (case-insensitive) or a slash character 
+"/" on a line by itself to end a command.  These are used by SQL Server 
+and Oracle, respectively.  These won't work in <b>sqlite3_exec()</b>, 
+because the shell translates these into a semicolon before passing them 
+to that function.</p>
+
+
+
+<h3>Compiling the sqlite3 program from sources</h3>
+
+<p>
+The sqlite3 program is built automatically when you compile the
+SQLite library.  Just get a copy of the source tree, run
+"configure" and then "make".</p>
+
+footer $rcsid
+
+<hr><small<i>
+This page last modified 2007/12/20 02:09:02 UTC
+</i></small></div></body></html>

@@ -1,0 +1,180 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Create Or Redefine SQL Functions</title>
+<style type="text/css">
+body {
+    margin: auto;
+    font-family: "Verdana" "sans-serif";
+    padding: 8px 1%;
+}
+
+a { color: #45735f }
+a:visited { color: #734559 }
+
+.logo { position:absolute; margin:3px; }
+.tagline {
+  float:right;
+  text-align:right;
+  font-style:italic;
+  width:240px;
+  margin:12px;
+  margin-top:58px;
+}
+
+.toolbar {
+  font-variant: small-caps;
+  text-align: center;
+  line-height: 1.6em;
+  margin: 0;
+  padding:1px 8px;
+}
+.toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
+.toolbar a:visited { color: white; }
+.toolbar a:hover { color: #80a796; background: white; }
+
+.content    { margin: 5%; }
+.content dt { font-weight:bold; }
+.content dd { margin-bottom: 25px; margin-left:20%; }
+.content ul { padding:0px; padding-left: 15px; margin:0px; }
+
+/* rounded corners */
+.se  { background: url(../images/se.png) 100% 100% no-repeat #80a796}
+.sw  { background: url(../images/sw.png) 0% 100% no-repeat }
+.ne  { background: url(../images/ne.png) 100% 0% no-repeat }
+.nw  { background: url(../images/nw.png) 0% 0% no-repeat }
+
+</style>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  
+</head>
+<body>
+<div><!-- container div to satisfy validator -->
+
+<a href="../index.html">
+<img class="logo" src="../images/SQLite.gif" alt="SQLite Logo"
+ border="0"></a>
+<div><!-- IE hack to prevent disappearing logo--></div>
+<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
+
+<table width=100% style="clear:both"><tr><td>
+  <div class="se"><div class="sw"><div class="ne"><div class="nw">
+  <div class="toolbar">
+    <a href="../about.html">About</a>
+    <a href="../sitemap.html">Sitemap</a>
+    <a href="../docs.html">Documentation</a>
+    <a href="../download.html">Download</a>
+    <a href="../copyright.html">License</a>
+    <a href="../news.html">News</a>
+    <a href="http://www.sqlite.org/cvstrac/index">Developers</a>
+    <a href="../support.html">Support</a>
+  </div></div></div></div></div>
+</td></tr></table>
+  
+<a href="intro.html"><h2>SQLite C Interface</h2></a>
+<h2>Create Or Redefine SQL Functions</h2>
+<blockquote><pre>
+int sqlite3_create_function(
+  sqlite3 *db,
+  const char *zFunctionName,
+  int nArg,
+  int eTextRep,
+  void *pApp,
+  void (*xFunc)(sqlite3_context*,int,sqlite3_value**),
+  void (*xStep)(sqlite3_context*,int,sqlite3_value**),
+  void (*xFinal)(sqlite3_context*)
+);
+int sqlite3_create_function16(
+  sqlite3 *db,
+  const void *zFunctionName,
+  int nArg,
+  int eTextRep,
+  void *pApp,
+  void (*xFunc)(sqlite3_context*,int,sqlite3_value**),
+  void (*xStep)(sqlite3_context*,int,sqlite3_value**),
+  void (*xFinal)(sqlite3_context*)
+);
+
+</pre></blockquote>
+<p>
+These two functions (collectively known as
+"function creation routines") are used to add SQL functions or aggregates
+or to redefine the behavior of existing SQL functions or aggregates.  The
+difference only between the two is that the second parameter, the
+name of the (scalar) function or aggregate, is encoded in UTF-8 for
+sqlite3_create_function() and UTF-16 for sqlite3_create_function16().</p>
+
+<p>The first argument is the 
+<a href="../c3ref/sqlite3.html">database connection</a> that holds the
+SQL function or aggregate is to be added or redefined. If a single
+program uses more than one database handle internally, then SQL
+functions or aggregates must be added individually to each database
+handle with which they will be used.</p>
+
+<p>The second parameter is the name of the SQL function to be created
+or redefined.
+The length of the name is limited to 255 bytes, exclusive of the
+zero-terminator.  Note that the name length limit is in bytes, not
+characters.  Any attempt to create a function with a longer name
+will result in an SQLITE_ERROR error.</p>
+
+<p>The third parameter is the number of arguments that the SQL function or
+aggregate takes. If this parameter is negative, then the SQL function or
+aggregate may take any number of arguments.</p>
+
+<p>The fourth parameter, eTextRep, specifies what
+
+<a href="../c3ref/c_any.html">text encoding</a> this SQL function prefers for
+its parameters.  Any SQL function implementation should be able to work
+work with UTF-8, UTF-16le, or UTF-16be.  But some implementations may be
+more efficient with one encoding than another.  It is allowed to
+invoke sqlite3_create_function() or sqlite3_create_function16() multiple
+times with the same function but with different values of eTextRep.
+When multiple implementations of the same function are available, SQLite
+will pick the one that involves the least amount of data conversion.
+If there is only a single implementation which does not care what
+text encoding is used, then the fourth argument should be
+
+<a href="../c3ref/c_any.html">SQLITE_ANY</a>.</p>
+
+<p>The fifth parameter is an arbitrary pointer.  The implementation
+of the function can gain access to this pointer using
+
+<a href="../c3ref/user_data.html">sqlite3_user_data()</a>.</p>
+
+<p>The seventh, eighth and ninth parameters, xFunc, xStep and xFinal, are
+pointers to C-language functions that implement the SQL
+function or aggregate. A scalar SQL function requires an implementation of
+the xFunc callback only, NULL pointers should be passed as the xStep
+and xFinal parameters. An aggregate SQL function requires an implementation
+of xStep and xFinal and NULL should be passed for xFunc. To delete an
+existing SQL function or aggregate, pass NULL for all three function
+callback.</p>
+
+<p>It is permitted to register multiple implementations of the same
+functions with the same name but with either differing numbers of
+arguments or differing perferred text encodings.  SQLite will use
+the implementation most closely matches the way in which the
+SQL function is used.</p>
+
+<p><h3>Invariants:</h3>
+<table border="0" cellpadding="5" cellspacing="0">
+<tr><td valign="top">F16103</td> 
+<td valign="top">
+The 
+<a href="../c3ref/create_function.html">sqlite3_create_function16()</a> interface behaves exactly
+like 
+<a href="../c3ref/create_function.html">sqlite3_create_function()</a> in every way except that it
+interprets the zFunctionName argument as
+zero-terminated UTF-16 native byte order instead of as a
+zero-terminated UTF-8.</p>
+
+<p></td></tr>
+</table>
+</p>
+<p>See also lists of
+  <a href="objlist.html">Objects</a>,
+  <a href="constlist.html">Constants</a>, and
+  <a href="funclist.html">Functions</a>.</p>
+<hr><small<i>
+This page last modified 2008/01/31 20:37:13 UTC
+</i></small></div></body></html>

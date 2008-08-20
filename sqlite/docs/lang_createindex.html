@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>SQLite Query Language: CREATE INDEX</title>
+<style type="text/css">
+body {
+    margin: auto;
+    font-family: "Verdana" "sans-serif";
+    padding: 8px 1%;
+}
+
+a { color: #45735f }
+a:visited { color: #734559 }
+
+.logo { position:absolute; margin:3px; }
+.tagline {
+  float:right;
+  text-align:right;
+  font-style:italic;
+  width:240px;
+  margin:12px;
+  margin-top:58px;
+}
+
+.toolbar {
+  font-variant: small-caps;
+  text-align: center;
+  line-height: 1.6em;
+  margin: 0;
+  padding:1px 8px;
+}
+.toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
+.toolbar a:visited { color: white; }
+.toolbar a:hover { color: #80a796; background: white; }
+
+.content    { margin: 5%; }
+.content dt { font-weight:bold; }
+.content dd { margin-bottom: 25px; margin-left:20%; }
+.content ul { padding:0px; padding-left: 15px; margin:0px; }
+
+/* rounded corners */
+.se  { background: url(images/se.png) 100% 100% no-repeat #80a796}
+.sw  { background: url(images/sw.png) 0% 100% no-repeat }
+.ne  { background: url(images/ne.png) 100% 0% no-repeat }
+.nw  { background: url(images/nw.png) 0% 0% no-repeat }
+
+</style>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  
+</head>
+<body>
+<div><!-- container div to satisfy validator -->
+
+<a href="index.html">
+<img class="logo" src="images/SQLite.gif" alt="SQLite Logo"
+ border="0"></a>
+<div><!-- IE hack to prevent disappearing logo--></div>
+<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
+
+<table width=100% style="clear:both"><tr><td>
+  <div class="se"><div class="sw"><div class="ne"><div class="nw">
+  <div class="toolbar">
+    <a href="about.html">About</a>
+    <a href="sitemap.html">Sitemap</a>
+    <a href="docs.html">Documentation</a>
+    <a href="download.html">Download</a>
+    <a href="copyright.html">License</a>
+    <a href="news.html">News</a>
+    <a href="http://www.sqlite.org/cvstrac/index">Developers</a>
+    <a href="support.html">Support</a>
+  </div></div></div></div></div>
+</td></tr></table>
+  
+<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a>
+<h3>CREATE INDEX</h3>
+<table cellpadding="10">
+<tr><td align="right" valign="top">
+<i><font color="#ff3434">sql-statement</font></i>&nbsp;::=</td>
+<td><b><font color="#2c2cf0">CREATE </font></b>[<b><font color="#2c2cf0">UNIQUE</font></b>]<b><font color="#2c2cf0"> INDEX </font></b>[<b><font color="#2c2cf0">IF NOT EXISTS</font></b>]<b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">database-name</font></i><b><font color="#2c2cf0"> <big>.</big></font></b>]<b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">index-name</font></i><b><font color="#2c2cf0"> <br>
+ON </font></b><i><font color="#ff3434">table-name</font></i><b><font color="#2c2cf0"> <big>(</big> </font></b><i><font color="#ff3434">column-name</font></i><b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0"><big>,</big> </font></b><i><font color="#ff3434">column-name</font></i><b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"></font></b><big>*</big><b><font color="#2c2cf0"> <big>)</big></font></b></td></tr>
+<tr><td align="right" valign="top">
+<i><font color="#ff3434">column-name</font></i>&nbsp;::=</td>
+<td><b><font color="#2c2cf0"></font></b><i><font color="#ff3434">name</font></i><b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0"> COLLATE </font></b><i><font color="#ff3434">collation-name</font></i><b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0"> ASC </font></b><big>|</big><b><font color="#2c2cf0"> DESC </font></b>]<b><font color="#2c2cf0"></font></b></td></tr>
+</table>
+
+
+<p>The CREATE INDEX command consists of the keywords "CREATE INDEX" followed
+by the name of the new index, the keyword "ON", the name of a previously
+created table that is to be indexed, and a parenthesized list of names of
+columns in the table that are used for the index key.
+Each column name can be followed by one of the "ASC" or "DESC" keywords
+to indicate sort order, but the sort order is ignored in the current
+implementation.  Sorting is always done in ascending order.</p>
+
+<p>The COLLATE clause following each column name defines a collating
+sequence used for text entires in that column.  The default collating
+sequence is the collating sequence defined for that column in the
+CREATE TABLE statement.  Or if no collating sequence is otherwise defined,
+the built-in BINARY collating sequence is used.</p>
+
+<p>There are no arbitrary limits on the number of indices that can be
+attached to a single table, nor on the number of columns in an index.</p>
+
+<p>If the UNIQUE keyword appears between CREATE and INDEX then duplicate
+index entries are not allowed.  Any attempt to insert a duplicate entry
+will result in an error.</p>
+
+<p>The exact text
+of each CREATE INDEX statement is stored in the <b>sqlite_master</b>
+or <b>sqlite_temp_master</b> table, depending on whether the table
+being indexed is temporary.  Every time the database is opened,
+all CREATE INDEX statements
+are read from the <b>sqlite_master</b> table and used to regenerate
+SQLite's internal representation of the index layout.</p>
+
+<p>If the optional IF NOT EXISTS clause is present and another index
+with the same name aleady exists, then this command becomes a no-op.</p>
+
+<p>Indexes are removed with the <a href="lang_dropindex.html">DROP INDEX</a> 
+command.</p>
+
+
+
+<hr><small<i>
+This page last modified 2007/12/20 21:09:25 UTC
+</i></small></div></body></html>

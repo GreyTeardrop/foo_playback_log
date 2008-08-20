@@ -1,0 +1,212 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>SQLite Query Language: BEGIN TRANSACTION</title>
+<style type="text/css">
+body {
+    margin: auto;
+    font-family: "Verdana" "sans-serif";
+    padding: 8px 1%;
+}
+
+a { color: #45735f }
+a:visited { color: #734559 }
+
+.logo { position:absolute; margin:3px; }
+.tagline {
+  float:right;
+  text-align:right;
+  font-style:italic;
+  width:240px;
+  margin:12px;
+  margin-top:58px;
+}
+
+.toolbar {
+  font-variant: small-caps;
+  text-align: center;
+  line-height: 1.6em;
+  margin: 0;
+  padding:1px 8px;
+}
+.toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
+.toolbar a:visited { color: white; }
+.toolbar a:hover { color: #80a796; background: white; }
+
+.content    { margin: 5%; }
+.content dt { font-weight:bold; }
+.content dd { margin-bottom: 25px; margin-left:20%; }
+.content ul { padding:0px; padding-left: 15px; margin:0px; }
+
+/* rounded corners */
+.se  { background: url(images/se.png) 100% 100% no-repeat #80a796}
+.sw  { background: url(images/sw.png) 0% 100% no-repeat }
+.ne  { background: url(images/ne.png) 100% 0% no-repeat }
+.nw  { background: url(images/nw.png) 0% 0% no-repeat }
+
+</style>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  
+</head>
+<body>
+<div><!-- container div to satisfy validator -->
+
+<a href="index.html">
+<img class="logo" src="images/SQLite.gif" alt="SQLite Logo"
+ border="0"></a>
+<div><!-- IE hack to prevent disappearing logo--></div>
+<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
+
+<table width=100% style="clear:both"><tr><td>
+  <div class="se"><div class="sw"><div class="ne"><div class="nw">
+  <div class="toolbar">
+    <a href="about.html">About</a>
+    <a href="sitemap.html">Sitemap</a>
+    <a href="docs.html">Documentation</a>
+    <a href="download.html">Download</a>
+    <a href="copyright.html">License</a>
+    <a href="news.html">News</a>
+    <a href="http://www.sqlite.org/cvstrac/index">Developers</a>
+    <a href="support.html">Support</a>
+  </div></div></div></div></div>
+</td></tr></table>
+  
+<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a>
+<h3>BEGIN TRANSACTION</h3>
+<table cellpadding="10">
+<tr><td align="right" valign="top">
+<i><font color="#ff3434">sql-statement</font></i>&nbsp;::=</td>
+<td><b><font color="#2c2cf0">BEGIN </font></b>[<b><font color="#2c2cf0"> DEFERRED </font></b><big>|</big><b><font color="#2c2cf0"> IMMEDIATE </font></b><big>|</big><b><font color="#2c2cf0"> EXCLUSIVE </font></b>]<b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0">TRANSACTION </font></b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">name</font></i><b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"></font></b></td></tr>
+</table>
+<table cellpadding="10">
+<tr><td align="right" valign="top">
+<i><font color="#ff3434">sql-statement</font></i>&nbsp;::=</td>
+<td><b><font color="#2c2cf0">END </font></b>[<b><font color="#2c2cf0">TRANSACTION </font></b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">name</font></i><b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"></font></b></td></tr>
+</table>
+<table cellpadding="10">
+<tr><td align="right" valign="top">
+<i><font color="#ff3434">sql-statement</font></i>&nbsp;::=</td>
+<td><b><font color="#2c2cf0">COMMIT </font></b>[<b><font color="#2c2cf0">TRANSACTION </font></b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">name</font></i><b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"></font></b></td></tr>
+</table>
+<table cellpadding="10">
+<tr><td align="right" valign="top">
+<i><font color="#ff3434">sql-statement</font></i>&nbsp;::=</td>
+<td><b><font color="#2c2cf0">ROLLBACK </font></b>[<b><font color="#2c2cf0">TRANSACTION </font></b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">name</font></i><b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"></font></b></td></tr>
+</table>
+
+
+<p>
+No changes can be made to the database except within a transaction.
+Any command that changes the database (basically, any SQL command
+other than SELECT) will automatically start a transaction if
+one is not already in effect.  Automatically started transactions
+are committed at the conclusion of the command.
+</p>
+
+<p>
+Transactions can be started manually using the BEGIN
+command.  Such transactions usually persist until the next
+COMMIT or ROLLBACK command.  But a transaction will also 
+ROLLBACK if the database is closed or if an error occurs
+and the ROLLBACK conflict resolution algorithm is specified.
+See the documentation on the <a href="lang_conflict.html">ON CONFLICT</a>
+clause for additional information about the ROLLBACK
+conflict resolution algorithm.
+</p>
+
+<p>
+END TRANSACTION is an alias for COMMIT.
+</p>
+
+<p>The optional transaction name is current ignored. SQLite 
+does not recognize nested transactions at this time.
+However, future versions of SQLite may be enhanced to support nested
+transactions and the transaction name would then become significant.
+Application are advised not to use the transaction name in order
+to avoid future compatibility problems.</p>
+
+<p>
+Transactions can be deferred, immediate, or exclusive.  
+The default transaction behavior is deferred.
+Deferred means that no locks are acquired
+on the database until the database is first accessed.  Thus with a
+deferred transaction, the BEGIN statement itself does nothing.  Locks
+are not acquired until the first read or write operation.  The first read
+operation against a database creates a SHARED lock and the first
+write operation creates a RESERVED lock.   Because the acquisition of
+locks is deferred until they are needed, it is possible that another
+thread or process could create a separate transaction and write to
+the database after the BEGIN on the current thread has executed.
+If the transaction is immediate, then RESERVED locks
+are acquired on all databases as soon as the BEGIN command is
+executed, without waiting for the
+database to be used.  After a BEGIN IMMEDIATE, you are guaranteed that
+no other thread or process will be able to write to the database or
+do a BEGIN IMMEDIATE or BEGIN EXCLUSIVE.  Other processes can continue
+to read from the database, however.  An exclusive transaction causes
+EXCLUSIVE locks to be acquired on all databases.  After a BEGIN
+EXCLUSIVE, you are guaranteed that no other thread or process will
+be able to read or write the database until the transaction is
+complete.
+</p>
+
+<p>
+A description of the meaning of SHARED, RESERVED, and EXCLUSIVE locks
+is available <a href="lockingv3.html">separately</a>.
+</p>
+
+<p>
+The COMMIT command does not actually perform a commit until all
+pending SQL commands finish.  Thus if two or more SELECT statements
+are in the middle of processing and a COMMIT is executed, the commit
+will not actually occur until all SELECT statements finish.
+</p>
+
+<p>
+An attempt to execute COMMIT might result in an SQLITE_BUSY return code.
+This indicates that another thread or process had a read lock on the database
+that prevented the database from being updated.  When COMMIT fails in this
+way, the transaction remains active and the COMMIT can be retried later
+after the reader has had a chance to clear.
+</p>
+
+<h3>Response To Errors Within A Transaction</h3>
+
+<p>If certain kinds of errors occur within a transaction, the
+transaction may or may not be rolled back automatically.  The
+errors that cause the behavior include:</p>
+
+<ul>
+<li> SQLITE_FULL: database or disk full
+<li> SQLITE_IOERR: disk I/O error
+<li> SQLITE_BUSY: database in use by another process
+<li> SQLITE_NOMEM: out or memory
+<li> SQLITE_INTERRUPT: processing interrupted by user request
+</ul>
+
+<p>
+For all of these errors, SQLite attempts to undo just the one statement
+it was working on and leave changes from prior statements within the
+same transaction intact and continue with the transaction.  However, 
+depending on the statement being evaluated and the point at which the
+error occurs, it might be necessary for SQLite to rollback and
+cancel the transaction.  An application can tell which
+course of action SQLite took by using the
+
+<a href="c3ref/get_autocommit.html">sqlite3_get_autocommit()</a> C-language interface.</p>
+
+<p>It is recommended that applications respond to the errors
+listed above by explicitly issuing a ROLLBACK command.  If the 
+transaction has already been rolled back automatically
+by the error response, then the ROLLBACK command will fail with an
+error, but no harm is caused by this.</p>
+
+<p>Future versions of SQLite may extend the list of errors which
+might cause automatic transaction rollback.  Future versions of
+SQLite might change the error response.  In particular, we may
+choose to simplify the interface in future versions of SQLite by
+causing the errors above to force an unconditional rollback.</p>
+
+
+<hr><small<i>
+This page last modified 2007/12/20 21:09:25 UTC
+</i></small></div></body></html>
