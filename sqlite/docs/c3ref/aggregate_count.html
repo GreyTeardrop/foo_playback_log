@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
-<title>Obsolete Functions</title>
+<title>Deprecated Functions</title>
 <style type="text/css">
 body {
     margin: auto;
@@ -70,28 +70,21 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Obsolete Functions</h2>
-<blockquote><pre>
-int sqlite3_aggregate_count(sqlite3_context*);
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Deprecated Functions</h2><blockquote><pre>int sqlite3_aggregate_count(sqlite3_context*);
 int sqlite3_expired(sqlite3_stmt*);
 int sqlite3_transfer_bindings(sqlite3_stmt*, sqlite3_stmt*);
 int sqlite3_global_recover(void);
 void sqlite3_thread_cleanup(void);
 int sqlite3_memory_alarm(void(*)(void*,sqlite3_int64,int),void*,sqlite3_int64);
-
-</pre></blockquote>
-<p>
-These functions are all now obsolete.  In order to maintain
-backwards compatibility with older code, we continue to support
-these functions.  However, new development projects should avoid
+</pre></blockquote><p>
+These functions are <a href="../c3ref/experimental.html">deprecated</a>.  In order to maintain
+backwards compatibility with older code, these functions continue
+to be supported.  However, new applications should avoid
 the use of these functions.  To help encourage people to avoid
 using these functions, we are not going to tell you want they do.
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

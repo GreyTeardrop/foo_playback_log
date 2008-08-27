@@ -70,10 +70,7 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Extract Metadata About A Column Of A Table</h2>
-<blockquote><pre>
-int sqlite3_table_column_metadata(
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Extract Metadata About A Column Of A Table</h2><blockquote><pre>int sqlite3_table_column_metadata(
   sqlite3 *db,                /* Connection handle */
   const char *zDbName,        /* Database name or NULL */
   const char *zTableName,     /* Table name */
@@ -84,52 +81,49 @@ int sqlite3_table_column_metadata(
   int *pPrimaryKey,           /* OUTPUT: True if column part of PK */
   int *pAutoinc               /* OUTPUT: True if column is auto-increment */
 );
-
-</pre></blockquote>
-<p>
-This routine
-returns meta-data about a specific column of a specific database
-table accessible using the connection handle passed as the first function
-argument.</p>
+</pre></blockquote><p>
+This routine returns metadata about a specific column of a specific
+database table accessible using the <a href="../c3ref/sqlite3.html">database connection</a> handle
+passed as the first function argument.</p>
 
 <p>The column is identified by the second, third and fourth parameters to
 this function. The second parameter is either the name of the database
 (i.e. "main", "temp" or an attached database) containing the specified
 table or NULL. If it is NULL, then all attached databases are searched
-for the table using the same algorithm as the database engine uses to
+for the table using the same algorithm used by the database engine to
 resolve unqualified table references.</p>
 
 <p>The third and fourth parameters to this function are the table and column
 name of the desired column, respectively. Neither of these parameters
 may be NULL.</p>
 
-<p>Meta information is returned by writing to the memory locations passed as
-the 5th and subsequent parameters to this function. Any of these
-arguments may be NULL, in which case the corresponding element of meta
-information is ommitted.</p>
+<p>Metadata is returned by writing to the memory locations passed as the 5th
+and subsequent parameters to this function. Any of these arguments may be
+NULL, in which case the corresponding element of metadata is omitted.</p>
 
-<p><pre>
-Parameter     Output Type      Description
------------------------------------</p>
+<p><blockquote>
+<table border="1">
+<tr><th> Parameter <th> Output<br>Type <th>  Description</p>
 
-<p>5th         const char*      Data type
-6th         const char*      Name of the default collation sequence
-7th         int              True if the column has a NOT NULL constraint
-8th         int              True if the column is part of the PRIMARY KEY
-9th         int              True if the column is AUTOINCREMENT
-</pre></p>
+<p><tr><td> 5th <td> const char* <td> Data type
+<tr><td> 6th <td> const char* <td> Name of default collation sequence
+<tr><td> 7th <td> int         <td> True if column has a NOT NULL constraint
+<tr><td> 8th <td> int         <td> True if column is part of the PRIMARY KEY
+<tr><td> 9th <td> int         <td> True if column is AUTOINCREMENT
+</table>
+</blockquote></p>
 
 <p>The memory pointed to by the character pointers returned for the
 declaration type and collation sequence is valid only until the next
-call to any sqlite API function.</p>
+call to any SQLite API function.</p>
 
-<p>If the specified table is actually a view, then an error is returned.</p>
+<p>If the specified table is actually a view, an <a href="../c3ref/c_abort.html">error code</a> is returned.</p>
 
 <p>If the specified column is "rowid", "oid" or "_rowid_" and an
 INTEGER PRIMARY KEY column has been explicitly declared, then the output
 parameters are set for the explicitly declared column. If there is no
-explicitly declared IPK column, then the output parameters are set as
-follows:</p>
+explicitly declared INTEGER PRIMARY KEY column, then the output
+parameters are set as follows:</p>
 
 <p><pre>
 data type: "INTEGER"
@@ -141,16 +135,14 @@ auto increment: 0
 
 <p>This function may load one or more schemas from database files. If an
 error occurs during this process, or if the requested table or column
-cannot be found, an SQLITE error code is returned and an error message
-left in the database handle (to be retrieved using sqlite3_errmsg()).</p>
+cannot be found, an <a href="../c3ref/c_abort.html">error code</a> is returned and an error message left
+in the <a href="../c3ref/sqlite3.html">database connection</a> (to be retrieved using sqlite3_errmsg()).</p>
 
 <p>This API is only available if the library was compiled with the
-SQLITE_ENABLE_COLUMN_METADATA preprocessor symbol defined.
-</p>
-<p>See also lists of
+<a href="../compile.html#enable_column_metadata">SQLITE_ENABLE_COLUMN_METADATA</a> C-preprocessor symbol defined.
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

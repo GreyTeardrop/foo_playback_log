@@ -70,33 +70,19 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Database Connection Handle</h2>
-<blockquote><pre>
-typedef struct sqlite3 sqlite3;
-
-</pre></blockquote>
-<p>
-Each open SQLite database is represented by pointer to an instance of the
-opaque structure named "sqlite3".  It is useful to think of an sqlite3
-pointer as an object.  The 
-<a href="../c3ref/open.html">sqlite3_open()</a>, 
-<a href="../c3ref/open.html">sqlite3_open16()</a>, and
-
-<a href="../c3ref/open.html">sqlite3_open_v2()</a> interfaces are its constructors
-and 
-<a href="../c3ref/close.html">sqlite3_close()</a> is its destructor.  There are many other interfaces
-(such as 
-<a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a>, 
-<a href="../c3ref/create_function.html">sqlite3_create_function()</a>, and
-
-<a href="../c3ref/busy_timeout.html">sqlite3_busy_timeout()</a> to name but three) that are methods on this
-object.
-</p>
-<p>See also lists of
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Database Connection Handle</h2><blockquote><pre>typedef struct sqlite3 sqlite3;
+</pre></blockquote><p>
+Each open SQLite database is represented by a pointer to an instance of
+the opaque structure named "sqlite3".  It is useful to think of an sqlite3
+pointer as an object.  The <a href="../c3ref/open.html">sqlite3_open()</a>, <a href="../c3ref/open.html">sqlite3_open16()</a>, and
+<a href="../c3ref/open.html">sqlite3_open_v2()</a> interfaces are its constructors, and <a href="../c3ref/close.html">sqlite3_close()</a>
+is its destructor.  There are many other interfaces (such as
+<a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a>, <a href="../c3ref/create_function.html">sqlite3_create_function()</a>, and
+<a href="../c3ref/busy_timeout.html">sqlite3_busy_timeout()</a> to name but three) that are methods on an
+sqlite3 object.
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

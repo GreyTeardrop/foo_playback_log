@@ -70,45 +70,38 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Load An Extension</h2>
-<blockquote><pre>
-int sqlite3_load_extension(
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Load An Extension</h2><blockquote><pre>int sqlite3_load_extension(
   sqlite3 *db,          /* Load the extension into this database connection */
   const char *zFile,    /* Name of the shared library containing extension */
   const char *zProc,    /* Entry point.  Derived from zFile if 0 */
   char **pzErrMsg       /* Put error message here if not 0 */
 );
+</pre></blockquote><p>
+This interface loads an SQLite extension library from the named file.</p>
 
-</pre></blockquote>
-<p>
- The sqlite3_load_extension() interface
-attempts to load an SQLite extension library contained in the file
-zFile. The entry point is zProc. zProc may be 0
-in which case the name of the entry point defaults
-to "sqlite3_extension_init".</p>
+<p> The sqlite3_load_extension() interface attempts to load an
+SQLite extension library contained in the file zFile.</p>
 
-<p> The sqlite3_load_extension() interface shall
-return 
-<a href="../c3ref/c_abort.html">SQLITE_OK</a> on success and 
-<a href="../c3ref/c_abort.html">SQLITE_ERROR</a> if something goes wrong.</p>
+<p> The entry point is zProc.</p>
 
-<p>If an error occurs and pzErrMsg is not 0, then the
-sqlite3_load_extension() interface shall attempt to fill *pzErrMsg with
-error message text stored in memory obtained from 
-<a href="../c3ref/free.html">sqlite3_malloc()</a>.
-  The calling function should free this memory
-by calling 
-<a href="../c3ref/free.html">sqlite3_free()</a>.</p>
+<p> zProc may be 0, in which case the name of the entry point
+defaults to "sqlite3_extension_init".</p>
 
-<p>Extension loading must be enabled using 
-<a href="../c3ref/enable_load_extension.html">sqlite3_enable_load_extension()</a>
-prior to calling this API or an error will be returned.
-</p>
-<p>See also lists of
+<p> The sqlite3_load_extension() interface shall return
+<a href="../c3ref/c_abort.html">SQLITE_OK</a> on success and <a href="../c3ref/c_abort.html">SQLITE_ERROR</a> if something goes wrong.</p>
+
+<p> If an error occurs and pzErrMsg is not 0, then the
+<a href="../c3ref/load_extension.html">sqlite3_load_extension()</a> interface shall attempt to
+fill *pzErrMsg with error message text stored in memory
+obtained from <a href="../c3ref/free.html">sqlite3_malloc()</a>.  The calling function
+should free this memory by calling <a href="../c3ref/free.html">sqlite3_free()</a>.</p>
+
+<p> Extension loading must be enabled using
+<a href="../c3ref/enable_load_extension.html">sqlite3_enable_load_extension()</a> prior to calling this API,
+otherwise an error will be returned.
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

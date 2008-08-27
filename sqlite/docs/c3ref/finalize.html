@@ -70,58 +70,37 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Destroy A Prepared Statement Object</h2>
-<blockquote><pre>
-int sqlite3_finalize(sqlite3_stmt *pStmt);
-
-</pre></blockquote>
-<p>
-The sqlite3_finalize() function is called to delete a
-
-<a href="../c3ref/stmt.html">prepared statement</a>. If the statement was
-executed successfully, or not executed at all, then SQLITE_OK is returned.
-If execution of the statement failed then an
-
-<a href="../c3ref/c_abort.html">error code</a> or 
-<a href="../c3ref/c_ioerr_blocked.html">extended error code</a>
-is returned.</p>
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Destroy A Prepared Statement Object</h2><blockquote><pre>int sqlite3_finalize(sqlite3_stmt *pStmt);
+</pre></blockquote><p>
+The sqlite3_finalize() function is called to delete a <a href="../c3ref/stmt.html">prepared statement</a>.
+If the statement was executed successfully or not executed at all, then
+SQLITE_OK is returned. If execution of the statement failed then an
+<a href="../c3ref/c_abort.html">error code</a> or <a href="../c3ref/c_ioerr_access.html">extended error code</a> is returned.</p>
 
 <p>This routine can be called at any point during the execution of the
-
 <a href="../c3ref/stmt.html">prepared statement</a>.  If the virtual machine has not
 completed execution when this routine is called, that is like
-encountering an error or an interrupt.  (See 
-<a href="../c3ref/interrupt.html">sqlite3_interrupt()</a>.)
-Incomplete updates may be rolled back and transactions cancelled,
+encountering an error or an <a href="../c3ref/interrupt.html">interrupt</a>.
+Incomplete updates may be rolled back and transactions canceled,
 depending on the circumstances, and the
-
-<a href="../c3ref/c_abort.html">error code</a> returned will be 
-<a href="../c3ref/c_abort.html">SQLITE_ABORT</a>.</p>
+<a href="../c3ref/c_abort.html">error code</a> returned will be <a href="../c3ref/c_abort.html">SQLITE_ABORT</a>.</p>
 
 <p><h3>Invariants:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">F11302</td> 
+<tr><td valign="top">H11302</td> 
 <td valign="top">
-The 
-<a href="../c3ref/finalize.html">sqlite3_finalize(S)</a> interface destroys the
-
+The <a href="../c3ref/finalize.html">sqlite3_finalize(S)</a> interface destroys the
 <a href="../c3ref/stmt.html">prepared statement</a> S and releases all
 memory and file resources held by that object.</td></tr>
-<tr><td valign="top">F11304</td> 
+<tr><td valign="top">H11304</td> 
 <td valign="top">
-If the most recent call to 
-<a href="../c3ref/step.html">sqlite3_step(S)</a> for the
-
+If the most recent call to <a href="../c3ref/step.html">sqlite3_step(S)</a> for the
 <a href="../c3ref/stmt.html">prepared statement</a> S returned an error,
-then 
-<a href="../c3ref/finalize.html">sqlite3_finalize(S)</a> returns that same error.</td></tr>
+then <a href="../c3ref/finalize.html">sqlite3_finalize(S)</a> returns that same error.</td></tr>
 </table>
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

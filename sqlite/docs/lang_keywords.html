@@ -70,10 +70,7 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a>
-<h3>SQLite Keywords</h3>
-</DIV>
-
+<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a><h3>SQLite Keywords</h3></DIV>
 
 <p>The SQL standard specifies a huge number of keywords which may not
 be used as the names of tables, indices, columns, databases, user-defined
@@ -87,7 +84,7 @@ are three ways of quoting keywords in SQLite:</p>
 
 <p>
 <blockquote>
-<table class="pdf_functions">
+<table>
 <tr>	<td valign="top"><b>'keyword'</b></td><td width="20"></td>
 	<td>A keyword in single quotes is interpreted as a literal string
         if it occurs in a context where a string literal is allowed, otherwise
@@ -115,7 +112,7 @@ are shown in an italic font.  Keywords that must be quoted in order to be
 used as identifiers are shown in bold.</p>
 
 <p>
-SQLite adds new keywords from time to time when it take on new features.
+SQLite adds new keywords from time to time when it takes on new features.
 So to prevent your code from being broken by future enhancements, you should
 normally quote any indentifier that is an English language word, even if
 you do not have to.
@@ -130,125 +127,7 @@ The following are the keywords currently recognized by SQLite:
 <tr>
 <td align="left" valign="top" width="20%">
 
-
-<i>ABORT</i><br>
-<b>ADD</b><br>
-<i>AFTER</i><br>
-<b>ALL</b><br>
-<b>ALTER</b><br>
-<i>ANALYZE</i><br>
-<b>AND</b><br>
-<b>AS</b><br>
-<i>ASC</i><br>
-<i>ATTACH</i><br>
-<b>AUTOINCREMENT</b><br>
-<i>BEFORE</i><br>
-<i>BEGIN</i><br>
-<b>BETWEEN</b><br>
-<b>BY</b><br>
-<i>CASCADE</i><br>
-<b>CASE</b><br>
-<i>CAST</i><br>
-<b>CHECK</b><br>
-<b>COLLATE</b><br>
-<b>COMMIT</b><br>
-<i>CONFLICT</i><br>
-<b>CONSTRAINT</b><br>
-</td><td valign="top" align="left" width="20%">
-<b>CREATE</b><br>
-<b>CROSS</b><br>
-<i>CURRENT_DATE</i><br>
-<i>CURRENT_TIME</i><br>
-<i>CURRENT_TIMESTAMP</i><br>
-<i>DATABASE</i><br>
-<b>DEFAULT</b><br>
-<b>DEFERRABLE</b><br>
-<i>DEFERRED</i><br>
-<b>DELETE</b><br>
-<i>DESC</i><br>
-<i>DETACH</i><br>
-<b>DISTINCT</b><br>
-<b>DROP</b><br>
-<i>EACH</i><br>
-<b>ELSE</b><br>
-<i>END</i><br>
-<b>ESCAPE</b><br>
-<b>EXCEPT</b><br>
-<i>EXCLUSIVE</i><br>
-<i>EXPLAIN</i><br>
-<i>FAIL</i><br>
-<i>FOR</i><br>
-</td><td valign="top" align="left" width="20%">
-<b>FOREIGN</b><br>
-<b>FROM</b><br>
-<b>FULL</b><br>
-<i>GLOB</i><br>
-<b>GROUP</b><br>
-<b>HAVING</b><br>
-<i>IF</i><br>
-<i>IGNORE</i><br>
-<i>IMMEDIATE</i><br>
-<b>IN</b><br>
-<b>INDEX</b><br>
-<i>INITIALLY</i><br>
-<b>INNER</b><br>
-<b>INSERT</b><br>
-<i>INSTEAD</i><br>
-<b>INTERSECT</b><br>
-<b>INTO</b><br>
-<b>IS</b><br>
-<b>ISNULL</b><br>
-<b>JOIN</b><br>
-<i>KEY</i><br>
-<b>LEFT</b><br>
-<i>LIKE</i><br>
-</td><td valign="top" align="left" width="20%">
-<b>LIMIT</b><br>
-<i>MATCH</i><br>
-<b>NATURAL</b><br>
-<b>NOT</b><br>
-<b>NOTNULL</b><br>
-<b>NULL</b><br>
-<i>OF</i><br>
-<i>OFFSET</i><br>
-<b>ON</b><br>
-<b>OR</b><br>
-<b>ORDER</b><br>
-<b>OUTER</b><br>
-<i>PLAN</i><br>
-<i>PRAGMA</i><br>
-<b>PRIMARY</b><br>
-<i>QUERY</i><br>
-<i>RAISE</i><br>
-<b>REFERENCES</b><br>
-<i>REINDEX</i><br>
-<i>RENAME</i><br>
-<i>REPLACE</i><br>
-<i>RESTRICT</i><br>
-<b>RIGHT</b><br>
-</td><td valign="top" align="left" width="20%">
-<b>ROLLBACK</b><br>
-<i>ROW</i><br>
-<b>SELECT</b><br>
-<b>SET</b><br>
-<b>TABLE</b><br>
-<i>TEMP</i><br>
-<i>TEMPORARY</i><br>
-<b>THEN</b><br>
-<b>TO</b><br>
-<b>TRANSACTION</b><br>
-<i>TRIGGER</i><br>
-<b>UNION</b><br>
-<b>UNIQUE</b><br>
-<b>UPDATE</b><br>
-<b>USING</b><br>
-<i>VACUUM</i><br>
-<b>VALUES</b><br>
-<i>VIEW</i><br>
-<i>VIRTUAL</i><br>
-<b>WHEN</b><br>
-<b>WHERE</b><br>
-
+<i>ABORT</i><br><b>ADD</b><br><i>AFTER</i><br><b>ALL</b><br><b>ALTER</b><br><i>ANALYZE</i><br><b>AND</b><br><b>AS</b><br><i>ASC</i><br><i>ATTACH</i><br><b>AUTOINCREMENT</b><br><i>BEFORE</i><br><i>BEGIN</i><br><b>BETWEEN</b><br><b>BY</b><br><i>CASCADE</i><br><b>CASE</b><br><i>CAST</i><br><b>CHECK</b><br><b>COLLATE</b><br><b>COLUMN</b><br><b>COMMIT</b><br><i>CONFLICT</i><br><b>CONSTRAINT</b><br></td><td valign="top" align="left" width="20%"><b>CREATE</b><br><b>CROSS</b><br><i>CURRENT_DATE</i><br><i>CURRENT_TIME</i><br><i>CURRENT_TIMESTAMP</i><br><i>DATABASE</i><br><b>DEFAULT</b><br><b>DEFERRABLE</b><br><i>DEFERRED</i><br><b>DELETE</b><br><i>DESC</i><br><i>DETACH</i><br><b>DISTINCT</b><br><b>DROP</b><br><i>EACH</i><br><b>ELSE</b><br><i>END</i><br><b>ESCAPE</b><br><b>EXCEPT</b><br><i>EXCLUSIVE</i><br><b>EXISTS</b><br><i>EXPLAIN</i><br><i>FAIL</i><br><i>FOR</i><br></td><td valign="top" align="left" width="20%"><b>FOREIGN</b><br><b>FROM</b><br><b>FULL</b><br><i>GLOB</i><br><b>GROUP</b><br><b>HAVING</b><br><i>IF</i><br><i>IGNORE</i><br><i>IMMEDIATE</i><br><b>IN</b><br><b>INDEX</b><br><i>INITIALLY</i><br><b>INNER</b><br><b>INSERT</b><br><i>INSTEAD</i><br><b>INTERSECT</b><br><b>INTO</b><br><b>IS</b><br><b>ISNULL</b><br><b>JOIN</b><br><i>KEY</i><br><b>LEFT</b><br><i>LIKE</i><br><b>LIMIT</b><br></td><td valign="top" align="left" width="20%"><i>MATCH</i><br><b>NATURAL</b><br><b>NOT</b><br><b>NOTNULL</b><br><b>NULL</b><br><i>OF</i><br><i>OFFSET</i><br><b>ON</b><br><b>OR</b><br><b>ORDER</b><br><b>OUTER</b><br><i>PLAN</i><br><i>PRAGMA</i><br><b>PRIMARY</b><br><i>QUERY</i><br><i>RAISE</i><br><b>REFERENCES</b><br><b>REGEXP</b><br><i>REINDEX</i><br><i>RENAME</i><br><i>REPLACE</i><br><i>RESTRICT</i><br><b>RIGHT</b><br><b>ROLLBACK</b><br></td><td valign="top" align="left" width="20%"><i>ROW</i><br><b>SELECT</b><br><b>SET</b><br><b>TABLE</b><br><i>TEMP</i><br><i>TEMPORARY</i><br><b>THEN</b><br><b>TO</b><br><b>TRANSACTION</b><br><i>TRIGGER</i><br><b>UNION</b><br><b>UNIQUE</b><br><b>UPDATE</b><br><b>USING</b><br><i>VACUUM</i><br><b>VALUES</b><br><i>VIEW</i><br><i>VIRTUAL</i><br><b>WHEN</b><br><b>WHERE</b><br>
 </td></tr></table></blockquote>
 
 <h2>Special names</h2>
@@ -267,7 +146,6 @@ type of object.</p>
   SQLITE_TEMP_MASTER<br>
   TEMP<br>
 </b></blockquote>
-
-<hr><small<i>
-This page last modified 2007/12/20 21:09:25 UTC
+<hr><small><i>
+This page last modified 2008/07/18 18:34:10 UTC
 </i></small></div></body></html>

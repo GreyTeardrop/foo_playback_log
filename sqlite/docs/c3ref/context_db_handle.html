@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
-<title>Testing Interface Operation Codes</title>
+<title>Database Connection For Functions</title>
 <style type="text/css">
 body {
     margin: auto;
@@ -70,30 +70,26 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Testing Interface Operation Codes</h2>
-<blockquote><pre>
-#define SQLITE_TESTCTRL_FAULT_CONFIG             1
-#define SQLITE_TESTCTRL_FAULT_FAILURES           2
-#define SQLITE_TESTCTRL_FAULT_BENIGN_FAILURES    3
-#define SQLITE_TESTCTRL_FAULT_PENDING            4
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Database Connection For Functions</h2><blockquote><pre>sqlite3 *sqlite3_context_db_handle(sqlite3_context*);
+</pre></blockquote><p>
+The sqlite3_context_db_handle() interface returns a copy of
+the pointer to the <a href="../c3ref/sqlite3.html">database connection</a> (the 1st parameter)
+of the <a href="../c3ref/create_function.html">sqlite3_create_function()</a>
+and <a href="../c3ref/create_function.html">sqlite3_create_function16()</a> routines that originally
+registered the application defined function.</p>
 
-</pre></blockquote>
-<p>
-These constants are the valid operation code parameters used
-as the first argument to 
-<a href="../c3ref/test_control.html">sqlite3_test_control()</a>.</p>
-
-<p>These parameters and their meansing are subject to change
-without notice.  These values are for testing purposes only.
-Applications should not use any of these parameters or the
-
-<a href="../c3ref/test_control.html">sqlite3_test_control()</a> interface.
-</p>
-<p>See also lists of
+<p><h3>Invariants:</h3>
+<table border="0" cellpadding="5" cellspacing="0">
+<tr><td valign="top">H16253</td> 
+<td valign="top">
+The <a href="../c3ref/context_db_handle.html">sqlite3_context_db_handle(C)</a> interface returns a copy of the
+D pointer from the <a href="../c3ref/create_function.html">sqlite3_create_function(D,X,N,E,P,F,S,L)</a>
+or <a href="../c3ref/create_function.html">sqlite3_create_function16(D,X,N,E,P,F,S,L)</a> call that
+registered the SQL function associated with <a href="../c3ref/context.html">sqlite3_context</a> C.</td></tr>
+</table>
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

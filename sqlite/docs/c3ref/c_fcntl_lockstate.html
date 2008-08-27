@@ -70,37 +70,22 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Standard File Control Opcodes</h2>
-<blockquote><pre>
-#define SQLITE_FCNTL_LOCKSTATE        1
-
-</pre></blockquote>
-<p>
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Standard File Control Opcodes</h2><blockquote><pre>#define SQLITE_FCNTL_LOCKSTATE        1
+</pre></blockquote><p>
 These integer constants are opcodes for the xFileControl method
-of the 
-<a href="../c3ref/io_methods.html">sqlite3_io_methods</a> object and to the 
-<a href="../c3ref/file_control.html">sqlite3_file_control()</a>
+of the <a href="../c3ref/io_methods.html">sqlite3_io_methods</a> object and for the <a href="../c3ref/file_control.html">sqlite3_file_control()</a>
 interface.</p>
 
-<p>The 
-<a href="../c3ref/c_fcntl_lockstate.html">SQLITE_FCNTL_LOCKSTATE</a> opcode is used for debugging.  This
-opcode cases the xFileControl method to write the current state of
-the lock (one of 
-<a href="../c3ref/c_lock_exclusive.html">SQLITE_LOCK_NONE</a>, 
-<a href="../c3ref/c_lock_exclusive.html">SQLITE_LOCK_SHARED</a>,
-
-<a href="../c3ref/c_lock_exclusive.html">SQLITE_LOCK_RESERVED</a>, 
-<a href="../c3ref/c_lock_exclusive.html">SQLITE_LOCK_PENDING</a>, or 
-<a href="../c3ref/c_lock_exclusive.html">SQLITE_LOCK_EXCLUSIVE</a>)
+<p>The <a href="../c3ref/c_fcntl_lockstate.html">SQLITE_FCNTL_LOCKSTATE</a> opcode is used for debugging.  This
+opcode causes the xFileControl method to write the current state of
+the lock (one of <a href="../c3ref/c_lock_exclusive.html">SQLITE_LOCK_NONE</a>, <a href="../c3ref/c_lock_exclusive.html">SQLITE_LOCK_SHARED</a>,
+<a href="../c3ref/c_lock_exclusive.html">SQLITE_LOCK_RESERVED</a>, <a href="../c3ref/c_lock_exclusive.html">SQLITE_LOCK_PENDING</a>, or <a href="../c3ref/c_lock_exclusive.html">SQLITE_LOCK_EXCLUSIVE</a>)
 into an integer that the pArg argument points to. This capability
 is used during testing and only needs to be supported when SQLITE_TEST
 is defined.
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

@@ -70,34 +70,15 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a>
-<h3>VACUUM</h3>
-<table cellpadding="10">
-<tr><td align="right" valign="top">
-<i><font color="#ff3434">sql-statement</font></i>&nbsp;::=</td>
-<td><b><font color="#2c2cf0">VACUUM</font></b></td></tr>
-</table>
-
-
-<p>The VACUUM command is an SQLite extension modeled after a similar
-command found in PostgreSQL.  If VACUUM is invoked with the name of a
-table or index then it is suppose to clean up the named table or index.
-In version 1.0 of SQLite, the VACUUM command would invoke 
-<b>gdbm_reorganize()</b> to clean up the backend database file.</p>
-
-<p>
-VACUUM became a no-op when the GDBM backend was removed from
-SQLITE in version 2.0.0.
-VACUUM was reimplemented in version 2.8.1.
-</p>
+<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a><h3>VACUUM</h3><table cellpadding="10"><tr><td align="right" valign="top"><i><font color="#ff3434">sql-statement</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0">VACUUM</font></b></td></tr></table>
 
 <p>When an object (table, index, or trigger) is dropped from the 
 database, it leaves behind empty space.  This makes the database 
 file larger than it needs to be, but can speed up inserts.  In time 
 inserts and deletes can leave the database file structure fragmented, 
-which slows down disk access to the database contents.
+which slows down disk access to the database contents.</p>
 
-The VACUUM command cleans
+<p>The VACUUM command cleans
 the main database by copying its contents to a temporary database file and 
 reloading the original database file from the copy.  This eliminates 
 free pages,  aligns table data to be contiguous, and otherwise cleans 
@@ -115,16 +96,14 @@ The VACUUM command is a no-op for in-memory databases.</p>
 
 <p>As of SQLite version 3.1, an alternative to using the VACUUM command
 is auto-vacuum mode, enabled using the 
-<a href="pragma.html#pragma_auto_vacuum">auto_vacuum pragma</a>.
-When auto-vacuum is enabled for a database, large deletes cause
-the size of the database file to shrink.  However, auto-vacuum
-also causes excess fragmentation of the database file.  And auto-vacuum
+<a href="pragma.html#pragma_auto_vacuum">auto_vacuum</a> pragma.  When <a href="pragma.html#pragma_auto_vacuum">auto_vacuum</a> is enabled for a database, 
+large deletes cause
+the size of the database file to shrink.  However, <a href="pragma.html#pragma_auto_vacuum">auto_vacuum</a>
+also causes excess fragmentation of the database file.  And <a href="pragma.html#pragma_auto_vacuum">auto_vacuum</a>
 does not compact partially filled pages of the database as VACUUM
 does.
 </p>
 
-
-<DIV class="pdf_section">
-<hr><small<i>
-This page last modified 2007/12/20 21:09:25 UTC
+<DIV class="pdf_section"><hr><small><i>
+This page last modified 2008/07/18 18:34:10 UTC
 </i></small></div></body></html>

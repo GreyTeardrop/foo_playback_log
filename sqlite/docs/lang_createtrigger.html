@@ -70,53 +70,27 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a>
-<h3>CREATE TRIGGER</h3>
-<table cellpadding="10">
-<tr><td align="right" valign="top">
-<i><font color="#ff3434">sql-statement</font></i>&nbsp;::=</td>
-<td><b><font color="#2c2cf0">CREATE </font></b>[<b><font color="#2c2cf0">TEMP </font></b><big>|</big><b><font color="#2c2cf0"> TEMPORARY</font></b>]<b><font color="#2c2cf0"> TRIGGER </font></b>[<b><font color="#2c2cf0">IF NOT EXISTS</font></b>]<b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">trigger-name</font></i><b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0"> BEFORE </font></b><big>|</big><b><font color="#2c2cf0"> AFTER </font></b>]<b><font color="#2c2cf0"><br>
+<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a><h3>CREATE TRIGGER</h3><table cellpadding="10"><tr><td align="right" valign="top"><i><font color="#ff3434">sql-statement</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0">CREATE </font></b>[<b><font color="#2c2cf0">TEMP </font></b><big>|</big><b><font color="#2c2cf0"> TEMPORARY</font></b>]<b><font color="#2c2cf0"> TRIGGER </font></b>[<b><font color="#2c2cf0">IF NOT EXISTS</font></b>]<b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">trigger-name</font></i><b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0"> BEFORE </font></b><big>|</big><b><font color="#2c2cf0"> AFTER </font></b>]<b><font color="#2c2cf0"><br>
 </font></b><i><font color="#ff3434">database-event</font></i><b><font color="#2c2cf0"> ON </font></b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">database-name</font></i><b><font color="#2c2cf0"> <big>.</big></font></b>]<b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">table-name</font></i><b><font color="#2c2cf0"><br>
-</font></b><i><font color="#ff3434">trigger-action</font></i><b><font color="#2c2cf0"></font></b></td></tr>
-</table>
-<table cellpadding="10">
-<tr><td align="right" valign="top">
-<i><font color="#ff3434">sql-statement</font></i>&nbsp;::=</td>
-<td><b><font color="#2c2cf0">CREATE </font></b>[<b><font color="#2c2cf0">TEMP </font></b><big>|</big><b><font color="#2c2cf0"> TEMPORARY</font></b>]<b><font color="#2c2cf0"> TRIGGER </font></b>[<b><font color="#2c2cf0">IF NOT EXISTS</font></b>]<b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">trigger-name</font></i><b><font color="#2c2cf0"> INSTEAD OF<br>
+</font></b><i><font color="#ff3434">trigger-action</font></i><b><font color="#2c2cf0"></font></b></td></tr></table><table cellpadding="10"><tr><td align="right" valign="top"><i><font color="#ff3434">sql-statement</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0">CREATE </font></b>[<b><font color="#2c2cf0">TEMP </font></b><big>|</big><b><font color="#2c2cf0"> TEMPORARY</font></b>]<b><font color="#2c2cf0"> TRIGGER </font></b>[<b><font color="#2c2cf0">IF NOT EXISTS</font></b>]<b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">trigger-name</font></i><b><font color="#2c2cf0"> INSTEAD OF<br>
 </font></b><i><font color="#ff3434">database-event</font></i><b><font color="#2c2cf0"> ON </font></b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">database-name</font></i><b><font color="#2c2cf0"> <big>.</big></font></b>]<b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">view-name</font></i><b><font color="#2c2cf0"><br>
-</font></b><i><font color="#ff3434">trigger-action</font></i><b><font color="#2c2cf0"></font></b></td></tr>
-</table>
-<table cellpadding="10">
-<tr><td align="right" valign="top">
-<i><font color="#ff3434">database-event</font></i>&nbsp;::=</td>
-<td><b><font color="#2c2cf0">DELETE </font></b><big>|</big><b><font color="#2c2cf0"> <br>
+</font></b><i><font color="#ff3434">trigger-action</font></i><b><font color="#2c2cf0"></font></b></td></tr></table><table cellpadding="10"><tr><td align="right" valign="top"><i><font color="#ff3434">database-event</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0">DELETE </font></b><big>|</big><b><font color="#2c2cf0"> <br>
 INSERT </font></b><big>|</big><b><font color="#2c2cf0"> <br>
 UPDATE </font></b><big>|</big><b><font color="#2c2cf0"> <br>
-UPDATE OF </font></b><i><font color="#ff3434">column-list</font></i><b><font color="#2c2cf0"></font></b></td></tr>
-</table>
-<table cellpadding="10">
-<tr><td align="right" valign="top">
-<i><font color="#ff3434">trigger-action</font></i>&nbsp;::=</td>
-<td><b><font color="#2c2cf0"></font></b>[<b><font color="#2c2cf0"> FOR EACH ROW </font></b>]<b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0"> WHEN </font></b><i><font color="#ff3434">expression</font></i><b><font color="#2c2cf0"> </font></b>]<b><font color="#2c2cf0"> <br>
+UPDATE OF </font></b><i><font color="#ff3434">column-list</font></i><b><font color="#2c2cf0"></font></b></td></tr></table><table cellpadding="10"><tr><td align="right" valign="top"><i><font color="#ff3434">trigger-action</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0"></font></b>[<b><font color="#2c2cf0"> FOR EACH ROW </font></b>]<b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0"> WHEN </font></b><i><font color="#ff3434">expression</font></i><b><font color="#2c2cf0"> </font></b>]<b><font color="#2c2cf0"> <br>
 BEGIN <br>
 &nbsp;&nbsp;&nbsp;&nbsp;</font></b><i><font color="#ff3434">trigger-step</font></i><b><font color="#2c2cf0"> ; </font></b>[<b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">trigger-step</font></i><b><font color="#2c2cf0"> ; </font></b>]<b><font color="#2c2cf0"></font></b><big>*</big><b><font color="#2c2cf0"><br>
-END</font></b></td></tr>
-</table>
-<table cellpadding="10">
-<tr><td align="right" valign="top">
-<i><font color="#ff3434">trigger-step</font></i>&nbsp;::=</td>
-<td><b><font color="#2c2cf0"></font></b><i><font color="#ff3434">update-statement</font></i><b><font color="#2c2cf0"> </font></b><big>|</big><b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">insert-statement</font></i><b><font color="#2c2cf0"> </font></b><big>|</big><b><font color="#2c2cf0"> <br>
-</font></b><i><font color="#ff3434">delete-statement</font></i><b><font color="#2c2cf0"> </font></b><big>|</big><b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">select-statement</font></i><b><font color="#2c2cf0"></font></b></td></tr>
-</table>
-
+END</font></b></td></tr></table><table cellpadding="10"><tr><td align="right" valign="top"><i><font color="#ff3434">trigger-step</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0"></font></b><i><font color="#ff3434">update-statement</font></i><b><font color="#2c2cf0"> </font></b><big>|</big><b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">insert-statement</font></i><b><font color="#2c2cf0"> </font></b><big>|</big><b><font color="#2c2cf0"> <br>
+</font></b><i><font color="#ff3434">delete-statement</font></i><b><font color="#2c2cf0"> </font></b><big>|</big><b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">select-statement</font></i><b><font color="#2c2cf0"></font></b></td></tr></table>
 
 <p>The CREATE TRIGGER statement is used to add triggers to the 
 database schema. Triggers are database operations (the <i>trigger-action</i>) 
 that are automatically performed when a specified database event (the
 <i>database-event</i>) occurs.  </p>
 
-<p>A trigger may be specified to fire whenever a DELETE, INSERT or UPDATE of a
-particular database table occurs, or whenever an UPDATE of one or more
+<p>A trigger may be specified to fire whenever a <a href="lang_delete.html">DELETE</a>, <a href="lang_insert.html">INSERT</a>,
+or <a href="lang_update.html">UPDATE</a> of a
+particular database table occurs, or whenever an <a href="lang_update.html">UPDATE</a> of one or more
 specified columns of a table are updated.</p>
 
 <p>At this time SQLite supports only FOR EACH ROW triggers, not FOR EACH
@@ -148,27 +122,34 @@ is associated with. OLD and NEW references may only be used in triggers on
 </table>
 </p>
 
-<p>If a WHEN clause is supplied, the SQL statements specified as <i>trigger-steps</i> are only executed for rows for which the WHEN clause is true. If no WHEN clause is supplied, the SQL statements are executed for all rows.</p>
+<p>If a WHEN clause is supplied, the SQL statements specified as 
+<i>trigger-steps</i> are only executed for rows for which the WHEN
+clause is true. If no WHEN clause is supplied, the SQL statements
+are executed for all rows.</p>
 
 <p>The specified <i>trigger-time</i> determines when the <i>trigger-steps</i>
 will be executed relative to the insertion, modification or removal of the
 associated row.</p>
 
-<p>An ON CONFLICT clause may be specified as part of an UPDATE or INSERT
-<i>trigger-step</i>. However if an ON CONFLICT clause is specified as part of 
+<p>An <a href="lang_conflict.html">ON CONFLICT</a> clause may be specified as part of an <a href="lang_update.html">UPDATE</a> or <a href="lang_insert.html">INSERT</a>
+<i>trigger-step</i>. However if an <a href="lang_conflict.html">ON CONFLICT</a> clause is specified as part of 
 the statement causing the trigger to fire, then this conflict handling
 policy is used instead.</p>
 
 <p>Triggers are automatically dropped when the table that they are 
 associated with is dropped.</p>
 
-<p>Triggers may be created on views, as well as ordinary tables, by specifying
-INSTEAD OF in the CREATE TRIGGER statement. If one or more ON INSERT, ON DELETE
-or ON UPDATE triggers are defined on a view, then it is not an error to execute
-an INSERT, DELETE or UPDATE statement on the view, respectively. Thereafter,
+<a name="instead_of_trigger"></a>
+
+<p>Triggers may be created on <a href="lang_createview.html">views</a>, as well as ordinary tables, by
+specifying INSTEAD OF in the CREATE TRIGGER statement. 
+If one or more ON INSERT, ON DELETE
+or ON UPDATE triggers are defined on a view, then it is not an
+error to execute an INSERT, DELETE or UPDATE statement on the view, 
+respectively. Thereafter,
 executing an INSERT, DELETE or UPDATE on the view causes the associated
-  triggers to fire. The real tables underlying the view are not modified
-  (except possibly explicitly, by a trigger program).</p>
+triggers to fire. The real tables underlying the view are not modified
+(except possibly explicitly, by a trigger program).</p>
 
 <p><b>Example:</b></p>
 
@@ -177,7 +158,6 @@ that order records are stored in the "orders" table, the following trigger
 ensures that all associated orders are redirected when a customer changes
 his or her address:</p>
 
-
 <blockquote><pre>
 CREATE TRIGGER update_customer_address UPDATE OF address ON customers 
   BEGIN
@@ -185,59 +165,50 @@ CREATE TRIGGER update_customer_address UPDATE OF address ON customers
   END;
 </pre></blockquote>
 
-
 <p>With this trigger installed, executing the statement:</p>
-
 
 <blockquote><pre>
 UPDATE customers SET address = '1 Main St.' WHERE name = 'Jack Jones';
 </pre></blockquote>
 
-
 <p>causes the following to be automatically executed:</p>
-
 
 <blockquote><pre>
 UPDATE orders SET address = '1 Main St.' WHERE customer_name = 'Jack Jones';
 </pre></blockquote>
 
-
 <p>Note that currently, triggers may behave oddly when created on tables
-  with INTEGER PRIMARY KEY fields. If a BEFORE trigger program modifies the 
-  INTEGER PRIMARY KEY field of a row that will be subsequently updated by the
+  with <a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a> fields. If a BEFORE trigger program modifies the 
+  <a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a> field of a row that will be subsequently updated by the
   statement that causes the trigger to fire, then the update may not occur. 
   The workaround is to declare the table with a PRIMARY KEY column instead
-  of an INTEGER PRIMARY KEY column.</p>
+  of an <a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a> column.</p>
 
-<p>A special SQL function RAISE() may be used within a trigger-program, with the following syntax</p> 
+<p>A special SQL function RAISE() may be used within a trigger-program,
+with the following syntax</p> 
 
-
-<table cellpadding="10">
-<tr><td align="right" valign="top">
-<i><font color="#ff3434">raise-function</font></i>&nbsp;::=</td>
-<td><b><font color="#2c2cf0">RAISE <big>(</big> ABORT<big>,</big> </font></b><i><font color="#ff3434">error-message</font></i><b><font color="#2c2cf0"> <big>)</big> </font></b><big>|</big><b><font color="#2c2cf0"> <br>
+<table cellpadding="10"><tr><td align="right" valign="top"><i><font color="#ff3434">raise-function</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0">RAISE <big>(</big> ABORT<big>,</big> </font></b><i><font color="#ff3434">error-message</font></i><b><font color="#2c2cf0"> <big>)</big> </font></b><big>|</big><b><font color="#2c2cf0"> <br>
 RAISE <big>(</big> FAIL<big>,</big> </font></b><i><font color="#ff3434">error-message</font></i><b><font color="#2c2cf0"> <big>)</big> </font></b><big>|</big><b><font color="#2c2cf0"> <br>
 RAISE <big>(</big> ROLLBACK<big>,</big> </font></b><i><font color="#ff3434">error-message</font></i><b><font color="#2c2cf0"> <big>)</big> </font></b><big>|</big><b><font color="#2c2cf0"> <br>
-RAISE <big>(</big> IGNORE <big>)</big></font></b></td></tr>
-</table>
+RAISE <big>(</big> IGNORE <big>)</big></font></b></td></tr></table>
 
-
-<p>When one of the first three forms is called during trigger-program execution, the specified ON CONFLICT processing is performed (either ABORT, FAIL or 
- ROLLBACK) and the current query terminates. An error code of SQLITE_CONSTRAINT is returned to the user, along with the specified error message.</p>
+<p>When one of the first three forms is called during trigger-program
+execution, the specified <a href="lang_conflict.html">ON CONFLICT</a> processing is performed
+(either ABORT, FAIL or ROLLBACK) and the current query terminates.
+An error code of <a href="c3ref/c_abort.html">SQLITE_CONSTRAINT</a> is returned to the application,
+along with the specified error message.</p>
 
 <p>When RAISE(IGNORE) is called, the remainder of the current trigger program,
 the statement that caused the trigger program to execute and any subsequent
-    trigger programs that would of been executed are abandoned. No database
-    changes are rolled back.  If the statement that caused the trigger program
-    to execute is itself part of a trigger program, then that trigger program
-    resumes execution at the beginning of the next step.
+trigger programs that would of been executed are abandoned. No database
+changes are rolled back.  If the statement that caused the trigger program
+to execute is itself part of a trigger program, then that trigger program
+resumes execution at the beginning of the next step.
 </p>
 
-<p>Triggers are removed using the 
-<a href="lang_droptrigger.html">DROP TRIGGER</a> statement.</p>
+<p>Triggers are removed using the <a href="lang_droptrigger.html">DROP TRIGGER</a> statement.</p>
 
 
-
-<hr><small<i>
-This page last modified 2007/12/20 21:09:25 UTC
+<hr><small><i>
+This page last modified 2008/07/18 18:34:10 UTC
 </i></small></div></body></html>

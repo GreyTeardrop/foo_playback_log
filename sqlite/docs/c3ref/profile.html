@@ -70,24 +70,18 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Tracing And Profiling Functions</h2>
-<blockquote><pre>
-void *sqlite3_trace(sqlite3*, void(*xTrace)(void*,const char*), void*);
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Tracing And Profiling Functions</h2><blockquote><pre>void *sqlite3_trace(sqlite3*, void(*xTrace)(void*,const char*), void*);
 void *sqlite3_profile(sqlite3*,
    void(*xProfile)(void*,const char*,sqlite3_uint64), void*);
-
-</pre></blockquote>
-<p>
+</pre></blockquote><p><b>Important:</b> This interface is <a href="../c3ref/experimental.html">experimental</a> and is subject to change without notice.</p><p>
 These routines register callback functions that can be used for
 tracing and profiling the execution of SQL statements.</p>
 
 <p>The callback function registered by sqlite3_trace() is invoked at
-various times when an SQL statement is being run by 
-<a href="../c3ref/step.html">sqlite3_step()</a>.
+various times when an SQL statement is being run by <a href="../c3ref/step.html">sqlite3_step()</a>.
 The callback returns a UTF-8 rendering of the SQL statement text
 as the statement first begins executing.  Additional callbacks occur
-as each triggersubprogram is entered.  The callbacks for triggers
+as each triggered subprogram is entered.  The callbacks for triggers
 contain a UTF-8 SQL comment that identifies the trigger.</p>
 
 <p>The callback function registered by sqlite3_profile() is invoked
@@ -95,71 +89,54 @@ as each SQL statement finishes.  The profile callback contains
 the original statement text and an estimate of wall-clock time
 of how long that statement took to run.</p>
 
-<p>The sqlite3_profile() API is currently considered experimental and
-is subject to change or removal in a future release.</p>
-
-<p>The trigger reporting feature of the trace callback is considered
-experimental and is subject to change or removal in future releases.
-Future versions of SQLite might also add new trace callback
-invocations.</p>
-
 <p><h3>Invariants:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">F12281</td> 
+<tr><td valign="top">H12281</td> 
 <td valign="top">
-The callback function registered by 
-<a href="../c3ref/profile.html">sqlite3_trace()</a> is
+The callback function registered by <a href="../c3ref/profile.html">sqlite3_trace()</a> is
 whenever an SQL statement first begins to execute and
 whenever a trigger subprogram first begins to run.</td></tr>
-<tr><td valign="top">F12282</td> 
+<tr><td valign="top">H12282</td> 
 <td valign="top">
-Each call to 
-<a href="../c3ref/profile.html">sqlite3_trace()</a> overrides the previously
+Each call to <a href="../c3ref/profile.html">sqlite3_trace()</a> overrides the previously
 registered trace callback.</td></tr>
-<tr><td valign="top">F12283</td> 
+<tr><td valign="top">H12283</td> 
 <td valign="top">
 A NULL trace callback disables tracing.</td></tr>
-<tr><td valign="top">F12284</td> 
+<tr><td valign="top">H12284</td> 
 <td valign="top">
 The first argument to the trace callback is a copy of
-the pointer which was the 3rd argument to 
-<a href="../c3ref/profile.html">sqlite3_trace()</a>.</td></tr>
-<tr><td valign="top">F12285</td> 
+the pointer which was the 3rd argument to <a href="../c3ref/profile.html">sqlite3_trace()</a>.</td></tr>
+<tr><td valign="top">H12285</td> 
 <td valign="top">
 The second argument to the trace callback is a
-zero-terminated UTF8 string containing the original text
-of the SQL statement as it was passed into 
-<a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a>
+zero-terminated UTF-8 string containing the original text
+of the SQL statement as it was passed into <a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a>
 or the equivalent, or an SQL comment indicating the beginning
 of a trigger subprogram.</td></tr>
-<tr><td valign="top">F12287</td> 
+<tr><td valign="top">H12287</td> 
 <td valign="top">
-The callback function registered by 
-<a href="../c3ref/profile.html">sqlite3_profile()</a> is invoked
+The callback function registered by <a href="../c3ref/profile.html">sqlite3_profile()</a> is invoked
 as each SQL statement finishes.</td></tr>
-<tr><td valign="top">F12288</td> 
+<tr><td valign="top">H12288</td> 
 <td valign="top">
 The first parameter to the profile callback is a copy of
-the 3rd parameter to 
-<a href="../c3ref/profile.html">sqlite3_profile()</a>.</td></tr>
-<tr><td valign="top">F12289</td> 
+the 3rd parameter to <a href="../c3ref/profile.html">sqlite3_profile()</a>.</td></tr>
+<tr><td valign="top">H12289</td> 
 <td valign="top">
 The second parameter to the profile callback is a
 zero-terminated UTF-8 string that contains the complete text of
-the SQL statement as it was processed by 
-<a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a>
+the SQL statement as it was processed by <a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a>
 or the equivalent.</td></tr>
-<tr><td valign="top">F12290</td> 
+<tr><td valign="top">H12290</td> 
 <td valign="top">
-The third parameter to the profile  callback is an estimate
+The third parameter to the profile callback is an estimate
 of the number of nanoseconds of wall-clock time required to
 run the SQL statement from start to finish.</td></tr>
 </table>
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

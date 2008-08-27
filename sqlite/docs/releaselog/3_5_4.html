@@ -70,26 +70,21 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<h2>SQLite Release 3.5.4 On 2007 Dec 14 (3.5.4)</h2>
-<p>Changes associated with this release include the following:</p>
-<p><ul>
+<h2>SQLite Release 3.5.4 On 2007 Dec 14 (3.5.4)</h2><p>Changes associated with this release include the following:</p><p><ul>
 <li>Fix a critical bug in UPDATE or DELETE that occurs when an
 OR REPLACE clause or a trigger causes rows in the same table to
-be deleted as side effects.  (See 
-<a href="http://www.sqlite.org/cvstrac/tktview?tn=2832">ticket #2832</a>.)  The most likely
+be deleted as side effects.  (See <a href="http://www.sqlite.org/cvstrac/tktview?tn=2832">ticket #2832</a>.)  The most likely
 result of this bug is a segmentation fault, though database
 corruption is a possibility.</li>
 <li>Bring the processing of ORDER BY into compliance with the 
 SQL standard for case where a result alias and a table column name
 are in conflict.  Correct behavior is to prefer the result alias.
 Older versions of SQLite incorrectly picked the table column.
-(See 
-<a href="http://www.sqlite.org/cvstrac/tktview?tn=2822">ticket #2822</a>.)</li>
+(See <a href="http://www.sqlite.org/cvstrac/tktview?tn=2822">ticket #2822</a>.)</li>
 <li>The <a href="../lang_vacuum.html">VACUUM</a> command preserves
 the setting of the 
 <a href="../pragma.html#pragma_legacy_file_format">legacy_file_format pragma</a>.
-(
-<a href="http://www.sqlite.org/cvstrac/tktview?tn=2804">Ticket #2804</a>.)</li>
+(<a href="http://www.sqlite.org/cvstrac/tktview?tn=2804">Ticket #2804</a>.)</li>
 <li>Productize and officially support the group_concat() SQL function.</li>
 <li>Better optimization of some IN operator expressions.</li>
 <li>Add the ability to change the 
@@ -101,13 +96,11 @@ the ".dump" output of databases with very large BLOBs and strings can
 be played back to recreate the database.</li>
 <li>Other small bug fixes and optimizations.</li>
 </ul></p>
-
       <p>A <a href="../changes.html">complete list of SQLite releases</a>
       in a single pages is also available.  A detailed history of every
       check-in is available at
       <a href="http://www.sqlite.org/cvstrac/timeline">
       http://www.sqlite.org/cvstrac/timeline</a>.</p>
-    
-<hr><small<i>
-This page last modified 2008/02/06 14:41:27 UTC
+    <hr><small><i>
+This page last modified 2008/08/05 18:20:45 UTC
 </i></small></div></body></html>

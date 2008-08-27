@@ -70,21 +70,19 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>SQL Function Context Object</h2>
-<blockquote><pre>
-typedef struct sqlite3_context sqlite3_context;
-
-</pre></blockquote>
-<p>
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>SQL Function Context Object</h2><blockquote><pre>typedef struct sqlite3_context sqlite3_context;
+</pre></blockquote><p>
 The context in which an SQL function executes is stored in an
-sqlite3_context object.  A pointer to an sqlite3_context
-object is always first parameter to application-defined SQL functions.
-</p>
-<p>See also lists of
+sqlite3_context object.  A pointer to an sqlite3_context object
+is always first parameter to <a href="../c3ref/create_function.html">application-defined SQL functions</a>.
+The application-defined SQL function implementation will pass this
+pointer through into calls to <a href="../c3ref/result_blob.html">sqlite3_result()</a>,
+<a href="../c3ref/aggregate_context.html">sqlite3_aggregate_context()</a>, <a href="../c3ref/user_data.html">sqlite3_user_data()</a>,
+<a href="../c3ref/context_db_handle.html">sqlite3_context_db_handle()</a>, <a href="../c3ref/get_auxdata.html">sqlite3_get_auxdata()</a>,
+and/or <a href="../c3ref/get_auxdata.html">sqlite3_set_auxdata()</a>.
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

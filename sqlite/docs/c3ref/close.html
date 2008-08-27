@@ -70,84 +70,69 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Closing A Database Connection</h2>
-<blockquote><pre>
-int sqlite3_close(sqlite3 *);
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Closing A Database Connection</h2><blockquote><pre>int sqlite3_close(sqlite3 *);
+</pre></blockquote><p>
+This routine is the destructor for the <a href="../c3ref/sqlite3.html">sqlite3</a> object.</p>
 
-</pre></blockquote>
-<p>
-This routine is the destructor for the 
-<a href="../c3ref/sqlite3.html">sqlite3</a> object.</p>
+<p>Applications should <a href="../c3ref/finalize.html">finalize</a> all <a href="../c3ref/stmt.html">prepared statements</a>
+and <a href="../c3ref/blob_close.html">close</a> all <a href="../c3ref/blob.html">BLOB handles</a> associated with
+the <a href="../c3ref/sqlite3.html">sqlite3</a> object prior to attempting to close the object.
+The <a href="../c3ref/next_stmt.html">sqlite3_next_stmt()</a> interface can be used to locate all
+<a href="../c3ref/stmt.html">prepared statements</a> associated with a <a href="../c3ref/sqlite3.html">database connection</a> if desired.
+Typical code might look like this:</p>
 
-<p>Applications should 
-<a href="../c3ref/finalize.html">finalize</a> all
+<p><blockquote><pre>
+sqlite3_stmt *pStmt;
+while( (pStmt = sqlite3_next_stmt(db, 0))!=0 ){
+&nbsp;   sqlite3_finalize(pStmt);
+}
+</pre></blockquote></p>
 
-<a href="../c3ref/stmt.html">prepared statements</a> and
-
-<a href="../c3ref/blob_close.html">close</a> all 
-<a href="../c3ref/blob.html">BLOBs</a>
-associated with the 
-<a href="../c3ref/sqlite3.html">sqlite3</a> object prior
-to attempting to close the 
-<a href="../c3ref/sqlite3.html">sqlite3</a> object.</p>
-
-<p><font color="red">(TODO: What happens to pending transactions?  Are they
-rolled back, or abandoned?)</font></p>
+<p>If <a href="../c3ref/close.html">sqlite3_close()</a> is invoked while a transaction is open,
+the transaction is automatically rolled back.</p>
 
 <p><h3>Invariants:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">F12011</td> 
+<tr><td valign="top">H12011</td> 
 <td valign="top">
-The 
-<a href="../c3ref/close.html">sqlite3_close()</a> interface destroys an 
-<a href="../c3ref/sqlite3.html">sqlite3</a> object
-allocated by a prior call to 
-<a href="../c3ref/open.html">sqlite3_open()</a>,
-
-<a href="../c3ref/open.html">sqlite3_open16()</a>, or 
-<a href="../c3ref/open.html">sqlite3_open_v2()</a>.</td></tr>
-<tr><td valign="top">F12012</td> 
+A successful call to <a href="../c3ref/close.html">sqlite3_close(C)</a> shall destroy the
+<a href="../c3ref/sqlite3.html">database connection</a> object C.</td></tr>
+<tr><td valign="top">H12012</td> 
 <td valign="top">
-The 
-<a href="../c3ref/close.html">sqlite3_close()</a> function releases all memory used by the
-connection and closes all open files.</td></tr>
-<tr><td valign="top">F12013</td> 
+A successful call to <a href="../c3ref/close.html">sqlite3_close(C)</a> shall return SQLITE_OK.</td></tr>
+<tr><td valign="top">H12013</td> 
 <td valign="top">
-If the database connection contains
-
-<a href="../c3ref/stmt.html">prepared statements</a> that have not been
-finalized by 
-<a href="../c3ref/finalize.html">sqlite3_finalize()</a>, then 
-<a href="../c3ref/close.html">sqlite3_close()</a>
-returns 
-<a href="../c3ref/c_abort.html">SQLITE_BUSY</a> and leaves the connection open.</td></tr>
-<tr><td valign="top">F12014</td> 
+A successful call to <a href="../c3ref/close.html">sqlite3_close(C)</a> shall release all
+memory and system resources associated with <a href="../c3ref/sqlite3.html">database connection</a>
+C.</td></tr>
+<tr><td valign="top">H12014</td> 
 <td valign="top">
-Giving sqlite3_close() a NULL pointer is a harmless no-op.</td></tr>
+A call to <a href="../c3ref/close.html">sqlite3_close(C)</a> on a <a href="../c3ref/sqlite3.html">database connection</a> C that
+has one or more open <a href="../c3ref/stmt.html">prepared statements</a> shall fail with
+an <a href="../c3ref/c_abort.html">SQLITE_BUSY</a> error code.</td></tr>
+<tr><td valign="top">H12015</td> 
+<td valign="top">
+A call to <a href="../c3ref/close.html">sqlite3_close(C)</a> where C is a NULL pointer shall
+return SQLITE_OK.</td></tr>
+<tr><td valign="top">H12019</td> 
+<td valign="top">
+When <a href="../c3ref/close.html">sqlite3_close(C)</a> is invoked on a <a href="../c3ref/sqlite3.html">database connection</a> C
+that has a pending transaction, the transaction shall be
+rolled back.</td></tr>
 </table></p>
 
-<p><h3>Limitations:</h3>
+<p><h3>Assumptions:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">U12015</td> 
+<tr><td valign="top">A12016</td> 
 <td valign="top">
-The parameter to 
-<a href="../c3ref/close.html">sqlite3_close()</a> must be an 
-<a href="../c3ref/sqlite3.html">sqlite3</a> object
-pointer previously obtained from 
-<a href="../c3ref/open.html">sqlite3_open()</a> or the
-equivalent, or NULL.</td></tr>
-<tr><td valign="top">U12016</td> 
-<td valign="top">
-The parameter to 
-<a href="../c3ref/close.html">sqlite3_close()</a> must not have been previously
-closed.</td></tr>
+The C parameter to <a href="../c3ref/close.html">sqlite3_close(C)</a> must be either a NULL
+pointer or an <a href="../c3ref/sqlite3.html">sqlite3</a> object pointer obtained
+from <a href="../c3ref/open.html">sqlite3_open()</a>, <a href="../c3ref/open.html">sqlite3_open16()</a>, or
+<a href="../c3ref/open.html">sqlite3_open_v2()</a>, and not previously closed.</td></tr>
 </table>
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

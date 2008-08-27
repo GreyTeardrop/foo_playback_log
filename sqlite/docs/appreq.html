@@ -1,0 +1,203 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Assumptions</title>
+<style type="text/css">
+body {
+    margin: auto;
+    font-family: "Verdana" "sans-serif";
+    padding: 8px 1%;
+}
+
+a { color: #45735f }
+a:visited { color: #734559 }
+
+.logo { position:absolute; margin:3px; }
+.tagline {
+  float:right;
+  text-align:right;
+  font-style:italic;
+  width:240px;
+  margin:12px;
+  margin-top:58px;
+}
+
+.toolbar {
+  font-variant: small-caps;
+  text-align: center;
+  line-height: 1.6em;
+  margin: 0;
+  padding:1px 8px;
+}
+.toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
+.toolbar a:visited { color: white; }
+.toolbar a:hover { color: #80a796; background: white; }
+
+.content    { margin: 5%; }
+.content dt { font-weight:bold; }
+.content dd { margin-bottom: 25px; margin-left:20%; }
+.content ul { padding:0px; padding-left: 15px; margin:0px; }
+
+/* rounded corners */
+.se  { background: url(images/se.png) 100% 100% no-repeat #80a796}
+.sw  { background: url(images/sw.png) 0% 100% no-repeat }
+.ne  { background: url(images/ne.png) 100% 0% no-repeat }
+.nw  { background: url(images/nw.png) 0% 0% no-repeat }
+
+</style>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  
+</head>
+<body>
+<div><!-- container div to satisfy validator -->
+
+<a href="index.html">
+<img class="logo" src="images/SQLite.gif" alt="SQLite Logo"
+ border="0"></a>
+<div><!-- IE hack to prevent disappearing logo--></div>
+<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
+
+<table width=100% style="clear:both"><tr><td>
+  <div class="se"><div class="sw"><div class="ne"><div class="nw">
+  <div class="toolbar">
+    <a href="about.html">About</a>
+    <a href="sitemap.html">Sitemap</a>
+    <a href="docs.html">Documentation</a>
+    <a href="download.html">Download</a>
+    <a href="copyright.html">License</a>
+    <a href="news.html">News</a>
+    <a href="http://www.sqlite.org/cvstrac/index">Developers</a>
+    <a href="support.html">Support</a>
+  </div></div></div></div></div>
+</td></tr></table>
+  
+
+
+<h2>Assumptions Made By SQLite</h2>
+
+<p>This document defines behavior that SQLite expects from the application
+that is using SQLite.  We call these "assumptions", but they might also be
+called "Application Requirements" since they can be thought of additional
+requirements that are imposed on any application that uses SQLite.</p>
+
+<p>Another way of looking at these invariants is that they are limitations
+or constraints on the use of SQLite.  If an application fails to abide by
+the assumptions described here, then the behavior of SQLite will be
+undefined and probably undesirable.</p>
+
+<p>Yet another way of thinking about these invariants is that all of the
+statements listed below must be true in order for SQLite to operate correctly.
+</p>
+
+<table cellspacing="20">
+<tr><td valign="top">A10512</td><td valign="top">The input to <a href="c3ref/complete.html">sqlite3_complete()</a> must be a zero-terminated
+UTF-8 string. </td></tr><tr><td valign="top">A10513</td><td valign="top">The input to <a href="c3ref/complete.html">sqlite3_complete16()</a> must be a zero-terminated
+UTF-16 string in native byte order. </td></tr><tr><td valign="top">A12016</td><td valign="top">The C parameter to <a href="c3ref/close.html">sqlite3_close(C)</a> must be either a NULL
+pointer or an <a href="c3ref/sqlite3.html">sqlite3</a> object pointer obtained
+from <a href="c3ref/open.html">sqlite3_open()</a>, <a href="c3ref/open.html">sqlite3_open16()</a>, or
+<a href="c3ref/open.html">sqlite3_open_v2()</a>, and not previously closed. </td></tr><tr><td valign="top">A12141</td><td valign="top">The first parameter to <a href="c3ref/exec.html">sqlite3_exec()</a> must be an valid and open
+<a href="c3ref/sqlite3.html">database connection</a>. </td></tr><tr><td valign="top">A12142</td><td valign="top">The database connection must not be closed while
+<a href="c3ref/exec.html">sqlite3_exec()</a> is running. </td></tr><tr><td valign="top">A12143</td><td valign="top">The calling function should use <a href="c3ref/free.html">sqlite3_free()</a> to free
+the memory that *errmsg is left pointing at once the error
+message is no longer needed. </td></tr><tr><td valign="top">A12145</td><td valign="top">The SQL statement text in the 2nd parameter to <a href="c3ref/exec.html">sqlite3_exec()</a>
+must remain unchanged while <a href="c3ref/exec.html">sqlite3_exec()</a> is running. </td></tr><tr><td valign="top">A12232</td><td valign="top">If a separate thread performs a new INSERT on the same
+database connection while the <a href="c3ref/last_insert_rowid.html">sqlite3_last_insert_rowid()</a>
+function is running and thus changes the last insert rowid,
+then the value returned by <a href="c3ref/last_insert_rowid.html">sqlite3_last_insert_rowid()</a> is
+unpredictable and might not equal either the old or the new
+last insert rowid. </td></tr><tr><td valign="top">A12252</td><td valign="top">If a separate thread makes changes on the same database connection
+while <a href="c3ref/changes.html">sqlite3_changes()</a> is running then the value returned
+is unpredictable and not meaningful. </td></tr><tr><td valign="top">A12264</td><td valign="top">If a separate thread makes changes on the same database connection
+while <a href="c3ref/total_changes.html">sqlite3_total_changes()</a> is running then the value
+returned is unpredictable and not meaningful. </td></tr><tr><td valign="top">A12279</td><td valign="top">If the database connection closes while <a href="c3ref/interrupt.html">sqlite3_interrupt()</a>
+is running then bad things will likely happen. </td></tr><tr><td valign="top">A12319</td><td valign="top">A busy handler must not close the database connection
+or <a href="c3ref/stmt.html">prepared statement</a> that invoked the busy handler. </td></tr><tr><td valign="top">A12936</td><td valign="top">If another thread changes the autocommit status of the database
+connection while this routine is running, then the return value
+is undefined. </td></tr><tr><td valign="top">A13154</td><td valign="top">The <a href="c3ref/sqlite3.html">database connection</a> pointer D in a call to
+<a href="c3ref/next_stmt.html">sqlite3_next_stmt(D,S)</a> must refer to an open database
+connection and in particular must not be a NULL pointer. </td></tr><tr><td valign="top">A13751</td><td valign="top">If two or more threads call one or more
+<a href="c3ref/column_database_name.html">column metadata interfaces</a>
+for the same <a href="c3ref/stmt.html">prepared statement</a> and result column
+at the same time then the results are undefined. </td></tr><tr><td valign="top">A17350</td><td valign="top">The pointer arguments to <a href="c3ref/free.html">sqlite3_free()</a> and <a href="c3ref/free.html">sqlite3_realloc()</a>
+must be either NULL or else pointers obtained from a prior
+invocation of <a href="c3ref/free.html">sqlite3_malloc()</a> or <a href="c3ref/free.html">sqlite3_realloc()</a> that have
+not yet been released. </td></tr><tr><td valign="top">A17351</td><td valign="top">The application must not read or write any part of
+a block of memory after it has been released using
+<a href="c3ref/free.html">sqlite3_free()</a> or <a href="c3ref/free.html">sqlite3_realloc()</a>. </td></tr><tr><td valign="top">A21001</td><td valign="top">      If a system failure occurs during or after a "create file"
+      operation, but before the created file has been <i>synced</i>, then 
+      SQLite assumes that it is possible that the created file may not
+      exist following system recovery.
+</td></tr><tr><td valign="top">A21002</td><td valign="top">      If a "create file" operation is executed by SQLite, and then the
+      created file <i>synced</i>, then SQLite assumes that the file-system
+      modifications corresponding to the "create file" operation have been
+      committed to persistent media. It is assumed that if a system
+      failure occurs any time after the file has been successfully 
+      <i>synced</i>, then the file is guaranteed to appear in the file-system
+      following system recovery.
+</td></tr><tr><td valign="top">A21003</td><td valign="top">      If a system failure occurs at any time after a "delete file" 
+      operation (call to the VFS xDelete() method) returns successfully, it is
+      assumed that the file-system will not contain the deleted file following
+      system recovery.
+</td></tr><tr><td valign="top">A21004</td><td valign="top">      If a system failure occurs during a "delete file" operation,
+      it is assumed that following system recovery the file-system will 
+      either contain the file being deleted in the state it was in before
+      the operation was attempted, or not contain the file at all. It is 
+      assumed that it is not possible for the file to have become corrupted
+      purely as a result of a failure occuring during a "delete file" 
+      operation.
+</td></tr><tr><td valign="top">A21005</td><td valign="top">      If a system failure occurs during or after a "truncate file"
+      operation, but before the truncated file has been <i>synced</i>, then 
+      SQLite assumes that the size of the truncated file is either as large
+      or larger than the size that it was to be truncated to.
+</td></tr><tr><td valign="top">A21006</td><td valign="top">      If a system failure occurs during or after a "truncate file"
+      operation, but before the truncated file has been <i>synced</i>, then 
+      it is assumed that the contents of the file up to the size that the
+      file was to be truncated to are not corrupted.
+</td></tr><tr><td valign="top">A21007</td><td valign="top">      If a "truncate file" operation is executed by SQLite, and then the
+      truncated file <i>synced</i>, then SQLite assumes that the file-system
+      modifications corresponding to the "truncate file" operation have been
+      committed to persistent media. It is assumed that if a system
+      failure occurs any time after the file has been successfully 
+      <i>synced</i>, then the effects of the file truncation are guaranteed
+      to appear in the file system following recovery.
+</td></tr><tr><td valign="top">A21008</td><td valign="top">      If a system failure occurs during or after a "write file"
+      operation, but before the corresponding file has been <i>synced</i>, 
+      then it is assumed that the content of all sectors spanned by the
+      <i>write file</i> operation are untrustworthy following system 
+      recovery. This includes regions of the sectors that were not
+      actually modified by the write file operation.
+</td></tr><tr><td valign="top">A21009</td><td valign="top">      If a system failure occurs during or after a "write file"
+      operation that causes the file to grow, but before the corresponding 
+      file has been <i>synced</i>, then it is assumed that the size of 
+      the file following recovery is as large or larger than it was before 
+      the "write file" operation that, if successful, would cause the file 
+      to grow.
+</td></tr><tr><td valign="top">A21010</td><td valign="top">      It is assumed that writing a series of sequential blocks of data to 
+      a file in order is faster than writing the same blocks in an arbitrary
+      order.
+</td></tr><tr><td valign="top">A21011</td><td valign="top">      If a system failure occurs on a system that supports the 
+      <i>atomic-write</i> property for blocks of size <i>N</i> bytes,
+      and a system failure occurs following an aligned write of <i>N</i> 
+      bytes to a file but before the file has been succesfully <i>synced</i>,
+      then is is assumed following recovery that all sectors spanned by the
+      write operation were correctly updated, or that none of the sectors were
+      modified at all.
+</td></tr><tr><td valign="top">A21012</td><td valign="top">      If a system failure occurs on a system that supports the 
+      <i>safe-append</i> following a write operation that appends data
+      to the end of the file without modifying any of the existing file 
+      content but before the file has been succesfully <i>synced</i>,
+      then is is assumed following recovery that either the data was
+      correctly appended to the file, or that the file size remains 
+      unchanged. It is assumed that it is impossible that the file be
+      extended but populated with incorrect data.
+</td></tr><tr><td valign="top">A21013</td><td valign="top">      Following a system recovery, if a device sector is deemed to be
+      untrustworthy as defined by A21008 and neither A21011 or A21012 
+      apply to the range of bytes written, then no assumption can be
+      made about the content of the sector following recovery. It is
+      assumed that it is possible for such a sector to be written 
+      correctly, not written at all, populated with garbage data or any
+      combination thereof.
+</td></tr>
+</table>
+<hr><small><i>
+This page last modified 2008/07/22 17:19:32 UTC
+</i></small></div></body></html>

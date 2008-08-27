@@ -70,14 +70,7 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a>
-<h3>DELETE</h3>
-<table cellpadding="10">
-<tr><td align="right" valign="top">
-<i><font color="#ff3434">sql-statement</font></i>&nbsp;::=</td>
-<td><b><font color="#2c2cf0">DELETE FROM </font></b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">database-name</font></i><b><font color="#2c2cf0"> <big>.</big></font></b>]<b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">table-name</font></i><b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0">WHERE </font></b><i><font color="#ff3434">expr</font></i><b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"></font></b></td></tr>
-</table>
-
+<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a><h3>DELETE</h3><table cellpadding="10"><tr><td align="right" valign="top"><i><font color="#ff3434">sql-statement</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0">DELETE FROM </font></b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">database-name</font></i><b><font color="#2c2cf0"> <big>.</big></font></b>]<b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">table-name</font></i><b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0">WHERE </font></b><i><font color="#ff3434">expr</font></i><b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"></font></b></td></tr></table>
 
 <p>The DELETE command is used to remove records from a table.
 The command consists of the "DELETE FROM" keywords followed by
@@ -88,7 +81,21 @@ the name of the table from which records are to be removed.
 If a WHERE clause is supplied, then only those rows that match
 the expression are removed.</p>
 
+<p>When the WHERE clause is omitted from a DELETE statement,
+SQLite uses an optimization to erase the entire table content
+without having to visit each row of the table individual.
+This "truncate" optimization makes the delete run much faster.
+However, it also means that the <a href="c3ref/changes.html">sqlite3_changes()</a> interface
+and the <a href="pragma.html#pragma_count_changes">count_changes</a> PRAGMA
+will not actually return the number of deleted rows.  If you
+need to delete every row of a table and still have
+<a href="c3ref/changes.html">sqlite3_changes()</a> and <a href="pragma.html#pragma_count_changes">count_changes</a> work correctly, then
+use WHERE clause that is always true:</p>
 
-<hr><small<i>
-This page last modified 2007/12/20 21:09:25 UTC
+<blockquote><pre>
+DELETE FROM sometable WHERE 1;
+</pre></blockquote>
+
+<hr><small><i>
+This page last modified 2008/07/18 18:34:10 UTC
 </i></small></div></body></html>

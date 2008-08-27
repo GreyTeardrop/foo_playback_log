@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
-<title>Mutex Verifcation Routines</title>
+<title>Mutex Verification Routines</title>
 <style type="text/css">
 body {
     margin: auto;
@@ -70,14 +70,9 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Mutex Verifcation Routines</h2>
-<blockquote><pre>
-int sqlite3_mutex_held(sqlite3_mutex*);
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Mutex Verification Routines</h2><blockquote><pre>int sqlite3_mutex_held(sqlite3_mutex*);
 int sqlite3_mutex_notheld(sqlite3_mutex*);
-
-</pre></blockquote>
-<p>
+</pre></blockquote><p>
 The sqlite3_mutex_held() and sqlite3_mutex_notheld() routines
 are intended for use inside assert() statements. The SQLite core
 never uses these routines except inside an assert() and applications
@@ -91,11 +86,9 @@ defined and if NDEBUG is not defined.</p>
 is held or not held, respectively, by the calling thread.</p>
 
 <p> The implementation is not required to provided versions of these
-routines that actually work.
-If the implementation does not provide working
-versions of these routines, it should at least provide stubs
-that always return true so that one does not get spurious
-assertion failures.</p>
+routines that actually work. If the implementation does not provide working
+versions of these routines, it should at least provide stubs that always
+return true so that one does not get spurious assertion failures.</p>
 
 <p> If the argument to sqlite3_mutex_held() is a NULL pointer then
 the routine should return 1. This seems counter-intuitive since
@@ -105,11 +98,9 @@ using mutexes.  And we do not want the assert() containing the
 call to sqlite3_mutex_held() to fail, so a non-zero return is
 the appropriate thing to do. The sqlite3_mutex_notheld()
 interface should also return 1 when given a NULL pointer.
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

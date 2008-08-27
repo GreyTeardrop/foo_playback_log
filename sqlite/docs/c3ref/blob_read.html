@@ -70,34 +70,65 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Read Data From A BLOB Incrementally</h2>
-<blockquote><pre>
-int sqlite3_blob_read(sqlite3_blob *, void *z, int n, int iOffset);
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Read Data From A BLOB Incrementally</h2><blockquote><pre>int sqlite3_blob_read(sqlite3_blob *, void *Z, int N, int iOffset);
+</pre></blockquote><p>
+This function is used to read data from an open <a href="../c3ref/blob.html">BLOB handle</a> into a
+caller-supplied buffer. N bytes of data are copied into buffer Z
+from the open BLOB, starting at offset iOffset.</p>
 
-</pre></blockquote>
-<p>
-This function is used to read data from an open
+<p>If offset iOffset is less than N bytes from the end of the BLOB,
+<a href="../c3ref/c_abort.html">SQLITE_ERROR</a> is returned and no data is read.  If N or iOffset is
+less than zero, <a href="../c3ref/c_abort.html">SQLITE_ERROR</a> is returned and no data is read.</p>
 
-<a href="../c3ref/blob.html">blob-handle</a> into a caller supplied buffer.
- n bytes of data are copied into buffer
-z from the open blob, starting at offset iOffset.</p>
+<p>An attempt to read from an expired <a href="../c3ref/blob.html">BLOB handle</a> fails with an
+error code of <a href="../c3ref/c_abort.html">SQLITE_ABORT</a>.</p>
 
-<p> If offset iOffset is less than n bytes from the end of the blob,
+<p>On success, SQLITE_OK is returned.
+Otherwise, an <a href="../c3ref/c_abort.html">error code</a> or an <a href="../c3ref/c_ioerr_access.html">extended error code</a> is returned.</p>
 
-<a href="../c3ref/c_abort.html">SQLITE_ERROR</a> is returned and no data is read. If n is
-less than zero 
-<a href="../c3ref/c_abort.html">SQLITE_ERROR</a> is returned and no data is read.</p>
-
-<p> On success, SQLITE_OK is returned. Otherwise, an
-
-<a href="../c3ref/c_abort.html">error code</a> or an 
-<a href="../c3ref/c_ioerr_blocked.html">extended error code</a> is returned.
-</p>
-<p>See also lists of
+<p><h3>Invariants:</h3>
+<table border="0" cellpadding="5" cellspacing="0">
+<tr><td valign="top">H17853</td> 
+<td valign="top">
+A successful invocation of <a href="../c3ref/blob_read.html">sqlite3_blob_read(P,Z,N,X)</a>
+shall reads N bytes of data out of the BLOB referenced by
+<a href="../c3ref/blob.html">BLOB handle</a> P beginning at offset X and store those bytes
+into buffer Z.</td></tr>
+<tr><td valign="top">H17856</td> 
+<td valign="top">
+In <a href="../c3ref/blob_read.html">sqlite3_blob_read(P,Z,N,X)</a> if the size of the BLOB
+is less than N+X bytes, then the function shall leave the
+Z buffer unchanged and return <a href="../c3ref/c_abort.html">SQLITE_ERROR</a>.</td></tr>
+<tr><td valign="top">H17859</td> 
+<td valign="top">
+In <a href="../c3ref/blob_read.html">sqlite3_blob_read(P,Z,N,X)</a> if X or N is less than zero
+then the function shall leave the Z buffer unchanged
+and return <a href="../c3ref/c_abort.html">SQLITE_ERROR</a>.</td></tr>
+<tr><td valign="top">H17862</td> 
+<td valign="top">
+The <a href="../c3ref/blob_read.html">sqlite3_blob_read(P,Z,N,X)</a> interface shall return <a href="../c3ref/c_abort.html">SQLITE_OK</a>
+if N bytes are successfully read into buffer Z.</td></tr>
+<tr><td valign="top">H17863</td> 
+<td valign="top">
+If the <a href="../c3ref/blob.html">BLOB handle</a> P is expired and X and N are within bounds
+then <a href="../c3ref/blob_read.html">sqlite3_blob_read(P,Z,N,X)</a> shall leave the Z buffer
+unchanged and return <a href="../c3ref/c_abort.html">SQLITE_ABORT</a>.</td></tr>
+<tr><td valign="top">H17865</td> 
+<td valign="top">
+If the requested read could not be completed,
+the <a href="../c3ref/blob_read.html">sqlite3_blob_read(P,Z,N,X)</a> interface shall return an
+appropriate <a href="../c3ref/c_abort.html">error code</a> or <a href="../c3ref/c_ioerr_access.html">extended error code</a>.</td></tr>
+<tr><td valign="top">H17868</td> 
+<td valign="top">
+If an error occurs during evaluation of <a href="../c3ref/blob_read.html">sqlite3_blob_read(P,...)</a>
+then subsequent calls to <a href="../c3ref/errcode.html">sqlite3_errcode(D)</a>,
+<a href="../c3ref/errcode.html">sqlite3_errmsg(D)</a>, and <a href="../c3ref/errcode.html">sqlite3_errmsg16(D)</a> shall return
+information appropriate for that error, where D is the
+<a href="../c3ref/sqlite3.html">database connection</a> that was used to open the <a href="../c3ref/blob.html">BLOB handle</a> P.</td></tr>
+</table>
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

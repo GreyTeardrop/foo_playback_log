@@ -70,28 +70,17 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Mutex Handle</h2>
-<blockquote><pre>
-typedef struct sqlite3_mutex sqlite3_mutex;
-
-</pre></blockquote>
-<p>
-The mutex module within SQLite defines 
-<a href="../c3ref/mutex.html">sqlite3_mutex</a> to be an
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Mutex Handle</h2><blockquote><pre>typedef struct sqlite3_mutex sqlite3_mutex;
+</pre></blockquote><p>
+The mutex module within SQLite defines <a href="../c3ref/mutex.html">sqlite3_mutex</a> to be an
 abstract type for a mutex object.  The SQLite core never looks
-at the internal representation of an 
-<a href="../c3ref/mutex.html">sqlite3_mutex</a>.  It only
-deals with pointers to the 
-<a href="../c3ref/mutex.html">sqlite3_mutex</a> object.</p>
+at the internal representation of an <a href="../c3ref/mutex.html">sqlite3_mutex</a>.  It only
+deals with pointers to the <a href="../c3ref/mutex.html">sqlite3_mutex</a> object.</p>
 
-<p>Mutexes are created using 
-<a href="../c3ref/mutex_alloc.html">sqlite3_mutex_alloc()</a>.
-</p>
-<p>See also lists of
+<p>Mutexes are created using <a href="../c3ref/mutex_alloc.html">sqlite3_mutex_alloc()</a>.
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

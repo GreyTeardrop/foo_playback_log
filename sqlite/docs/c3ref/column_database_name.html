@@ -70,51 +70,41 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Source Of Data In A Query Result</h2>
-<blockquote><pre>
-const char *sqlite3_column_database_name(sqlite3_stmt*,int);
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Source Of Data In A Query Result</h2><blockquote><pre>const char *sqlite3_column_database_name(sqlite3_stmt*,int);
 const void *sqlite3_column_database_name16(sqlite3_stmt*,int);
 const char *sqlite3_column_table_name(sqlite3_stmt*,int);
 const void *sqlite3_column_table_name16(sqlite3_stmt*,int);
 const char *sqlite3_column_origin_name(sqlite3_stmt*,int);
 const void *sqlite3_column_origin_name16(sqlite3_stmt*,int);
-
-</pre></blockquote>
-<p>
+</pre></blockquote><p>
 These routines provide a means to determine what column of what
-table in which database a result of a SELECT statement comes from.
+table in which database a result of a <a href="../lang_select.html">SELECT</a> statement comes from.
 The name of the database or table or column can be returned as
-either a UTF8 or UTF16 string.  The _database_ routines return
+either a UTF-8 or UTF-16 string.  The _database_ routines return
 the database name, the _table_ routines return the table name, and
 the origin_ routines return the column name.
-The returned string is valid until
-the 
-<a href="../c3ref/stmt.html">prepared statement</a> is destroyed using
-
-<a href="../c3ref/finalize.html">sqlite3_finalize()</a> or until the same information is requested
+The returned string is valid until the <a href="../c3ref/stmt.html">prepared statement</a> is destroyed
+using <a href="../c3ref/finalize.html">sqlite3_finalize()</a> or until the same information is requested
 again in a different encoding.</p>
 
 <p>The names returned are the original un-aliased names of the
 database, table, and column.</p>
 
-<p>The first argument to the following calls is a 
-<a href="../c3ref/stmt.html">prepared statement</a>.
+<p>The first argument to the following calls is a <a href="../c3ref/stmt.html">prepared statement</a>.
 These functions return information about the Nth column returned by
 the statement, where N is the second function argument.</p>
 
-<p>If the Nth column returned by the statement is an expression
-or subquery and is not a column value, then all of these functions
-return NULL.  These routine might also return NULL if a memory
-allocation error occurs.  Otherwise, they return the
-name of the attached database, table and column that query result
-column was extracted from.</p>
+<p>If the Nth column returned by the statement is an expression or
+subquery and is not a column value, then all of these functions return
+NULL.  These routine might also return NULL if a memory allocation error
+occurs.  Otherwise, they return the name of the attached database, table
+and column that query result column was extracted from.</p>
 
 <p>As with all other SQLite APIs, those postfixed with "16" return
 UTF-16 encoded strings, the other functions return UTF-8.</p>
 
 <p>These APIs are only available if the library was compiled with the
-SQLITE_ENABLE_COLUMN_METADATA preprocessor symbol defined.</p>
+<a href="../compile.html#enable_column_metadata">SQLITE_ENABLE_COLUMN_METADATA</a> C-preprocessor symbol defined.</p>
 
 <p>If two or more threads call one or more of these routines against the same
 prepared statement and column at the same time then the results are
@@ -122,97 +112,70 @@ undefined.</p>
 
 <p><h3>Invariants:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">F13741</td> 
+<tr><td valign="top">H13741</td> 
 <td valign="top">
-The 
-<a href="../c3ref/column_database_name.html">sqlite3_column_database_name(S,N)</a> interface returns either
+The <a href="../c3ref/column_database_name.html">sqlite3_column_database_name(S,N)</a> interface returns either
 the UTF-8 zero-terminated name of the database from which the
-Nth result column of 
-<a href="../c3ref/stmt.html">prepared statement</a> S
-is extracted, or NULL if the the Nth column of S is a
-general expression or if unable to allocate memory
-to store the name.</td></tr>
-<tr><td valign="top">F13742</td> 
+Nth result column of the <a href="../c3ref/stmt.html">prepared statement</a> S is extracted,
+or NULL if the Nth column of S is a general expression
+or if unable to allocate memory to store the name.</td></tr>
+<tr><td valign="top">H13742</td> 
 <td valign="top">
-The 
-<a href="../c3ref/column_database_name.html">sqlite3_column_database_name16(S,N)</a> interface returns either
-the UTF-16 native byte order
-zero-terminated name of the database from which the
-Nth result column of 
-<a href="../c3ref/stmt.html">prepared statement</a> S
-is extracted, or NULL if the the Nth column of S is a
-general expression or if unable to allocate memory
-to store the name.</td></tr>
-<tr><td valign="top">F13743</td> 
+The <a href="../c3ref/column_database_name.html">sqlite3_column_database_name16(S,N)</a> interface returns either
+the UTF-16 native byte order zero-terminated name of the database
+from which the Nth result column of the <a href="../c3ref/stmt.html">prepared statement</a> S is
+extracted, or NULL if the Nth column of S is a general expression
+or if unable to allocate memory to store the name.</td></tr>
+<tr><td valign="top">H13743</td> 
 <td valign="top">
-The 
-<a href="../c3ref/column_database_name.html">sqlite3_column_table_name(S,N)</a> interface returns either
+The <a href="../c3ref/column_database_name.html">sqlite3_column_table_name(S,N)</a> interface returns either
 the UTF-8 zero-terminated name of the table from which the
-Nth result column of 
-<a href="../c3ref/stmt.html">prepared statement</a> S
-is extracted, or NULL if the the Nth column of S is a
-general expression or if unable to allocate memory
-to store the name.</td></tr>
-<tr><td valign="top">F13744</td> 
+Nth result column of the <a href="../c3ref/stmt.html">prepared statement</a> S is extracted,
+or NULL if the Nth column of S is a general expression
+or if unable to allocate memory to store the name.</td></tr>
+<tr><td valign="top">H13744</td> 
 <td valign="top">
-The 
-<a href="../c3ref/column_database_name.html">sqlite3_column_table_name16(S,N)</a> interface returns either
-the UTF-16 native byte order
-zero-terminated name of the table from which the
-Nth result column of 
-<a href="../c3ref/stmt.html">prepared statement</a> S
-is extracted, or NULL if the the Nth column of S is a
-general expression or if unable to allocate memory
-to store the name.</td></tr>
-<tr><td valign="top">F13745</td> 
+The <a href="../c3ref/column_database_name.html">sqlite3_column_table_name16(S,N)</a> interface returns either
+the UTF-16 native byte order zero-terminated name of the table
+from which the Nth result column of the <a href="../c3ref/stmt.html">prepared statement</a> S is
+extracted, or NULL if the Nth column of S is a general expression
+or if unable to allocate memory to store the name.</td></tr>
+<tr><td valign="top">H13745</td> 
 <td valign="top">
-The 
-<a href="../c3ref/column_database_name.html">sqlite3_column_origin_name(S,N)</a> interface returns either
+The <a href="../c3ref/column_database_name.html">sqlite3_column_origin_name(S,N)</a> interface returns either
 the UTF-8 zero-terminated name of the table column from which the
-Nth result column of 
-<a href="../c3ref/stmt.html">prepared statement</a> S
-is extracted, or NULL if the the Nth column of S is a
-general expression or if unable to allocate memory
-to store the name.</td></tr>
-<tr><td valign="top">F13746</td> 
+Nth result column of the <a href="../c3ref/stmt.html">prepared statement</a> S is extracted,
+or NULL if the Nth column of S is a general expression
+or if unable to allocate memory to store the name.</td></tr>
+<tr><td valign="top">H13746</td> 
 <td valign="top">
-The 
-<a href="../c3ref/column_database_name.html">sqlite3_column_origin_name16(S,N)</a> interface returns either
-the UTF-16 native byte order
-zero-terminated name of the table column from which the
-Nth result column of 
-<a href="../c3ref/stmt.html">prepared statement</a> S
-is extracted, or NULL if the the Nth column of S is a
-general expression or if unable to allocate memory
+The <a href="../c3ref/column_database_name.html">sqlite3_column_origin_name16(S,N)</a> interface returns either
+the UTF-16 native byte order zero-terminated name of the table
+column from which the Nth result column of the
+<a href="../c3ref/stmt.html">prepared statement</a> S is extracted, or NULL if the Nth column
+of S is a general expression or if unable to allocate memory
 to store the name.</td></tr>
-<tr><td valign="top">F13748</td> 
+<tr><td valign="top">H13748</td> 
 <td valign="top">
 The return values from
-
 <a href="../c3ref/column_database_name.html">column metadata interfaces</a>
-are valid
-for the lifetime of the 
-<a href="../c3ref/stmt.html">prepared statement</a>
+are valid for the lifetime of the <a href="../c3ref/stmt.html">prepared statement</a>
 or until the encoding is changed by another metadata
 interface call for the same prepared statement and column.</td></tr>
 </table></p>
 
-<p><h3>Limitations:</h3>
+<p><h3>Assumptions:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">U13751</td> 
+<tr><td valign="top">A13751</td> 
 <td valign="top">
 If two or more threads call one or more
-
 <a href="../c3ref/column_database_name.html">column metadata interfaces</a>
-the same 
-<a href="../c3ref/stmt.html">prepared statement</a> and result column
+for the same <a href="../c3ref/stmt.html">prepared statement</a> and result column
 at the same time then the results are undefined.</td></tr>
 </table>
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

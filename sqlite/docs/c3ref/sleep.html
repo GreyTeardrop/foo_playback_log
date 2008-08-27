@@ -70,30 +70,36 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Suspend Execution For A Short Time</h2>
-<blockquote><pre>
-int sqlite3_sleep(int);
-
-</pre></blockquote>
-<p>
- The sqlite3_sleep() function
-causes the current thread to suspend execution
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Suspend Execution For A Short Time</h2><blockquote><pre>int sqlite3_sleep(int);
+</pre></blockquote><p>
+The sqlite3_sleep() function causes the current thread to suspend execution
 for at least a number of milliseconds specified in its parameter.</p>
 
-<p> If the operating system does not support sleep requests with
+<p>If the operating system does not support sleep requests with
 millisecond time resolution, then the time will be rounded up to
 the nearest second. The number of milliseconds of sleep actually
 requested from the operating system is returned.</p>
 
-<p> SQLite implements this interface by calling the xSleep()
-method of the default 
-<a href="../c3ref/vfs.html">sqlite3_vfs</a> object.
-</p>
-<p>See also lists of
+<p>SQLite implements this interface by calling the xSleep()
+method of the default <a href="../c3ref/vfs.html">sqlite3_vfs</a> object.</p>
+
+<p><h3>Invariants:</h3>
+<table border="0" cellpadding="5" cellspacing="0">
+<tr><td valign="top">H10533</td> 
+<td valign="top">
+The <a href="../c3ref/sleep.html">sqlite3_sleep(M)</a> interface invokes the xSleep
+method of the default <a href="../c3ref/vfs.html">VFS</a> in order to
+suspend execution of the current thread for at least
+M milliseconds.</td></tr>
+<tr><td valign="top">H10536</td> 
+<td valign="top">
+The <a href="../c3ref/sleep.html">sqlite3_sleep(M)</a> interface returns the number of
+milliseconds of sleep actually requested of the operating
+system, which might be larger than the parameter M.</td></tr>
+</table>
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

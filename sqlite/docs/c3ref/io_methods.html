@@ -70,10 +70,7 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>OS Interface File Virtual Methods Object</h2>
-<blockquote><pre>
-typedef struct sqlite3_io_methods sqlite3_io_methods;
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>OS Interface File Virtual Methods Object</h2><blockquote><pre>typedef struct sqlite3_io_methods sqlite3_io_methods;
 struct sqlite3_io_methods {
   int iVersion;
   int (*xClose)(sqlite3_file*);
@@ -84,62 +81,50 @@ struct sqlite3_io_methods {
   int (*xFileSize)(sqlite3_file*, sqlite3_int64 *pSize);
   int (*xLock)(sqlite3_file*, int);
   int (*xUnlock)(sqlite3_file*, int);
-  int (*xCheckReservedLock)(sqlite3_file*);
+  int (*xCheckReservedLock)(sqlite3_file*, int *pResOut);
   int (*xFileControl)(sqlite3_file*, int op, void *pArg);
   int (*xSectorSize)(sqlite3_file*);
   int (*xDeviceCharacteristics)(sqlite3_file*);
   /* Additional methods may be added in future releases */
 };
+</pre></blockquote><p>
+Every file opened by the <a href="../c3ref/vfs.html">sqlite3_vfs</a> xOpen method populates an
+<a href="../c3ref/file.html">sqlite3_file</a> object (or, more commonly, a subclass of the
+<a href="../c3ref/file.html">sqlite3_file</a> object) with a pointer to an instance of this object.
+This object defines the methods used to perform various operations
+against the open file represented by the <a href="../c3ref/file.html">sqlite3_file</a> object.</p>
 
-</pre></blockquote>
-<p>
-Every file opened by the 
-<a href="../c3ref/vfs.html">sqlite3_vfs</a> xOpen method contains a pointer to
-an instance of the this object.  This object defines the
-methods used to perform various operations against the open file.</p>
-
-<p>The flags argument to xSync may be one of 
-<a href="../c3ref/c_sync_dataonly.html">SQLITE_SYNC_NORMAL</a> or
-
+<p>The flags argument to xSync may be one of <a href="../c3ref/c_sync_dataonly.html">SQLITE_SYNC_NORMAL</a> or
 <a href="../c3ref/c_sync_dataonly.html">SQLITE_SYNC_FULL</a>.  The first choice is the normal fsync().
-OS-X style fullsync.  The SQLITE_SYNC_DATA flag may be ORed in to
-indicate that only the data of the file and not its inode needs to be
-synced.</p>
+The second choice is a Mac OS-X style fullsync.  The <a href="../c3ref/c_sync_dataonly.html">SQLITE_SYNC_DATAONLY</a>
+flag may be ORed in to indicate that only the data of the file
+and not its inode needs to be synced.</p>
 
 <p>The integer values to xLock() and xUnlock() are one of
 <ul>
-<li> 
-<a href="../c3ref/c_lock_exclusive.html">SQLITE_LOCK_NONE</a>,
-<li> 
-<a href="../c3ref/c_lock_exclusive.html">SQLITE_LOCK_SHARED</a>,
-<li> 
-<a href="../c3ref/c_lock_exclusive.html">SQLITE_LOCK_RESERVED</a>,
-<li> 
-<a href="../c3ref/c_lock_exclusive.html">SQLITE_LOCK_PENDING</a>, or
-<li> 
-<a href="../c3ref/c_lock_exclusive.html">SQLITE_LOCK_EXCLUSIVE</a>.
+<li> <a href="../c3ref/c_lock_exclusive.html">SQLITE_LOCK_NONE</a>,
+<li> <a href="../c3ref/c_lock_exclusive.html">SQLITE_LOCK_SHARED</a>,
+<li> <a href="../c3ref/c_lock_exclusive.html">SQLITE_LOCK_RESERVED</a>,
+<li> <a href="../c3ref/c_lock_exclusive.html">SQLITE_LOCK_PENDING</a>, or
+<li> <a href="../c3ref/c_lock_exclusive.html">SQLITE_LOCK_EXCLUSIVE</a>.
 </ul>
 xLock() increases the lock. xUnlock() decreases the lock.
-The xCheckReservedLock() method looks
-to see if any database connection, either in this
-process or in some other process, is holding an RESERVED,
+The xCheckReservedLock() method checks whether any database connection,
+either in this process or in some other process, is holding a RESERVED,
 PENDING, or EXCLUSIVE lock on the file.  It returns true
-if such a lock exists and false if not.</p>
+if such a lock exists and false otherwise.</p>
 
 <p>The xFileControl() method is a generic interface that allows custom
 VFS implementations to directly control an open file using the
-
-<a href="../c3ref/file_control.html">sqlite3_file_control()</a> interface.  The second "op" argument
-is an integer opcode.   The third
-argument is a generic pointer which is intended to be a pointer
-to a structure that may contain arguments or space in which to
+<a href="../c3ref/file_control.html">sqlite3_file_control()</a> interface.  The second "op" argument is an
+integer opcode.  The third argument is a generic pointer intended to
+point to a structure that may contain arguments or space in which to
 write return values.  Potential uses for xFileControl() might be
 functions to enable blocking locks with timeouts, to change the
 locking strategy (for example to use dot-file locks), to inquire
 about the status of a lock, or to break stale locks.  The SQLite
-core reserves opcodes less than 100 for its own use.
-A 
-<a href="../c3ref/c_fcntl_lockstate.html">list of opcodes</a> less than 100 is available.
+core reserves all opcodes less than 100 for its own use.
+A <a href="../c3ref/c_fcntl_lockstate.html">list of opcodes</a> less than 100 is available.
 Applications that define a custom xFileControl method should use opcodes
 greater than 100 to avoid conflicts.</p>
 
@@ -151,28 +136,17 @@ method returns a bit vector describing behaviors of the
 underlying device:</p>
 
 <p><ul>
-<li> 
-<a href="../c3ref/c_iocap_atomic.html">SQLITE_IOCAP_ATOMIC</a>
-<li> 
-<a href="../c3ref/c_iocap_atomic.html">SQLITE_IOCAP_ATOMIC512</a>
-<li> 
-<a href="../c3ref/c_iocap_atomic.html">SQLITE_IOCAP_ATOMIC1K</a>
-<li> 
-<a href="../c3ref/c_iocap_atomic.html">SQLITE_IOCAP_ATOMIC2K</a>
-<li> 
-<a href="../c3ref/c_iocap_atomic.html">SQLITE_IOCAP_ATOMIC4K</a>
-<li> 
-<a href="../c3ref/c_iocap_atomic.html">SQLITE_IOCAP_ATOMIC8K</a>
-<li> 
-<a href="../c3ref/c_iocap_atomic.html">SQLITE_IOCAP_ATOMIC16K</a>
-<li> 
-<a href="../c3ref/c_iocap_atomic.html">SQLITE_IOCAP_ATOMIC32K</a>
-<li> 
-<a href="../c3ref/c_iocap_atomic.html">SQLITE_IOCAP_ATOMIC64K</a>
-<li> 
-<a href="../c3ref/c_iocap_atomic.html">SQLITE_IOCAP_SAFE_APPEND</a>
-<li> 
-<a href="../c3ref/c_iocap_atomic.html">SQLITE_IOCAP_SEQUENTIAL</a>
+<li> <a href="../c3ref/c_iocap_atomic.html">SQLITE_IOCAP_ATOMIC</a>
+<li> <a href="../c3ref/c_iocap_atomic.html">SQLITE_IOCAP_ATOMIC512</a>
+<li> <a href="../c3ref/c_iocap_atomic.html">SQLITE_IOCAP_ATOMIC1K</a>
+<li> <a href="../c3ref/c_iocap_atomic.html">SQLITE_IOCAP_ATOMIC2K</a>
+<li> <a href="../c3ref/c_iocap_atomic.html">SQLITE_IOCAP_ATOMIC4K</a>
+<li> <a href="../c3ref/c_iocap_atomic.html">SQLITE_IOCAP_ATOMIC8K</a>
+<li> <a href="../c3ref/c_iocap_atomic.html">SQLITE_IOCAP_ATOMIC16K</a>
+<li> <a href="../c3ref/c_iocap_atomic.html">SQLITE_IOCAP_ATOMIC32K</a>
+<li> <a href="../c3ref/c_iocap_atomic.html">SQLITE_IOCAP_ATOMIC64K</a>
+<li> <a href="../c3ref/c_iocap_atomic.html">SQLITE_IOCAP_SAFE_APPEND</a>
+<li> <a href="../c3ref/c_iocap_atomic.html">SQLITE_IOCAP_SEQUENTIAL</a>
 </ul></p>
 
 <p>The SQLITE_IOCAP_ATOMIC property means that all writes of
@@ -185,11 +159,9 @@ first then the size of the file is extended, never the other
 way around.  The SQLITE_IOCAP_SEQUENTIAL property means that
 information is written to disk in the same order as calls
 to xWrite().
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

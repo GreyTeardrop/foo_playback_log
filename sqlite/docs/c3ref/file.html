@@ -70,29 +70,20 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>OS Interface Open File Handle</h2>
-<blockquote><pre>
-typedef struct sqlite3_file sqlite3_file;
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>OS Interface Open File Handle</h2><blockquote><pre>typedef struct sqlite3_file sqlite3_file;
 struct sqlite3_file {
   const struct sqlite3_io_methods *pMethods;  /* Methods for an open file */
 };
-
-</pre></blockquote>
-<p>
-An 
-<a href="../c3ref/file.html">sqlite3_file</a> object represents an open file in the OS
+</pre></blockquote><p>
+An <a href="../c3ref/file.html">sqlite3_file</a> object represents an open file in the OS
 interface layer.  Individual OS interface implementations will
 want to subclass this object by appending additional fields
 for their own use.  The pMethods entry is a pointer to an
-
 <a href="../c3ref/io_methods.html">sqlite3_io_methods</a> object that defines methods for performing
 I/O operations on the open file.
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

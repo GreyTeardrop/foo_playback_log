@@ -72,6 +72,21 @@ a:visited { color: #734559 }
   
 
 
+
+<font color="#7f001f"><p>
+<b>Note:</b>
+This document was written in 2004 as a guide to helping programmers
+move from using SQLite version 2 to SQLite version 3.  The information
+in this document is still essentially correct, however there have been
+many changes and enhancements over the years.  We recommend that the
+following documents be used instead:
+<ul>
+<li><a href="cintro.html">An Introduction To The SQLite C/C++ Interface</a></li>
+<li><a href="c3ref/intro.html">SQLite C/C++ Reference Guide</a></li>
+</ul>
+</p>
+</font>
+
 <h2>C/C++ Interface For SQLite Version 3</h2>
 
 <h3>1.0 Overview</h3>
@@ -122,18 +137,12 @@ to several data structures and #defines.  (A complete
 document.)
 Fortunately, the interface is not nearly as complex as its size implies.
 Simple programs can still make do with only 3 functions:
-
-<a href="c3ref/open.html">sqlite3_open()</a>, 
-<a href="c3ref/exec.html">sqlite3_exec()</a>, and 
-<a href="c3ref/close.html">sqlite3_close()</a>.
+<a href="c3ref/open.html">sqlite3_open()</a>, <a href="c3ref/exec.html">sqlite3_exec()</a>, and <a href="c3ref/close.html">sqlite3_close()</a>.
 More control over the execution of the database engine is provided
-using 
-<a href="c3ref/prepare.html">sqlite3_prepare_v2()</a>
+using <a href="c3ref/prepare.html">sqlite3_prepare_v2()</a>
 to compile an SQLite statement into byte code and
-
 <a href="c3ref/step.html">sqlite3_step()</a> to execute that bytecode.
 A family of routines with names beginning with 
-
 <a href="c3ref/column_blob.html">sqlite3_column_</a>
 is used to extract information about the result set of a query.
 Many interface functions come in pairs, with both a UTF-8 and
@@ -225,8 +234,7 @@ They are as follows:
 </pre></blockquote>
 
 <p>
-The 
-<a href="c3ref/exec.html">sqlite3_exec()</a> function works much as it did in SQLite version 2.
+The <a href="c3ref/exec.html">sqlite3_exec()</a> function works much as it did in SQLite version 2.
 Zero or more SQL statements specified in the second parameter are compiled
 and executed.  Query results are returned to a callback routine.
 </p>
@@ -255,7 +263,7 @@ The SQL statement is a UTF-8 string for sqlite3_prepare().
 The sqlite3_prepare16() works the same way except
 that it expects a UTF-16 string as SQL input.
 Only the first SQL statement in the input string is compiled.
-The fourth parameter is filled in with a pointer to the next (uncompiled)
+The fifth parameter is filled in with a pointer to the next (uncompiled)
 SQLite statement in the input string, if any.
 The sqlite3_finalize() routine deallocates a prepared SQL statement.
 All prepared statements must be finalized before the database can be
@@ -269,7 +277,6 @@ The SQL statement may contain tokens of the form "?" or "?nnn" or ":aaa"
 where "nnn" is an integer and "aaa" is an identifier.
 Such tokens represent unspecified literal values (or "wildcards")
 to be filled in later by the 
-
 <a href="c3ref/bind_blob.html">sqlite3_bind</a> interface.
 Each wildcard has an associated number which is its sequence in the
 statement or the "nnn" in the case of a "?nnn" form. 
@@ -333,26 +340,17 @@ of the result set:
 </pre></blockquote>
 
 <p>
-The 
-<a href="c3ref/column_count.html">sqlite3_column_count()</a>
+The <a href="c3ref/column_count.html">sqlite3_column_count()</a>
 function returns the number of columns in
 the results set.  sqlite3_column_count() can be called at any time after
-
-<a href="c3ref/prepare.html">sqlite3_prepare_v2()</a>.  
-<a href="c3ref/data_count.html">sqlite3_data_count()</a> works similarly to
-
-<a href="c3ref/column_count.html">sqlite3_column_count()</a> except that it only works following 
-<a href="c3ref/step.html">sqlite3_step()</a>.
-If the previous call to 
-<a href="c3ref/step.html">sqlite3_step()</a> returned SQLITE_DONE or an error code,
-then 
-<a href="c3ref/data_count.html">sqlite3_data_count()</a> will return 0 whereas 
-<a href="c3ref/column_count.html">sqlite3_column_count()</a> will
+<a href="c3ref/prepare.html">sqlite3_prepare_v2()</a>.  <a href="c3ref/data_count.html">sqlite3_data_count()</a> works similarly to
+<a href="c3ref/column_count.html">sqlite3_column_count()</a> except that it only works following <a href="c3ref/step.html">sqlite3_step()</a>.
+If the previous call to <a href="c3ref/step.html">sqlite3_step()</a> returned SQLITE_DONE or an error code,
+then <a href="c3ref/data_count.html">sqlite3_data_count()</a> will return 0 whereas <a href="c3ref/column_count.html">sqlite3_column_count()</a> will
 continue to return the number of columns in the result set.
 </p>
 
 <p>Returned data is examined using the other 
-
 <a href="c3ref/column_blob.html">sqlite3_column_***()</a> functions, 
 all of which take a column number as their second parameter. Columns are
 zero-indexed from left to right. Note that this is different to parameters,
@@ -360,8 +358,7 @@ which are indexed starting at one.
 </p>
 
 <p>
-The 
-<a href="c3ref/column_blob.html">sqlite3_column_type()</a> function returns the
+The <a href="c3ref/column_blob.html">sqlite3_column_type()</a> function returns the
 datatype for the value in the Nth column.  The return value is one
 of these:
 </p>
@@ -586,7 +583,6 @@ sqlite_3_create_collation() as needed.  The fourth parameter to the callback
 is the name of the collating sequence in UTF-8.  For sqlite3_collation_need16()
 the callback sends the collating sequence name in UTF-16 host byte order.
 </p>
-
-<hr><small<i>
-This page last modified 2007/12/19 13:42:44 UTC
+<hr><small><i>
+This page last modified 2008/07/11 13:23:12 UTC
 </i></small></div></body></html>

@@ -70,10 +70,7 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Compiling An SQL Statement</h2>
-<blockquote><pre>
-int sqlite3_prepare(
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Compiling An SQL Statement</h2><blockquote><pre>int sqlite3_prepare(
   sqlite3 *db,            /* Database handle */
   const char *zSql,       /* SQL statement, UTF-8 encoded */
   int nByte,              /* Maximum length of zSql in bytes. */
@@ -101,158 +98,120 @@ int sqlite3_prepare16_v2(
   sqlite3_stmt **ppStmt,  /* OUT: Statement handle */
   const void **pzTail     /* OUT: Pointer to unused portion of zSql */
 );
-
-</pre></blockquote>
-<p>
+</pre></blockquote><p>
 To execute an SQL query, it must first be compiled into a byte-code
 program using one of these routines.</p>
 
-<p>The first argument "db" is an 
-<a href="../c3ref/sqlite3.html">database connection</a>
-obtained from a prior call to 
-<a href="../c3ref/open.html">sqlite3_open()</a>, 
-<a href="../c3ref/open.html">sqlite3_open_v2()</a>
-or 
-<a href="../c3ref/open.html">sqlite3_open16()</a>.
-The second argument "zSql" is the statement to be compiled, encoded
+<p>The first argument, "db", is a <a href="../c3ref/sqlite3.html">database connection</a> obtained from a
+prior call to <a href="../c3ref/open.html">sqlite3_open()</a>, <a href="../c3ref/open.html">sqlite3_open_v2()</a> or <a href="../c3ref/open.html">sqlite3_open16()</a>.</p>
+
+<p>The second argument, "zSql", is the statement to be compiled, encoded
 as either UTF-8 or UTF-16.  The sqlite3_prepare() and sqlite3_prepare_v2()
-interfaces uses UTF-8 and sqlite3_prepare16() and sqlite3_prepare16_v2()
+interfaces use UTF-8, and sqlite3_prepare16() and sqlite3_prepare16_v2()
 use UTF-16.</p>
 
-<p>If the nByte argument is less
-than zero, then zSql is read up to the first zero terminator.
-If nByte is non-negative, then it is the maximum number of
-bytes read from zSql.  When nByte is non-negative, the
+<p>If the nByte argument is less than zero, then zSql is read up to the
+first zero terminator. If nByte is non-negative, then it is the maximum
+number of  bytes read from zSql.  When nByte is non-negative, the
 zSql string ends at either the first '\000' or '\u0000' character or
-until the nByte-th byte, whichever comes first.</p>
+the nByte-th byte, whichever comes first. If the caller knows
+that the supplied string is nul-terminated, then there is a small
+performance advantage to be gained by passing an nByte parameter that
+is equal to the number of bytes in the input string <i>including</i>
+the nul-terminator bytes.</p>
 
 <p>*pzTail is made to point to the first byte past the end of the
-first SQL statement in zSql.  These routines only compiles the first
+first SQL statement in zSql.  These routines only compile the first
 statement in zSql, so *pzTail is left pointing to what remains
 uncompiled.</p>
 
-<p>*ppStmt is left pointing to a compiled 
-<a href="../c3ref/stmt.html">prepared statement</a> that can be
-executed using 
-<a href="../c3ref/step.html">sqlite3_step()</a>.  Or if there is an error, *ppStmt may be
-set to NULL.  If the input text contains no SQL (if the input
-is and empty string or a comment) then *ppStmt is set to NULL.
- The calling procedure is responsible for deleting the
-compiled SQL statement
-using 
-<a href="../c3ref/finalize.html">sqlite3_finalize()</a> after it has finished with it.</p>
+<p>*ppStmt is left pointing to a compiled <a href="../c3ref/stmt.html">prepared statement</a> that can be
+executed using <a href="../c3ref/step.html">sqlite3_step()</a>.  If there is an error, *ppStmt is set
+to NULL.  If the input text contains no SQL (if the input is an empty
+string or a comment) then *ppStmt is set to NULL.
+ The calling procedure is responsible for deleting the compiled
+SQL statement using <a href="../c3ref/finalize.html">sqlite3_finalize()</a> after it has finished with it.</p>
 
-<p>On success, 
-<a href="../c3ref/c_abort.html">SQLITE_OK</a> is returned.  Otherwise an
-
-<a href="../c3ref/c_abort.html">error code</a> is returned.</p>
+<p>On success, <a href="../c3ref/c_abort.html">SQLITE_OK</a> is returned, otherwise an <a href="../c3ref/c_abort.html">error code</a> is returned.</p>
 
 <p>The sqlite3_prepare_v2() and sqlite3_prepare16_v2() interfaces are
 recommended for all new programs. The two older interfaces are retained
 for backwards compatibility, but their use is discouraged.
 In the "v2" interfaces, the prepared statement
-that is returned (the 
-<a href="../c3ref/stmt.html">sqlite3_stmt</a> object) contains a copy of the
-original SQL text. This causes the 
-<a href="../c3ref/step.html">sqlite3_step()</a> interface to
+that is returned (the <a href="../c3ref/stmt.html">sqlite3_stmt</a> object) contains a copy of the
+original SQL text. This causes the <a href="../c3ref/step.html">sqlite3_step()</a> interface to
 behave a differently in two ways:</p>
 
 <p><ol>
 <li>
-If the database schema changes, instead of returning 
-<a href="../c3ref/c_abort.html">SQLITE_SCHEMA</a> as it
-always used to do, 
-<a href="../c3ref/step.html">sqlite3_step()</a> will automatically recompile the SQL
+If the database schema changes, instead of returning <a href="../c3ref/c_abort.html">SQLITE_SCHEMA</a> as it
+always used to do, <a href="../c3ref/step.html">sqlite3_step()</a> will automatically recompile the SQL
 statement and try to run it again.  If the schema has changed in
-a way that makes the statement no longer valid, 
-<a href="../c3ref/step.html">sqlite3_step()</a> will still
-return 
-<a href="../c3ref/c_abort.html">SQLITE_SCHEMA</a>.  But unlike the legacy behavior,
-
-<a href="../c3ref/c_abort.html">SQLITE_SCHEMA</a> is now a fatal error.  Calling
-
-<a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a> again will not make the
-error go away.  Note: use 
-<a href="../c3ref/errcode.html">sqlite3_errmsg()</a> to find the text
-of the parsing error that results in an 
-<a href="../c3ref/c_abort.html">SQLITE_SCHEMA</a> return.
+a way that makes the statement no longer valid, <a href="../c3ref/step.html">sqlite3_step()</a> will still
+return <a href="../c3ref/c_abort.html">SQLITE_SCHEMA</a>.  But unlike the legacy behavior, <a href="../c3ref/c_abort.html">SQLITE_SCHEMA</a> is
+now a fatal error.  Calling <a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a> again will not make the
+error go away.  Note: use <a href="../c3ref/errcode.html">sqlite3_errmsg()</a> to find the text
+of the parsing error that results in an <a href="../c3ref/c_abort.html">SQLITE_SCHEMA</a> return.
 </li></p>
 
 <p><li>
-When an error occurs,
-
-<a href="../c3ref/step.html">sqlite3_step()</a> will return one of the detailed
-
-<a href="../c3ref/c_abort.html">error codes</a> or 
-<a href="../c3ref/c_ioerr_blocked.html">extended error codes</a>.
-The legacy behavior was that 
-<a href="../c3ref/step.html">sqlite3_step()</a> would only return a generic
-
-<a href="../c3ref/c_abort.html">SQLITE_ERROR</a> result code and you would have to make a second call to
-
-<a href="../c3ref/reset.html">sqlite3_reset()</a> in order to find the underlying cause of the problem.
-With the "v2" prepare interfaces, the underlying reason for the error is
-returned immediately.
+When an error occurs, <a href="../c3ref/step.html">sqlite3_step()</a> will return one of the detailed
+<a href="../c3ref/c_abort.html">error codes</a> or <a href="../c3ref/c_ioerr_access.html">extended error codes</a>.  The legacy behavior was that
+<a href="../c3ref/step.html">sqlite3_step()</a> would only return a generic <a href="../c3ref/c_abort.html">SQLITE_ERROR</a> result code
+and you would have to make a second call to <a href="../c3ref/reset.html">sqlite3_reset()</a> in order
+to find the underlying cause of the problem. With the "v2" prepare
+interfaces, the underlying reason for the error is returned immediately.
 </li>
 </ol></p>
 
 <p><h3>Invariants:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">F13011</td> 
+<tr><td valign="top">H13011</td> 
 <td valign="top">
-The 
-<a href="../c3ref/prepare.html">sqlite3_prepare(db,zSql,...)</a> and
-
+The <a href="../c3ref/prepare.html">sqlite3_prepare(db,zSql,...)</a> and
 <a href="../c3ref/prepare.html">sqlite3_prepare_v2(db,zSql,...)</a> interfaces interpret the
 text in their zSql parameter as UTF-8.</td></tr>
-<tr><td valign="top">F13012</td> 
+<tr><td valign="top">H13012</td> 
 <td valign="top">
-The 
-<a href="../c3ref/prepare.html">sqlite3_prepare16(db,zSql,...)</a> and
-
+The <a href="../c3ref/prepare.html">sqlite3_prepare16(db,zSql,...)</a> and
 <a href="../c3ref/prepare.html">sqlite3_prepare16_v2(db,zSql,...)</a> interfaces interpret the
 text in their zSql parameter as UTF-16 in the native byte order.</td></tr>
-<tr><td valign="top">F13013</td> 
+<tr><td valign="top">H13013</td> 
 <td valign="top">
-If the nByte argument to 
-<a href="../c3ref/prepare.html">sqlite3_prepare_v2(db,zSql,nByte,...)</a>
-and its variants is less than zero, then SQL text is
+If the nByte argument to <a href="../c3ref/prepare.html">sqlite3_prepare_v2(db,zSql,nByte,...)</a>
+and its variants is less than zero, the SQL text is
 read from zSql is read up to the first zero terminator.</td></tr>
-<tr><td valign="top">F13014</td> 
+<tr><td valign="top">H13014</td> 
 <td valign="top">
-If the nByte argument to 
-<a href="../c3ref/prepare.html">sqlite3_prepare_v2(db,zSql,nByte,...)</a>
-and its variants is non-negative, then nBytes bytes
+If the nByte argument to <a href="../c3ref/prepare.html">sqlite3_prepare_v2(db,zSql,nByte,...)</a>
+and its variants is non-negative, then at most nBytes bytes of
 SQL text is read from zSql.</td></tr>
-<tr><td valign="top">F13015</td> 
+<tr><td valign="top">H13015</td> 
 <td valign="top">
-In 
-<a href="../c3ref/prepare.html">sqlite3_prepare_v2(db,zSql,N,P,pzTail)</a> and its variants
+In <a href="../c3ref/prepare.html">sqlite3_prepare_v2(db,zSql,N,P,pzTail)</a> and its variants
 if the zSql input text contains more than one SQL statement
 and pzTail is not NULL, then *pzTail is made to point to the
 first byte past the end of the first SQL statement in zSql.
 <font color="red">(TODO: What does *pzTail point to if there is one statement?)</font></td></tr>
-<tr><td valign="top">F13016</td> 
+<tr><td valign="top">H13016</td> 
 <td valign="top">
-A successful call to 
-<a href="../c3ref/prepare.html">sqlite3_prepare_v2(db,zSql,N,ppStmt,...)</a>
+A successful call to <a href="../c3ref/prepare.html">sqlite3_prepare_v2(db,zSql,N,ppStmt,...)</a>
 or one of its variants writes into *ppStmt a pointer to a new
-
-<a href="../c3ref/stmt.html">prepared statement</a> or a pointer to NULL
-if zSql contains nothing other than whitespace or comments.</td></tr>
-<tr><td valign="top">F13019</td> 
+<a href="../c3ref/stmt.html">prepared statement</a> or a pointer to NULL if zSql contains
+nothing other than whitespace or comments.</td></tr>
+<tr><td valign="top">H13019</td> 
 <td valign="top">
-The 
-<a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a> interface and its variants return
-
-<a href="../c3ref/c_abort.html">SQLITE_OK</a> or an appropriate 
-<a href="../c3ref/c_abort.html">error code</a> upon failure.</td></tr>
+The <a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a> interface and its variants return
+<a href="../c3ref/c_abort.html">SQLITE_OK</a> or an appropriate <a href="../c3ref/c_abort.html">error code</a> upon failure.</td></tr>
+<tr><td valign="top">H13021</td> 
+<td valign="top">
+Before <a href="../c3ref/prepare.html">sqlite3_prepare(db,zSql,nByte,ppStmt,pzTail)</a> or its
+variants returns an error (any value other than <a href="../c3ref/c_abort.html">SQLITE_OK</a>),
+they first set *ppStmt to NULL.</td></tr>
 </table>
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

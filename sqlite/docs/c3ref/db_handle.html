@@ -70,28 +70,25 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Find The Database Handle Of A Prepared Statement</h2>
-<blockquote><pre>
-sqlite3 *sqlite3_db_handle(sqlite3_stmt*);
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Find The Database Handle Of A Prepared Statement</h2><blockquote><pre>sqlite3 *sqlite3_db_handle(sqlite3_stmt*);
+</pre></blockquote><p>
+The sqlite3_db_handle interface returns the <a href="../c3ref/sqlite3.html">database connection</a> handle
+to which a <a href="../c3ref/stmt.html">prepared statement</a> belongs.  The database handle returned by
+sqlite3_db_handle is the same database handle that was the first argument
+to the <a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a> call (or its variants) that was used to
+create the statement in the first place.</p>
 
-</pre></blockquote>
-<p>
- The sqlite3_db_handle interface
-returns the 
-<a href="../c3ref/sqlite3.html">sqlite3*</a> database handle to which a
-
-<a href="../c3ref/stmt.html">prepared statement</a> belongs.
- the database handle returned by sqlite3_db_handle
-is the same database handle that was
-the first argument to the 
-<a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a> or its variants
-that was used to create the statement in the first place.
-</p>
-<p>See also lists of
+<p><h3>Invariants:</h3>
+<table border="0" cellpadding="5" cellspacing="0">
+<tr><td valign="top">H13123</td> 
+<td valign="top">
+The <a href="../c3ref/db_handle.html">sqlite3_db_handle(S)</a> interface returns a pointer
+to the <a href="../c3ref/sqlite3.html">database connection</a> associated with the
+<a href="../c3ref/stmt.html">prepared statement</a> S.</td></tr>
+</table>
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

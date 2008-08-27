@@ -75,266 +75,105 @@ a:visited { color: #734559 }
 <h2>Available Documentation</h2>
 <table width="100%" cellpadding="5">
 
-
-<tr><td valign="top" align="right">
-<a href="whentouse.html">Appropriate&nbsp;Uses&nbsp;For&nbsp;SQLite</a></td>
-<td width="10"></td>
-<td valign="top" align="left">
-
+<tr><td valign="top" align="right"><a href="whentouse.html">Appropriate&nbsp;Uses&nbsp;For&nbsp;SQLite</a></td><td width="10"></td><td valign="top" align="left">
   This document describes situations where SQLite is an appropriate
   database engine to use versus situations where a client/server
   database engine might be a better choice.
-
-</td></tr>
-<tr><td valign="top" align="right">
-<a href="different.html">Distinctive&nbsp;Features</a></td>
-<td width="10"></td>
-<td valign="top" align="left">
-
+</td></tr><tr><td valign="top" align="right"><a href="different.html">Distinctive&nbsp;Features</a></td><td width="10"></td><td valign="top" align="left">
   This document enumerates and describes some of the features of
   SQLite that make it different from other SQL database engines.
-
-</td></tr>
-<tr><td valign="top" align="right">
-<a href="quickstart.html">SQLite&nbsp;In&nbsp;5&nbsp;Minutes&nbsp;Or&nbsp;Less</a></td>
-<td width="10"></td>
-<td valign="top" align="left">
-
+</td></tr><tr><td valign="top" align="right"><a href="quickstart.html">SQLite&nbsp;In&nbsp;5&nbsp;Minutes&nbsp;Or&nbsp;Less</a></td><td width="10"></td><td valign="top" align="left">
   A very quick introduction to programming with SQLite.
-
-</td></tr>
-<tr><td valign="top" align="right">
-<a href="lang.html">SQL&nbsp;Syntax</a></td>
-<td width="10"></td>
-<td valign="top" align="left">
-
+</td></tr><tr><td valign="top" align="right"><a href="lang.html">SQL&nbsp;Syntax</a></td><td width="10"></td><td valign="top" align="left">
   This document describes the SQL language that is understood by
   SQLite.  
-
-</td></tr>
-<tr><td valign="top" align="right">
-<a href="c3ref/intro.html">Version&nbsp;3&nbsp;C/C++&nbsp;API<br>Reference</a></td>
-<td width="10"></td>
-<td valign="top" align="left">
-
+</td></tr><tr><td valign="top" align="right"><a href="c3ref/intro.html">Version&nbsp;3&nbsp;C/C++&nbsp;API<br>Reference</a></td><td width="10"></td><td valign="top" align="left">
   This document describes each API function separately.
-
-</td></tr>
-<tr><td valign="top" align="right">
-<a href="faq.html">Frequently&nbsp;Asked&nbsp;Questions</a></td>
-<td width="10"></td>
-<td valign="top" align="left">
-
+</td></tr><tr><td valign="top" align="right"><a href="faq.html">Frequently&nbsp;Asked&nbsp;Questions</a></td><td width="10"></td><td valign="top" align="left">
   The title of the document says all...
-
-</td></tr>
-<tr><td valign="top" align="right">
-<a href="sharedcache.html">Sharing&nbsp;Cache&nbsp;Mode</a></td>
-<td width="10"></td>
-<td valign="top" align="left">
-
+</td></tr><tr><td valign="top" align="right"><a href="sharedcache.html">Sharing&nbsp;Cache&nbsp;Mode</a></td><td width="10"></td><td valign="top" align="left">
   Version 3.3.0 and later supports the ability for two or more
   database connections to share the same page and schema cache.
   This feature is useful for certain specialized applications.
-
-</td></tr>
-<tr><td valign="top" align="right">
-<a href="tclsqlite.html">Tcl&nbsp;API</a></td>
-<td width="10"></td>
-<td valign="top" align="left">
-
+</td></tr><tr><td valign="top" align="right"><a href="tclsqlite.html">Tcl&nbsp;API</a></td><td width="10"></td><td valign="top" align="left">
   A description of the TCL interface bindings for SQLite.
-
-</td></tr>
-<tr><td valign="top" align="right">
-<a href="atomiccommit.html">How&nbsp;SQLite&nbsp;Implements&nbsp;Atomic&nbsp;Commit</a></td>
-<td width="10"></td>
-<td valign="top" align="left">
-
+</td></tr><tr><td valign="top" align="right"><a href="tempfiles.html">Temporary&nbsp;Files&nbsp;Used&nbsp;By&nbsp;SQLite</a></td><td width="10"></td><td valign="top" align="left">
+  SQLite can potentially use many different temporary files when
+  processing certain SQL statements.  This document describes the
+  many kinds of temporary files that SQLite uses and offers suggestions
+  for avoiding them on systems where creating a temporary file is an
+  expensive operation.
+</td></tr><tr><td valign="top" align="right"><a href="pragma.html">Pragma&nbsp;commands</a></td><td width="10"></td><td valign="top" align="left">
+  This document describes SQLite performance tuning options and other 
+  special purpose database commands.
+</td></tr><tr><td valign="top" align="right"><a href="atomiccommit.html">How&nbsp;SQLite&nbsp;Implements&nbsp;Atomic&nbsp;Commit</a></td><td width="10"></td><td valign="top" align="left">
   A description of the logic within SQLite that implements
   transactions with atomic commit, even in the face of power
   failures.
-
-</td></tr>
-<tr><td valign="top" align="right">
-<a href="34to35.html">Moving&nbsp;From&nbsp;SQLite&nbsp;3.4&nbsp;to&nbsp;3.5</a></td>
-<td width="10"></td>
-<td valign="top" align="left">
-
+</td></tr><tr><td valign="top" align="right"><a href="35to36.html">Moving&nbsp;From&nbsp;SQLite&nbsp;3.5&nbsp;to&nbsp;3.6</a></td><td width="10"></td><td valign="top" align="left">
+  A document describing the differences between SQLite version 3.5.9
+  and 3.6.0.
+</td></tr><tr><td valign="top" align="right"><a href="34to35.html">Moving&nbsp;From&nbsp;SQLite&nbsp;3.4&nbsp;to&nbsp;3.5</a></td><td width="10"></td><td valign="top" align="left">
   A document describing the differences between SQLite version 3.4.2
   and 3.5.0.
-
-</td></tr>
-<tr><td valign="top" align="right">
-<a href="pragma.html">Pragma&nbsp;commands</a></td>
-<td width="10"></td>
-<td valign="top" align="left">
-
-  This document describes SQLite performance tuning options and other 
-  special purpose database commands.
-
-</td></tr>
-<tr><td valign="top" align="right">
-<a href="version3.html">SQLite&nbsp;Version&nbsp;3</a></td>
-<td width="10"></td>
-<td valign="top" align="left">
-
+</td></tr><tr><td valign="top" align="right"><a href="version3.html">SQLite&nbsp;Version&nbsp;3</a></td><td width="10"></td><td valign="top" align="left">
   A summary of of the changes between SQLite version 2.8 and SQLite version 3.0.
-
-</td></tr>
-<tr><td valign="top" align="right">
-<a href="capi3.html">Version&nbsp;3&nbsp;C/C++&nbsp;API</a></td>
-<td width="10"></td>
-<td valign="top" align="left">
-
+</td></tr><tr><td valign="top" align="right"><a href="capi3.html">Version&nbsp;3&nbsp;C/C++&nbsp;API</a></td><td width="10"></td><td valign="top" align="left">
   A description of the C/C++ interface bindings for SQLite version 3.0.0
   and following.
-
-</td></tr>
-<tr><td valign="top" align="right">
-<a href="datatype3.html">Version&nbsp;3&nbsp;DataTypes&nbsp;</a></td>
-<td width="10"></td>
-<td valign="top" align="left">
-
+</td></tr><tr><td valign="top" align="right"><a href="datatype3.html">Version&nbsp;3&nbsp;DataTypes&nbsp;</a></td><td width="10"></td><td valign="top" align="left">
   SQLite version 3 introduces the concept of manifest typing, where the
   type of a value is associated with the value itself, not the column that
   it is stored in.
   This page describes data typing for SQLite version 3 in further detail.
-
-</td></tr>
-<tr><td valign="top" align="right">
-<a href="lockingv3.html">Locking&nbsp;And&nbsp;Concurrency<br>In&nbsp;SQLite&nbsp;Version&nbsp;3</a></td>
-<td width="10"></td>
-<td valign="top" align="left">
-
+</td></tr><tr><td valign="top" align="right"><a href="lockingv3.html">Locking&nbsp;And&nbsp;Concurrency<br>In&nbsp;SQLite&nbsp;Version&nbsp;3</a></td><td width="10"></td><td valign="top" align="left">
   A description of how the new locking code in version 3 increases
   concurrency and decreases the problem of writer starvation.
-
-</td></tr>
-<tr><td valign="top" align="right">
-<a href="optoverview.html">Overview&nbsp;Of&nbsp;The&nbsp;Optimizer</a></td>
-<td width="10"></td>
-<td valign="top" align="left">
-
+</td></tr><tr><td valign="top" align="right"><a href="optoverview.html">Overview&nbsp;Of&nbsp;The&nbsp;Optimizer</a></td><td width="10"></td><td valign="top" align="left">
   A quick overview of the various query optimizations that are
   attempted by the SQLite code generator.
-
-</td></tr>
-<tr><td valign="top" align="right">
-<a href="nulls.html">Null&nbsp;Handling</a></td>
-<td width="10"></td>
-<td valign="top" align="left">
-
+</td></tr><tr><td valign="top" align="right"><a href="nulls.html">Null&nbsp;Handling</a></td><td width="10"></td><td valign="top" align="left">
   Different SQL database engines handle NULLs in different ways.  The
   SQL standards are ambiguous.  This document describes how SQLite handles
   NULLs in comparison with other SQL database engines.
-
-</td></tr>
-<tr><td valign="top" align="right">
-<a href="copyright.html">Copyright</a></td>
-<td width="10"></td>
-<td valign="top" align="left">
-
+</td></tr><tr><td valign="top" align="right"><a href="copyright.html">Copyright</a></td><td width="10"></td><td valign="top" align="left">
   SQLite is in the public domain.  This document describes what that means
   and the implications for contributors.
-
-</td></tr>
-<tr><td valign="top" align="right">
-<a href="omitted.html">Unsupported&nbsp;SQL</a></td>
-<td width="10"></td>
-<td valign="top" align="left">
-
+</td></tr><tr><td valign="top" align="right"><a href="omitted.html">Unsupported&nbsp;SQL</a></td><td width="10"></td><td valign="top" align="left">
   This page describes features of SQL that SQLite does not support.
-
-</td></tr>
-<tr><td valign="top" align="right">
-<a href="c_interface.html">Version&nbsp;2&nbsp;C/C++&nbsp;API</a></td>
-<td width="10"></td>
-<td valign="top" align="left">
-
+</td></tr><tr><td valign="top" align="right"><a href="c_interface.html">Version&nbsp;2&nbsp;C/C++&nbsp;API</a></td><td width="10"></td><td valign="top" align="left">
   A description of the C/C++ interface bindings for SQLite through version 
   2.8
-
-</td></tr>
-<tr><td valign="top" align="right">
-<a href="datatypes.html">Version&nbsp;2&nbsp;DataTypes&nbsp;</a></td>
-<td width="10"></td>
-<td valign="top" align="left">
-
+</td></tr><tr><td valign="top" align="right"><a href="datatypes.html">Version&nbsp;2&nbsp;DataTypes&nbsp;</a></td><td width="10"></td><td valign="top" align="left">
   A description of how SQLite version 2 handles SQL datatypes.
   Short summary:  Everything is a string.
-
-</td></tr>
-<tr><td valign="top" align="right">
-<a href="changes.html">Release&nbsp;History</a></td>
-<td width="10"></td>
-<td valign="top" align="left">
-
+</td></tr><tr><td valign="top" align="right"><a href="changes.html">Release&nbsp;History</a></td><td width="10"></td><td valign="top" align="left">
   A chronology of SQLite releases going back to version 1.0.0
-
-</td></tr>
-<tr><td valign="top" align="right">
-<a href="speed.html">Speed&nbsp;Comparison</a></td>
-<td width="10"></td>
-<td valign="top" align="left">
-
+</td></tr><tr><td valign="top" align="right"><a href="speed.html">Speed&nbsp;Comparison</a></td><td width="10"></td><td valign="top" align="left">
   The speed of version 2.7.6 of SQLite is compared against PostgreSQL and
   MySQL.
-
-</td></tr>
-<tr><td valign="top" align="right">
-<a href="arch.html">Architecture</a></td>
-<td width="10"></td>
-<td valign="top" align="left">
-
+</td></tr><tr><td valign="top" align="right"><a href="arch.html">Architecture</a></td><td width="10"></td><td valign="top" align="left">
   An architectural overview of the SQLite library, useful for those who want
   to hack the code.
-
-</td></tr>
-<tr><td valign="top" align="right">
-<a href="vdbe.html">VDBE&nbsp;Tutorial</a></td>
-<td width="10"></td>
-<td valign="top" align="left">
-
+</td></tr><tr><td valign="top" align="right"><a href="vdbe.html">VDBE&nbsp;Tutorial</a></td><td width="10"></td><td valign="top" align="left">
   The VDBE is the subsystem within SQLite that does the actual work of
   executing SQL statements.  This page describes the principles of operation
   for the VDBE in SQLite version 2.7.  This is essential reading for anyone
   who want to modify the SQLite sources.
-
-</td></tr>
-<tr><td valign="top" align="right">
-<a href="opcode.html">VDBE&nbsp;Opcodes</a></td>
-<td width="10"></td>
-<td valign="top" align="left">
-
+</td></tr><tr><td valign="top" align="right"><a href="opcode.html">VDBE&nbsp;Opcodes</a></td><td width="10"></td><td valign="top" align="left">
   This document is an automatically generated description of the various
   opcodes that the VDBE understands.  Programmers can use this document as
   a reference to better understand the output of EXPLAIN listings from
   SQLite.
-
-</td></tr>
-<tr><td valign="top" align="right">
-<a href="compile.html">Compilation&nbsp;Options</a></td>
-<td width="10"></td>
-<td valign="top" align="left">
-
+</td></tr><tr><td valign="top" align="right"><a href="compile.html">Compilation&nbsp;Options</a></td><td width="10"></td><td valign="top" align="left">
   This document describes the compile time options that may be set to 
   modify the default behavior of the library or omit optional features
   in order to reduce binary size.
-
-</td></tr>
-<tr><td valign="top" align="right">
-<a href="formatchng.html">Backwards&nbsp;Compatibility</a></td>
-<td width="10"></td>
-<td valign="top" align="left">
-
+</td></tr><tr><td valign="top" align="right"><a href="formatchng.html">Backwards&nbsp;Compatibility</a></td><td width="10"></td><td valign="top" align="left">
   This document details all of the incompatible changes to the SQLite
   file format that have occurred since version 1.0.0.
-
 </td></tr>
-
 </table>
-
-<hr><small<i>
-This page last modified 2007/12/19 18:28:48 UTC
+<hr><small><i>
+This page last modified 2008/07/16 18:57:36 UTC
 </i></small></div></body></html>

@@ -389,27 +389,35 @@ modes, as follows:</P>
 </UL>
 
 <a name="collation"></a>
+
 <h3>7. User-defined Collation Sequences</h3>
 
 <p>
 By default, when SQLite compares two text values, the result of the
 comparison is determined using memcmp(), regardless of the encoding of the
 string. SQLite v3 provides the ability for users to supply arbitrary
-comparison functions, known as user-defined collation sequences, to be used
-instead of memcmp().
+comparison functions, known as user-defined "collation sequences" or
+"collating functions", to be used instead of memcmp().
 </p>  
 <p>
 Aside from the default collation sequence BINARY, implemented using
-memcmp(), SQLite features one extra built-in collation sequences 
-intended for testing purposes, the NOCASE collation:
+memcmp(), SQLite features two extra built-in collation sequences 
+intended for testing purposes, the NOCASE and RTRIM collations:
 </p>  
 <UL>
-	<LI><b>BINARY</b> - Compares string data using memcmp(), regardless
-                            of text encoding.</LI>
-	<LI><b>NOCASE</b> - The same as binary, except the 26 upper case
-			    characters used by the English language are
-			    folded to their lower case equivalents before
-                            the comparison is performed.  </UL>
+<LI><b>BINARY</b> - Compares string data using memcmp(), regardless
+                    of text encoding.</LI>
+<LI><b>NOCASE</b> - The same as binary, except the 26 upper case
+     characters of ASCII are
+     folded to their lower case equivalents before
+     the comparison is performed.  Note that only ASCII characters
+     are case folded.  SQLite does not attempt to due full
+     UTF case folding due to the size of the tables required.</li>
+
+<LI><b>RTRIM</b> - The same as binary, except that trailing space
+     characters are ignored.</li>
+</ul>
+
 
 
 <h4>7.1 Assigning Collation Sequences from SQL</h4>
@@ -428,10 +436,10 @@ which such a comparison takes place.
 </p>  
 
 <p>
-For binary comparison operators (=, <, >, <= and >=) if either operand is a
-column, then the default collation type of the column determines the
-collation sequence to use for the comparison. If both operands are columns,
-then the collation type for the left operand determines the collation
+For binary comparison operators (=, &lt;, &gt;, &lt;= and &gt;=) if either
+operand is a column, then the default collation type of the column determines
+the collation sequence to use for the comparison. If both operands are
+columns, then the collation type for the left operand determines the collation
 sequence used. If neither operand is a column, then the BINARY collation
 sequence is used.  For the purposes of this paragraph, a column name
 preceded by one or more unary "+" operators is considered a column name.
@@ -505,7 +513,6 @@ SELECT * FROM t1 ORDER BY c COLLATE NOCASE;
 
 </PRE>
 </blockquote>
-
-<hr><small<i>
-This page last modified 2007/11/12 15:19:12 UTC
+<hr><small><i>
+This page last modified 2008/06/26 02:51:28 UTC
 </i></small></div></body></html>

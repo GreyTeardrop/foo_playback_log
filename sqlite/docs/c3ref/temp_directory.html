@@ -70,28 +70,21 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Name Of The Folder Holding Temporary Files</h2>
-<blockquote><pre>
-SQLITE_EXTERN char *sqlite3_temp_directory;
-
-</pre></blockquote>
-<p>
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Name Of The Folder Holding Temporary Files</h2><blockquote><pre>SQLITE_EXTERN char *sqlite3_temp_directory;
+</pre></blockquote><p>
 If this global variable is made to point to a string which is
-the name of a folder (a.ka. directory), then all temporary files
+the name of a folder (a.k.a. directory), then all temporary files
 created by SQLite will be placed in that directory.  If this variable
-is NULL pointer, then SQLite does a search for an appropriate temporary
-file directory.</p>
+is a NULL pointer, then SQLite performs a search for an appropriate
+temporary file directory.</p>
 
-<p>It is not safe to modify this variable once a database connection
+<p>It is not safe to modify this variable once a <a href="../c3ref/sqlite3.html">database connection</a>
 has been opened.  It is intended that this variable be set once
 as part of process initialization and before any SQLite interface
 routines have been call and remain unchanged thereafter.
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

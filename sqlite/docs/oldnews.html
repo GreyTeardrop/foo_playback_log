@@ -72,10 +72,51 @@ a:visited { color: #734559 }
   
 
 
+<a name="2008__ar_17"></a><h3>2008-Mar-17 - Version 3.5.7</h3><p>
+  Version 3.5.7 fixes several minor and obscure bugs, especially 
+  in the autoconf-generated makefile.  Upgrading is optional.
+  This release of SQLite is considered stable and ready for production use.
+</p><hr width="50%"><a name="2008__eb_6"></a><h3>2008-Feb-6 - Version 3.5.6</h3><p>
+  Version 3.5.6 fixes a minor regression in 3.5.5 - a regression that
+  had nothing to do with the massive change ove the virtual machine
+  to a register-based design.
+  No problems have been reported with the new virtual machine.  This
+  release of SQLite is considered stable and ready for production use.
+</p><hr width="50%"><a name="2008__an_31"></a><h3>2008-Jan-31 - Version 3.5.5</h3><p>
+  Version 3.5.5 changes over 8% of the core source code of SQLite in order
+  to convert the internal virtual machine from a stack-based design into
+  a register-based design.  This change will allow future optimizations
+  and will avoid an entire class of stack overflow bugs that have caused
+  problems in the past.  Even though this change is large, extensive testing
+  has found zero errors in the new virtual machine and so we believe this
+  to be a very stable release.
+</p><hr width="50%"><a name="2007__ec_14"></a><h3>2007-Dec-14 - Version 3.5.4</h3><p>
+  Version 3.5.4 fixes an long-standing but obscure bug in UPDATE and
+  DELETE which might cause database corruption.  (See ticket #2832.)
+  Upgrading is recommended for all users.</p>
 
-<a name="2007__ov_05"></a>
-<h3>2007-Nov-05 - Version 3.5.2</h3>
-<p>
+<p>  This release also brings the processing of ORDER BY statements into
+  compliance with standard SQL.  This could, in theory, cause problems
+  for existing applications that depend on the older, buggy behavior.
+  See ticket #2822 for additional information.
+</p><hr width="50%"><a name="2007__ec_12"></a><h3>2007-Dec-12 - SQLite Consortium Announced</h3><p>
+  The <a href="consortium.html">SQLite Consortium</a> was launched
+  today with <a href="http://www.mozilla.org/">Mozilla</a> and
+  <a href="http://www.symbian.com/">Symbian</a> as charter members.
+  As noted in the <a href="pressrelease-20071212.html">press release</a>,
+  the Consortium's goal is to promote the continuing vitality and
+  independence of SQLite.  
+</p><hr width="50%"><a name="2007__ov_27"></a><h3>2007-Nov-27 - Version 3.5.3</h3><p>
+  This is an incremental release that fixes several minor problems.
+  Upgrading is optional.  If Version 3.5.2 or 3.5.1 is working fine
+  for you, then there is no pressing need to change to 3.5.3.</p>
+
+<p>  The prebuilt binaries and the amalgamation found on the 
+  <a href="download.html">download</a> page include the FTS3 fulltext
+  search extension module.  We are doing this on an experimental
+  basis and are not promising to provide prebuilt binaries with
+  FTS3 in the future.
+</p><hr width="50%"><a name="2007__ov_05"></a><h3>2007-Nov-05 - Version 3.5.2</h3><p>
   This is an incremental release that fixes several minor problems,
   adds some obscure features, and provides some performance tweaks.  
   Upgrading is optional.</p>
@@ -86,11 +127,7 @@ a:visited { color: #734559 }
   array for all its dynamic memory allocation needs and never calls
   malloc.  Expect to see additional radical changes to the memory 
   allocation subsystem in future releases.
-</p>
-<hr width="50%">
-<a name="2007__ct_04"></a>
-<h3>2007-Oct-04 - Version 3.5.1</h3>
-<p>
+</p><hr width="50%"><a name="2007__ct_04"></a><h3>2007-Oct-04 - Version 3.5.1</h3><p>
   Fix a long-standing bug that might cause database corruption if a
   disk-full error occurs in the middle of a transaction and that
   transaction is not rolled back.
@@ -98,11 +135,7 @@ a:visited { color: #734559 }
 
 <p>  The new VFS layer is stable.  However, we still reserve the right to
   make tweaks to the interface definition of the VFS if necessary.
-</p>
-<hr width="50%">
-<a name="2007__ep_04"></a>
-<h3>2007-Sep-04 - Version 3.5.0 alpha</h3>
-<p>
+</p><hr width="50%"><a name="2007__ep_04"></a><h3>2007-Sep-04 - Version 3.5.0 alpha</h3><p>
   The OS interface layer and the memory allocation subsystems in
   SQLite have been reimplemented.  The published API is largely unchanged
   but the (unpublished) OS interface has been modified extensively.  
@@ -114,11 +147,7 @@ a:visited { color: #734559 }
   modified.  We are calling this first release "alpha" in order to give
   the user community time to test and evaluate the changes before we
   freeze the new design.
-</p>
-<hr width="50%">
-<a name="2007__ug_13"></a>
-<h3>2007-Aug-13 - Version 3.4.2</h3>
-<p>
+</p><hr width="50%"><a name="2007__ug_13"></a><h3>2007-Aug-13 - Version 3.4.2</h3><p>
   While stress-testing the 
   <a href="c3ref/soft_heap_limit.html">soft_heap_limit</a>
   feature, a bug that could lead to
@@ -130,11 +159,7 @@ a:visited { color: #734559 }
   only if you use the 
   <a href="c3ref/soft_heap_limit.html">sqlite3_soft_heap_limit</a>
   interface.
-</p>
-<hr width="50%">
-<a name="2007__ly_20"></a>
-<h3>2007-Jly-20 - Version 3.4.1</h3>
-<p>
+</p><hr width="50%"><a name="2007__ly_20"></a><h3>2007-Jly-20 - Version 3.4.1</h3><p>
   This release fixes a bug in <a href="lang_vacuum.html">VACUUM</a> that
   can lead to <a href="http://www.sqlite.org/cvstrac/wiki?p=DatabaseCorruption">
   database corruption</a>.  The bug was introduced in version 
@@ -142,11 +167,7 @@ a:visited { color: #734559 }
   Upgrading is recommended for all users.  Also included are a slew of
   other more routine
   <a href="changes.html#version_3_4_1">enhancements and bug fixes</a>.
-</p>
-<hr width="50%">
-<a name="2007__un_18"></a>
-<h3>2007-Jun-18 - Version 3.4.0</h3>
-<p>
+</p><hr width="50%"><a name="2007__un_18"></a><h3>2007-Jun-18 - Version 3.4.0</h3><p>
   This release fixes two separate bugs either of which 
   can lead to database corruption.  Upgrading
   is strongly recommended.  If you must continue using an older version
@@ -170,36 +191,20 @@ a:visited { color: #734559 }
   <a href="pragma.html#pragma_incremental_vacuum">incremental vacuum</a>.
   See the <a href="changes.html#version_3_4_0">change log</a> 
   for additional information.
-</p>
-<hr width="50%">
-<a name="2007__pr_25"></a>
-<h3>2007-Apr-25 - Version 3.3.17</h3>
-<p>
+</p><hr width="50%"><a name="2007__pr_25"></a><h3>2007-Apr-25 - Version 3.3.17</h3><p>
   This version fixes a bug in the forwards-compatibility logic of SQLite
   that was causing a database to become unreadable when it should have
   been read-only.  Upgrade from 3.3.16 only if you plan to deploy into
   a product that might need to be upgraded in the future.  For day to day
   use, it probably does not matter.
-</p>
-<hr width="50%">
-<a name="2007__pr_18"></a>
-<h3>2007-Apr-18 - Version 3.3.16</h3>
-<p>
+</p><hr width="50%"><a name="2007__pr_18"></a><h3>2007-Apr-18 - Version 3.3.16</h3><p>
   Performance improvements added in 3.3.14 but mistakenly turned off
   in 3.3.15 have been reinstated.  A bug has been fixed that prevented 
   VACUUM from running if a NULL value was in a UNIQUE column.
-</p>
-<hr width="50%">
-<a name="2007__pr_09"></a>
-<h3>2007-Apr-09 - Version 3.3.15</h3>
-<p>
+</p><hr width="50%"><a name="2007__pr_09"></a><h3>2007-Apr-09 - Version 3.3.15</h3><p>
   An annoying bug introduced in 3.3.14 has been fixed.  There are
   also many enhancements to the test suite.  
-</p>
-<hr width="50%">
-<a name="2007__pr_02"></a>
-<h3>2007-Apr-02 - Version 3.3.14</h3>
-<p>
+</p><hr width="50%"><a name="2007__pr_02"></a><h3>2007-Apr-02 - Version 3.3.14</h3><p>
   This version focuses on performance improvements.  If you recompile
   <a href="http://www.sqlite.org/cvstrac/wiki?p=TheAmalgamation">
   the amalgamation</a> using GCC option -O3 (the precompiled binaries
@@ -208,44 +213,24 @@ a:visited { color: #734559 }
   workload.  This version also
   adds support for <a href="pragma.html#pragma_locking_mode">
   exclusive access mode</a>.
-</p>
-<hr width="50%">
-<a name="2007__eb_13"></a>
-<h3>2007-Feb-13 - Version 3.3.13</h3>
-<p>
+</p><hr width="50%"><a name="2007__eb_13"></a><h3>2007-Feb-13 - Version 3.3.13</h3><p>
   This version fixes a subtle bug in the ORDER BY optimizer that can 
   occur when using joins.  There are also a few minor enhancements.
   Upgrading is recommended.
-</p>
-<hr width="50%">
-<a name="2007__an_27"></a>
-<h3>2007-Jan-27 - Version 3.3.12</h3>
-<p>
+</p><hr width="50%"><a name="2007__an_27"></a><h3>2007-Jan-27 - Version 3.3.12</h3><p>
   The first published build of the previous version used the wrong
   set of source files.  Consequently, many people downloaded a build
   that was labeled as "3.3.11" but was really 3.3.10.  Version 3.3.12
   is released to clear up the ambiguity.  A couple more bugs have
   also been fixed and <a href="pragma.html#pragma_integrity_check">
   PRAGMA integrity_check</a> has been enhanced.
-</p>
-<hr width="50%">
-<a name="2007__an_22"></a>
-<h3>2007-Jan-22 - Version 3.3.11</h3>
-<p>
+</p><hr width="50%"><a name="2007__an_22"></a><h3>2007-Jan-22 - Version 3.3.11</h3><p>
   Version 3.3.11 fixes for a few more problems in version 3.3.9 that
   version 3.3.10 failed to catch.  Upgrading is recommended.
-</p>
-<hr width="50%">
-<a name="2007__an_9"></a>
-<h3>2007-Jan-9 - Version 3.3.10</h3>
-<p>
+</p><hr width="50%"><a name="2007__an_9"></a><h3>2007-Jan-9 - Version 3.3.10</h3><p>
   Version 3.3.10 fixes several bugs that were introduced by the previous
   release.  Upgrading is recommended.
-</p>
-<hr width="50%">
-<a name="2007__an_4"></a>
-<h3>2007-Jan-4 - Version 3.3.9</h3>
-<p>
+</p><hr width="50%"><a name="2007__an_4"></a><h3>2007-Jan-4 - Version 3.3.9</h3><p>
   Version 3.3.9 fixes bugs that can lead to database corruption under
   obscure and difficult to reproduce circumstances.  See
   <a href="http://www.sqlite.org/cvstrac/wiki?p=DatabaseCorruption">
@@ -256,21 +241,13 @@ a:visited { color: #734559 }
   API and includes important bug fixes in the command-line
   shell and enhancements to the query optimizer.  Upgrading is
   recommended.
-</p>
-<hr width="50%">
-<a name="2006__ct_9"></a>
-<h3>2006-Oct-9 - Version 3.3.8</h3>
-<p>
+</p><hr width="50%"><a name="2006__ct_9"></a><h3>2006-Oct-9 - Version 3.3.8</h3><p>
   Version 3.3.8 adds support for full-text search using the 
   <a href="http://www.sqlite.org/cvstrac/wiki?p=FtsOne">FTS1
   module.</a>  There are also minor bug fixes.  Upgrade only if
   you want to try out the new full-text search capabilities or if
   you are having problems with 3.3.7.
-</p>
-<hr width="50%">
-<a name="2006__ug_12"></a>
-<h3>2006-Aug-12 - Version 3.3.7</h3>
-<p>
+</p><hr width="50%"><a name="2006__ug_12"></a><h3>2006-Aug-12 - Version 3.3.7</h3><p>
   Version 3.3.7 includes support for loadable extensions and virtual
   tables.  But both features are still considered "beta" and their
   APIs are subject to change in a future release.  This release is
@@ -278,11 +255,7 @@ a:visited { color: #734559 }
   since 3.3.6.  Upgrading is not necessary.  Do so only if you encounter
   one of the obscure bugs that have been fixed or if you want to try
   out the new features.
-</p>
-<hr width="50%">
-<a name="2006__un_19"></a>
-<h3>2006-Jun-19 - New Book About SQLite</h3>
-<p>
+</p><hr width="50%"><a name="2006__un_19"></a><h3>2006-Jun-19 - New Book About SQLite</h3><p>
   <a href="http://www.apress.com/book/bookDisplay.html?bID=10130">
   <i>The Definitive Guide to SQLite</i></a>, a new book by
   <a href="http://www.mikesclutter.com">Mike Owens</a>.
@@ -290,50 +263,26 @@ a:visited { color: #734559 }
   The books covers the latest SQLite internals as well as
   the native C interface and bindings for PHP, Python,
   Perl, Ruby, Tcl, and Java.  Recommended.
-</p>
-<hr width="50%">
-<a name="2006__un_6"></a>
-<h3>2006-Jun-6 - Version 3.3.6</h3>
-<p>
+</p><hr width="50%"><a name="2006__un_6"></a><h3>2006-Jun-6 - Version 3.3.6</h3><p>
   Changes include improved tolerance for windows virus scanners
   and faster :memory: databases.  There are also fixes for several
   obscure bugs.  Upgrade if you are having problems.
-</p>
-<hr width="50%">
-<a name="2006__pr_5"></a>
-<h3>2006-Apr-5 - Version 3.3.5</h3>
-<p>
+</p><hr width="50%"><a name="2006__pr_5"></a><h3>2006-Apr-5 - Version 3.3.5</h3><p>
   This release fixes many minor bugs and documentation typos and
   provides some minor new features and performance enhancements.
   Upgrade only if you are having problems or need one of the new features.
-</p>
-<hr width="50%">
-<a name="2006__eb_11"></a>
-<h3>2006-Feb-11 - Version 3.3.4</h3>
-<p>
+</p><hr width="50%"><a name="2006__eb_11"></a><h3>2006-Feb-11 - Version 3.3.4</h3><p>
   This release fixes several bugs, including a 
   a blunder that might cause a deadlock on multithreaded systems.
   Anyone using SQLite in a multithreaded environment should probably upgrade.
-</p>
-<hr width="50%">
-<a name="2006__an_31"></a>
-<h3>2006-Jan-31 - Version 3.3.3 stable</h3>
-<p>
+</p><hr width="50%"><a name="2006__an_31"></a><h3>2006-Jan-31 - Version 3.3.3 stable</h3><p>
   There have been no major problems discovered in version 3.3.2, so
   we hereby declare the new APIs and language features to be stable
   and supported.
-</p>
-<hr width="50%">
-<a name="2006__an_24"></a>
-<h3>2006-Jan-24 - Version 3.3.2 beta</h3>
-<p>
+</p><hr width="50%"><a name="2006__an_24"></a><h3>2006-Jan-24 - Version 3.3.2 beta</h3><p>
   More bug fixes and performance improvements as we move closer to
   a production-ready version 3.3.x.
-</p>
-<hr width="50%">
-<a name="2006__an_16"></a>
-<h3>2006-Jan-16 - Version 3.3.1 alpha</h3>
-<p>
+</p><hr width="50%"><a name="2006__an_16"></a><h3>2006-Jan-16 - Version 3.3.1 alpha</h3><p>
   Many bugs found in last week's alpha release have now been fixed and
   the library is running much faster again.</p>
 
@@ -345,11 +294,7 @@ a:visited { color: #734559 }
   See <a href="http://www.sqlite.org/cvstrac/wiki?p=MultiThreading">
   the MultiThreading wiki page</a> for additional
   information.
-</p>
-<hr width="50%">
-<a name="2006__an_10"></a>
-<h3>2006-Jan-10 - Version 3.3.0 alpha</h3>
-<p>
+</p><hr width="50%"><a name="2006__an_10"></a><h3>2006-Jan-10 - Version 3.3.0 alpha</h3><p>
   Version 3.3.0 adds support for CHECK constraints, DESC indices,
   separate REAL and INTEGER column affinities, a new OS interface layer
   design, and many other changes.  The code passed a regression
@@ -363,28 +308,16 @@ a:visited { color: #734559 }
   databases created by version 3.3.0 will not be readable or writable
   by earlier versions of the SQLite.  The older file format can be
   specified at compile-time for those rare cases where it is needed.
-</p>
-<hr width="50%">
-<a name="2005__ec_19"></a>
-<h3>2005-Dec-19 - Versions 3.2.8 and 2.8.17</h3>
-<p>
+</p><hr width="50%"><a name="2005__ec_19"></a><h3>2005-Dec-19 - Versions 3.2.8 and 2.8.17</h3><p>
   These versions contain one-line changes to 3.2.7 and 2.8.16 to fix a bug
   that has been present since March of 2002 and version 2.4.0.
   That bug might possibly cause database corruption if a large INSERT or
   UPDATE statement within a multi-statement transaction fails due to a
   uniqueness constraint but the containing transaction commits.
-</p>
-<hr width="50%">
-<a name="2005__ep_24"></a>
-<h3>2005-Sep-24 - Version 3.2.7</h3>
-<p>
+</p><hr width="50%"><a name="2005__ep_24"></a><h3>2005-Sep-24 - Version 3.2.7</h3><p>
   This version fixes several minor and obscure bugs.
   Upgrade only if you are having problems.
-</p>
-<hr width="50%">
-<a name="2005__ep_16"></a>
-<h3>2005-Sep-16 - Version 3.2.6 - Critical Bug Fix</h3>
-<p>
+</p><hr width="50%"><a name="2005__ep_16"></a><h3>2005-Sep-16 - Version 3.2.6 - Critical Bug Fix</h3><p>
   This version fixes a bug that can result in database
   corruption if a VACUUM of a 1 gibibyte or larger database fails
   (perhaps do to running out of disk space or an unexpected power loss)
@@ -394,59 +327,31 @@ a:visited { color: #734559 }
   The ORDER BY and GROUP BY processing was rewritten to use less memory.
   Support for COUNT(DISTINCT) was added.  The LIKE operator can now be
   used by the optimizer on columns with COLLATE NOCASE.
-</p>
-<hr width="50%">
-<a name="2005__ug_27"></a>
-<h3>2005-Aug-27 - Version 3.2.5</h3>
-<p>
+</p><hr width="50%"><a name="2005__ug_27"></a><h3>2005-Aug-27 - Version 3.2.5</h3><p>
   This release fixes a few more lingering bugs in the new code.
   We expect that this release will be stable and ready for production use.
-</p>
-<hr width="50%">
-<a name="2005__ug_24"></a>
-<h3>2005-Aug-24 - Version 3.2.4</h3>
-<p>
+</p><hr width="50%"><a name="2005__ug_24"></a><h3>2005-Aug-24 - Version 3.2.4</h3><p>
   This release fixes a bug in the new optimizer that can lead to segfaults
   when parsing very complex WHERE clauses.
-</p>
-<hr width="50%">
-<a name="2005__ug_21"></a>
-<h3>2005-Aug-21 - Version 3.2.3</h3>
-<p>
+</p><hr width="50%"><a name="2005__ug_21"></a><h3>2005-Aug-21 - Version 3.2.3</h3><p>
   This release adds the <a href="lang_analyze.html">ANALYZE</a> command,
   the <a href="lang_expr.html">CAST</a> operator, and many
   very substantial improvements to the query optimizer.  See the
   <a href="changes.html#version_3_2_3">change log</a> for additional
   information.
-</p>
-<hr width="50%">
-<a name="2005__ug_2"></a>
-<h3>2005-Aug-2 - 2005 Open Source Award for SQLite</h3>
-<p>
+</p><hr width="50%"><a name="2005__ug_2"></a><h3>2005-Aug-2 - 2005 Open Source Award for SQLite</h3><p>
   SQLite and its primary author D. Richard Hipp have been honored with
   a <a href="http://osdir.com/Article6677.phtml">2005 Open Source
   Award</a> from Google and O'Reilly.<br clear="right">
-</p>
-<hr width="50%">
-<a name="2005__un_13"></a>
-<h3>2005-Jun-13 - Version 3.2.2</h3>
-<p>
+</p><hr width="50%"><a name="2005__un_13"></a><h3>2005-Jun-13 - Version 3.2.2</h3><p>
   This release includes numerous minor bug fixes, speed improvements,
   and code size reductions.  There is no reason to upgrade unless you
   are having problems or unless you just want to.
-</p>
-<hr width="50%">
-<a name="2005__ar_29"></a>
-<h3>2005-Mar-29 - Version 3.2.1</h3>
-<p>
+</p><hr width="50%"><a name="2005__ar_29"></a><h3>2005-Mar-29 - Version 3.2.1</h3><p>
   This release fixes a memory allocation problem in the new
   <a href="lang_altertable.html">ALTER TABLE ADD COLUMN</a>
   command.
-</p>
-<hr width="50%">
-<a name="2005__ar_21"></a>
-<h3>2005-Mar-21 - Version 3.2.0</h3>
-<p>
+</p><hr width="50%"><a name="2005__ar_21"></a><h3>2005-Mar-21 - Version 3.2.0</h3><p>
   The primary purpose for version 3.2.0 is to add support for
   <a href="lang_altertable.html">ALTER TABLE ADD COLUMN</a>.
   The new ADD COLUMN capability is made
@@ -460,21 +365,13 @@ a:visited { color: #734559 }
   might not work correctly.  See
   <a href="http://www.sqlite.org/cvstrac/tktview?tn=1171">Ticket #1171</a>
   for details.  Upgrading is recommended for all users.
-</p>
-<hr width="50%">
-<a name="2005__ar_16"></a>
-<h3>2005-Mar-16 - Version 3.1.6</h3>
-<p>
+</p><hr width="50%"><a name="2005__ar_16"></a><h3>2005-Mar-16 - Version 3.1.6</h3><p>
   Version 3.1.6 fixes a critical bug that can cause database corruption
   when inserting rows into tables with around 125 columns. This bug was
   introduced in version 3.0.0.  See
   <a href="http://www.sqlite.org/cvstrac/tktview?tn=1163">Ticket #1163</a>
   for additional information.
-</p>
-<hr width="50%">
-<a name="2005__ar_11"></a>
-<h3>2005-Mar-11 - Versions 3.1.4 and 3.1.5 Released</h3>
-<p>
+</p><hr width="50%"><a name="2005__ar_11"></a><h3>2005-Mar-11 - Versions 3.1.4 and 3.1.5 Released</h3><p>
   Version 3.1.4 fixes a critical bug that could cause database corruption
   if the autovacuum mode of version 3.1.0 is turned on (it is off by
   default) and a CREATE UNIQUE INDEX is executed within a transaction but
@@ -485,17 +382,9 @@ a:visited { color: #734559 }
   the F_FULLFSYNC ioctl() in OS-X by setting "PRAGMA synchronous=on" instead
   of the default "PRAGMA synchronous=full".  There was an attempt to add
   this capability in 3.1.4 but it did not work due to a spelling error.
-</p>
-<hr width="50%">
-<a name="2005__eb_19"></a>
-<h3>2005-Feb-19 - Version 3.1.3 Released</h3>
-<p>
+</p><hr width="50%"><a name="2005__eb_19"></a><h3>2005-Feb-19 - Version 3.1.3 Released</h3><p>
   Version 3.1.3 cleans up some minor issues discovered in version 3.1.2.
-</p>
-<hr width="50%">
-<a name="2005__eb_15"></a>
-<h3>2005-Feb-15 - Versions 2.8.16 and 3.1.2 Released</h3>
-<p>
+</p><hr width="50%"><a name="2005__eb_15"></a><h3>2005-Feb-15 - Versions 2.8.16 and 3.1.2 Released</h3><p>
   A critical bug in the VACUUM command that can lead to database
   corruption has been fixed in both the 2.x branch and the main
   3.x line.  This bug has existed in all prior versions of SQLite.
@@ -511,11 +400,7 @@ a:visited { color: #734559 }
   <a href="http://www.sqlite.org/releasenotes310.html">release notes
   for version 3.1.0</a> for a detailed description of the
   changes available in the 3.1 series.
-</p>
-<hr width="50%">
-<a name="2005__eb_01"></a>
-<h3>2005-Feb-01 - Version 3.1.1 (beta) Released</h3>
-<p>
+</p><hr width="50%"><a name="2005__eb_01"></a><h3>2005-Feb-01 - Version 3.1.1 (beta) Released</h3><p>
   Version 3.1.1 (beta) is now available on the
   website.  Verison 3.1.1 is fully backwards compatible with the 3.0 series
   and features many new features including Autovacuum and correlated
@@ -523,11 +408,7 @@ a:visited { color: #734559 }
   <a href="http://www.sqlite.org/releasenotes310.html">release notes</a>
   From version 3.1.0 apply equally to this release beta.  A stable release
   is expected within a couple of weeks.
-</p>
-<hr width="50%">
-<a name="2005__an_21"></a>
-<h3>2005-Jan-21 - Version 3.1.0 (alpha) Released</h3>
-<p>
+</p><hr width="50%"><a name="2005__an_21"></a><h3>2005-Jan-21 - Version 3.1.0 (alpha) Released</h3><p>
   Version 3.1.0 (alpha) is now available on the
   website.  Verison 3.1.0 is fully backwards compatible with the 3.0 series
   and features many new features including Autovacuum and correlated
@@ -537,76 +418,44 @@ a:visited { color: #734559 }
 
 <p>  This is an alpha release.  A beta release is expected in about a week
   with the first stable release to follow after two more weeks.
-</p>
-<hr width="50%">
-<a name="2004__ov_09"></a>
-<h3>2004-Nov-09 - SQLite at the 2004 International PHP Conference</h3>
-<p>
+</p><hr width="50%"><a name="2004__ov_09"></a><h3>2004-Nov-09 - SQLite at the 2004 International PHP Conference</h3><p>
   There was a talk on the architecture of SQLite and how to optimize
   SQLite queries at the 2004 International PHP Conference in Frankfurt,
   Germany.
   <a href="http://www.sqlite.org/php2004/page-001.html">
   Slides</a> from that talk are available.
-</p>
-<hr width="50%">
-<a name="2004__ct_11"></a>
-<h3>2004-Oct-11 - Version 3.0.8</h3>
-<p>
+</p><hr width="50%"><a name="2004__ct_11"></a><h3>2004-Oct-11 - Version 3.0.8</h3><p>
   Version 3.0.8 of SQLite contains several code optimizations and minor
   bug fixes and adds support for DEFERRED, IMMEDIATE, and EXCLUSIVE
   transactions.  This is an incremental release.  There is no reason
   to upgrade from version 3.0.7 if that version is working for you.
-</p>
-<hr width="50%">
-<a name="2004__ct_10"></a>
-<h3>2004-Oct-10 - SQLite at the 11<sup><small>th</small></sup>
-Annual Tcl/Tk Conference</h3>
-<p>
+</p><hr width="50%"><a name="2004__ct_10"></a><h3>2004-Oct-10 - SQLite at the 11<sup><small>th</small></sup>
+Annual Tcl/Tk Conference</h3><p>
   There will be a talk on the use of SQLite in Tcl/Tk at the
   11<sup><small>th</small></sup> Tcl/Tk Conference this week in
   New Orleans.  Visit <a href="http://www.tcl.tk/community/tcl2004/">
   http://www.tcl.tk/</a> for details.
   <a href="http://www.sqlite.org/tclconf2004/page-001.html">
   Slides</a> from the talk are available.
-</p>
-<hr width="50%">
-<a name="2004__ep_18"></a>
-<h3>2004-Sep-18 - Version 3.0.7</h3>
-<p>
+</p><hr width="50%"><a name="2004__ep_18"></a><h3>2004-Sep-18 - Version 3.0.7</h3><p>
   Version 3.0 has now been in use by multiple projects for several
   months with no major difficulties.   We consider it stable and
   ready for production use. 
-</p>
-<hr width="50%">
-<a name="2004__ep_02"></a>
-<h3>2004-Sep-02 - Version 3.0.6 (beta)</h3>
-<p>
+</p><hr width="50%"><a name="2004__ep_02"></a><h3>2004-Sep-02 - Version 3.0.6 (beta)</h3><p>
   Because of some important changes to sqlite3_step(),
   we have decided to
   do an additional beta release prior to the first "stable" release.
   If no serious problems are discovered in this version, we will
   release version 3.0 "stable" in about a week.
-</p>
-<hr width="50%">
-<a name="2004__ug_29"></a>
-<h3>2004-Aug-29 - Version 3.0.5 (beta)</h3>
-<p>
+</p><hr width="50%"><a name="2004__ug_29"></a><h3>2004-Aug-29 - Version 3.0.5 (beta)</h3><p>
   The fourth beta release of SQLite version 3.0 is now available.
   The next release is expected to be called "stable".
-</p>
-<hr width="50%">
-<a name="2004__ug_08"></a>
-<h3>2004-Aug-08 - Version 3.0.4 (beta)</h3>
-<p>
+</p><hr width="50%"><a name="2004__ug_08"></a><h3>2004-Aug-08 - Version 3.0.4 (beta)</h3><p>
   The third beta release of SQLite version 3.0 is now available.
   This new beta fixes several bugs including a database corruption
   problem that can occur when doing a DELETE while a SELECT is pending.
   Expect at least one more beta before version 3.0 goes final.
-</p>
-<hr width="50%">
-<a name="2004__uly_22"></a>
-<h3>2004-July-22 - Version 3.0.3 (beta)</h3>
-<p>
+</p><hr width="50%"><a name="2004__uly_22"></a><h3>2004-July-22 - Version 3.0.3 (beta)</h3><p>
   The second beta release of SQLite version 3.0 is now available.
   This new beta fixes many bugs and adds support for databases with
   varying page sizes.  The next 3.0 release will probably be called
@@ -621,21 +470,13 @@ Annual Tcl/Tk Conference</h3>
 
 <p>  SQLite version 3.0 is made possible in part by AOL
   developers supporting and embracing great Open-Source Software.
-</p>
-<hr width="50%">
-<a name="2004__ly_22"></a>
-<h3>2004-Jly-22 - Version 2.8.15</h3>
-<p>
+</p><hr width="50%"><a name="2004__ly_22"></a><h3>2004-Jly-22 - Version 2.8.15</h3><p>
   SQLite version 2.8.15 is a maintenance release for the version 2.8
   series.  Version 2.8 continues to be maintained with bug fixes, but
   no new features will be added to version 2.8.  All the changes in
   this release are minor.  If you are not having problems, there is
   there is no reason to upgrade.
-</p>
-<hr width="50%">
-<a name="2004__un_30"></a>
-<h3>2004-Jun-30 - Version 3.0.2 (beta) Released</h3>
-<p>
+</p><hr width="50%"><a name="2004__un_30"></a><h3>2004-Jun-30 - Version 3.0.2 (beta) Released</h3><p>
   The first beta release of SQLite version 3.0 is now available.
   Version 3.0 adds support for internationalization and a new
   more compact file format. 
@@ -646,22 +487,14 @@ Annual Tcl/Tk Conference</h3>
 
 <p>  SQLite version 3.0 is made possible in part by AOL
   developers supporting and embracing great Open-Source Software.
-</p>
-<hr width="50%">
-<a name="2004__un_25"></a>
-<h3>2004-Jun-25 - Website hacked</h3>
-<p>
+</p><hr width="50%"><a name="2004__un_25"></a><h3>2004-Jun-25 - Website hacked</h3><p>
   The www.sqlite.org website was hacked sometime around 2004-Jun-22
   because the lead SQLite developer failed to properly patch CVS.
   Evidence suggests that the attacker was unable to elevate privileges
   above user "cvs".  Nevertheless, as a precaution the entire website
   has been reconstructed from scratch on a fresh machine.  All services
   should be back to normal as of 2004-Jun-28.
-</p>
-<hr width="50%">
-<a name="2004__un_18"></a>
-<h3>2004-Jun-18 - Version 3.0.0 (alpha) Released</h3>
-<p>
+</p><hr width="50%"><a name="2004__un_18"></a><h3>2004-Jun-18 - Version 3.0.0 (alpha) Released</h3><p>
   The first alpha release of SQLite version 3.0 is available for
   public review and comment.  Version 3.0 enhances internationalization support
   through the use of UTF-16 and user-defined text collating sequences.
@@ -678,31 +511,19 @@ Annual Tcl/Tk Conference</h3>
 
 <p>  The 2.8 series of SQLite will continue to be supported with bug
   fixes for the foreseeable future.
-</p>
-<hr width="50%">
-<a name="2004__un_09"></a>
-<h3>2004-Jun-09 - Version 2.8.14 Released</h3>
-<p>
+</p><hr width="50%"><a name="2004__un_09"></a><h3>2004-Jun-09 - Version 2.8.14 Released</h3><p>
   SQLite version 2.8.14 is a patch release to the stable 2.8 series.
   There is no reason to upgrade if 2.8.13 is working ok for you.
   This is only a bug-fix release.  Most development effort is
   going into version 3.0.0 which is due out soon.
-</p>
-<hr width="50%">
-<a name="2004__ay_31"></a>
-<h3>2004-May-31 - CVS Access Temporarily Disabled</h3>
-<p>
+</p><hr width="50%"><a name="2004__ay_31"></a><h3>2004-May-31 - CVS Access Temporarily Disabled</h3><p>
   Anonymous access to the CVS repository will be suspended
   for 2 weeks beginning on 2004-June-04.  Everyone will still
   be able to download
   prepackaged source bundles, create or modify trouble tickets, or view
   change logs during the CVS service interruption. Full open access to the
   CVS repository will be restored on 2004-June-18.
-</p>
-<hr width="50%">
-<a name="2004__pr_23"></a>
-<h3>2004-Apr-23 - Work Begins On SQLite Version 3</h3>
-<p>
+</p><hr width="50%"><a name="2004__pr_23"></a><h3>2004-Apr-23 - Work Begins On SQLite Version 3</h3><p>
   Work has begun on version 3 of SQLite.  Version 3 is a major
   changes to both the C-language API and the underlying file format
   that will enable SQLite to better support internationalization.
@@ -710,10 +531,7 @@ Annual Tcl/Tk Conference</h3>
 
 <p>  Plans are to continue to support SQLite version 2.8 with
   bug fixes.  But all new development will occur in version 3.0.
-</p>
-<hr width="50%">
-
-
-<hr><small<i>
-This page last modified 2007/12/20 02:17:51 UTC
+</p><hr width="50%">
+<hr><small><i>
+This page last modified 2008/06/26 13:01:47 UTC
 </i></small></div></body></html>

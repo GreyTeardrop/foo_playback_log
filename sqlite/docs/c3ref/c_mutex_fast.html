@@ -70,27 +70,24 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Mutex Types</h2>
-<blockquote><pre>
-#define SQLITE_MUTEX_FAST             0
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Mutex Types</h2><blockquote><pre>#define SQLITE_MUTEX_FAST             0
 #define SQLITE_MUTEX_RECURSIVE        1
 #define SQLITE_MUTEX_STATIC_MASTER    2
 #define SQLITE_MUTEX_STATIC_MEM       3  /* sqlite3_malloc() */
 #define SQLITE_MUTEX_STATIC_MEM2      4  /* sqlite3_release_memory() */
 #define SQLITE_MUTEX_STATIC_PRNG      5  /* sqlite3_random() */
 #define SQLITE_MUTEX_STATIC_LRU       6  /* lru page list */
+#define SQLITE_MUTEX_STATIC_LRU2      7  /* lru page list */
+</pre></blockquote><p>
+The <a href="../c3ref/mutex_alloc.html">sqlite3_mutex_alloc()</a> interface takes a single argument
+which is one of these integer constants.</p>
 
-</pre></blockquote>
-<p>
- The 
-<a href="../c3ref/mutex_alloc.html">sqlite3_mutex_alloc()</a> interface takes a single argument
-which is one of these integer constants.
-</p>
-<p>See also lists of
+<p>The set of static mutexes may change from one SQLite release to the
+next.  Applications that override the built-in mutex logic must be
+prepared to accommodate additional static mutexes.
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

@@ -70,58 +70,40 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Run-Time Library Version Numbers</h2>
-<blockquote><pre>
-SQLITE_EXTERN const char sqlite3_version[];
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Run-Time Library Version Numbers</h2><blockquote><pre>SQLITE_EXTERN const char sqlite3_version[];
 const char *sqlite3_libversion(void);
 int sqlite3_libversion_number(void);
-
-</pre></blockquote>
-<p>
-These features provide the same information as the 
-<a href="../c3ref/c_version.html">SQLITE_VERSION</a>
-and 
-<a href="../c3ref/c_version.html">SQLITE_VERSION_NUMBER</a> #defines in the header, but are associated
+</pre></blockquote><p>
+These features provide the same information as the <a href="../c3ref/c_version.html">SQLITE_VERSION</a>
+and <a href="../c3ref/c_version.html">SQLITE_VERSION_NUMBER</a> #defines in the header, but are associated
 with the library instead of the header file.  Cautious programmers might
 include a check in their application to verify that
 sqlite3_libversion_number() always returns the value
-
 <a href="../c3ref/c_version.html">SQLITE_VERSION_NUMBER</a>.</p>
 
 <p>The sqlite3_libversion() function returns the same information as is
-in the sqlite3_version
-[]
- string constant.  The function is provided
+in the sqlite3_version[] string constant.  The function is provided
 for use in DLLs since DLL users usually do not have direct access to string
 constants within the DLL.</p>
 
 <p><h3>Invariants:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">F10021</td> 
+<tr><td valign="top">H10021</td> 
 <td valign="top">
-The 
-<a href="../c3ref/libversion.html">sqlite3_libversion_number()</a> interface returns an integer
-equal to 
-<a href="../c3ref/c_version.html">SQLITE_VERSION_NUMBER</a>.</td></tr>
-<tr><td valign="top">F10022</td> 
+The <a href="../c3ref/libversion.html">sqlite3_libversion_number()</a> interface shall return
+an integer equal to <a href="../c3ref/c_version.html">SQLITE_VERSION_NUMBER</a>.</td></tr>
+<tr><td valign="top">H10022</td> 
 <td valign="top">
-The 
-<a href="../c3ref/libversion.html">sqlite3_version</a> string constant contains the text of the
-
-<a href="../c3ref/c_version.html">SQLITE_VERSION</a> string.</td></tr>
-<tr><td valign="top">F10023</td> 
+The <a href="../c3ref/libversion.html">sqlite3_version</a> string constant shall contain
+the text of the <a href="../c3ref/c_version.html">SQLITE_VERSION</a> string.</td></tr>
+<tr><td valign="top">H10023</td> 
 <td valign="top">
-The 
-<a href="../c3ref/libversion.html">sqlite3_libversion()</a> function returns
-a pointer to the 
-<a href="../c3ref/libversion.html">sqlite3_version</a> string constant.</td></tr>
+The <a href="../c3ref/libversion.html">sqlite3_libversion()</a> function shall return
+a pointer to the <a href="../c3ref/libversion.html">sqlite3_version</a> string constant.</td></tr>
 </table>
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

@@ -70,47 +70,72 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Virtual File System Objects</h2>
-<blockquote><pre>
-sqlite3_vfs *sqlite3_vfs_find(const char *zVfsName);
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Virtual File System Objects</h2><blockquote><pre>sqlite3_vfs *sqlite3_vfs_find(const char *zVfsName);
 int sqlite3_vfs_register(sqlite3_vfs*, int makeDflt);
 int sqlite3_vfs_unregister(sqlite3_vfs*);
-
-</pre></blockquote>
-<p>
-A virtual filesystem (VFS) is an 
-<a href="../c3ref/vfs.html">sqlite3_vfs</a> object
+</pre></blockquote><p>
+A virtual filesystem (VFS) is an <a href="../c3ref/vfs.html">sqlite3_vfs</a> object
 that SQLite uses to interact
-with the underlying operating system.  Most builds come with a
+with the underlying operating system.  Most SQLite builds come with a
 single default VFS that is appropriate for the host computer.
 New VFSes can be registered and existing VFSes can be unregistered.
 The following interfaces are provided.</p>
 
-<p> The sqlite3_vfs_find() interface returns a pointer to
-a VFS given its name. Names are case sensitive.
- Names are zero-terminated UTF-8 strings.
- If there is no match, a NULL
-pointer is returned. If zVfsName is NULL then the default
-VFS is returned.</p>
+<p>The sqlite3_vfs_find() interface returns a pointer to a VFS given its name.
+Names are case sensitive.
+Names are zero-terminated UTF-8 strings.
+If there is no match, a NULL pointer is returned.
+If zVfsName is NULL then the default VFS is returned.</p>
 
-<p> New VFSes are registered with sqlite3_vfs_register().
- Each new VFS becomes the default VFS if the makeDflt flag is set.
- The same VFS can be registered multiple times without injury.
- To make an existing VFS into the default VFS, register it again
-with the makeDflt flag set. If two different VFSes with the
-same name are registered, the behavior is undefined. If a
+<p>New VFSes are registered with sqlite3_vfs_register().
+Each new VFS becomes the default VFS if the makeDflt flag is set.
+The same VFS can be registered multiple times without injury.
+To make an existing VFS into the default VFS, register it again
+with the makeDflt flag set.  If two different VFSes with the
+same name are registered, the behavior is undefined.  If a
 VFS is registered with a name that is NULL or an empty string,
 then the behavior is undefined.</p>
 
-<p> Unregister a VFS with the sqlite3_vfs_unregister() interface.
- If the default VFS is unregistered, another VFS is chosen as
-the default.  The choice for the new VFS is arbitrary.
-</p>
-<p>See also lists of
+<p>Unregister a VFS with the sqlite3_vfs_unregister() interface.
+If the default VFS is unregistered, another VFS is chosen as
+the default.  The choice for the new VFS is arbitrary.</p>
+
+<p><h3>Invariants:</h3>
+<table border="0" cellpadding="5" cellspacing="0">
+<tr><td valign="top">H11203</td> 
+<td valign="top">
+The <a href="../c3ref/vfs_find.html">sqlite3_vfs_find(N)</a> interface returns a pointer to the
+registered <a href="../c3ref/vfs.html">sqlite3_vfs</a> object whose name exactly matches
+the zero-terminated UTF-8 string N, or it returns NULL if
+there is no match.</td></tr>
+<tr><td valign="top">H11206</td> 
+<td valign="top">
+If the N parameter to <a href="../c3ref/vfs_find.html">sqlite3_vfs_find(N)</a> is NULL then
+the function returns a pointer to the default <a href="../c3ref/vfs.html">sqlite3_vfs</a>
+object if there is one, or NULL if there is no default
+<a href="../c3ref/vfs.html">sqlite3_vfs</a> object.</td></tr>
+<tr><td valign="top">H11209</td> 
+<td valign="top">
+The <a href="../c3ref/vfs_find.html">sqlite3_vfs_register(P,F)</a> interface registers the
+well-formed <a href="../c3ref/vfs.html">sqlite3_vfs</a> object P using the name given
+by the zName field of the object.</td></tr>
+<tr><td valign="top">H11212</td> 
+<td valign="top">
+Using the <a href="../c3ref/vfs_find.html">sqlite3_vfs_register(P,F)</a> interface to register
+the same <a href="../c3ref/vfs.html">sqlite3_vfs</a> object multiple times is a harmless no-op.</td></tr>
+<tr><td valign="top">H11215</td> 
+<td valign="top">
+The <a href="../c3ref/vfs_find.html">sqlite3_vfs_register(P,F)</a> interface makes the <a href="../c3ref/vfs.html">sqlite3_vfs</a>
+object P the default <a href="../c3ref/vfs.html">sqlite3_vfs</a> object if F is non-zero.</td></tr>
+<tr><td valign="top">H11218</td> 
+<td valign="top">
+The <a href="../c3ref/vfs_find.html">sqlite3_vfs_unregister(P)</a> interface unregisters the
+<a href="../c3ref/vfs.html">sqlite3_vfs</a> object P so that it is no longer returned by
+subsequent calls to <a href="../c3ref/vfs_find.html">sqlite3_vfs_find()</a>.</td></tr>
+</table>
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

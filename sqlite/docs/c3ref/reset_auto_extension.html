@@ -70,28 +70,19 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Reset Automatic Extension Loading</h2>
-<blockquote><pre>
-void sqlite3_reset_auto_extension(void);
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Reset Automatic Extension Loading</h2><blockquote><pre>void sqlite3_reset_auto_extension(void);
+</pre></blockquote><p>
+This function disables all previously registered automatic
+extensions.  It undoes the effect of all prior
+<a href="../c3ref/auto_extension.html">sqlite3_auto_extension()</a> calls.</p>
 
-</pre></blockquote>
-<p>
- This function disables all previously registered
-automatic extensions.  This
-routine undoes the effect of all prior 
-<a href="../c3ref/auto_extension.html">sqlite3_auto_extension()</a>
-calls.</p>
+<p> This function disables all previously registered
+automatic extensions.</p>
 
-<p> This call disabled automatic extensions in all threads.</p>
-
-<p>This interface is experimental and is subject to change or
-removal in future releases of SQLite.
-</p>
-<p>See also lists of
+<p> This function disables automatic extensions in all threads.
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

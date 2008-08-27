@@ -70,79 +70,62 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Query Progress Callbacks</h2>
-<blockquote><pre>
-void sqlite3_progress_handler(sqlite3*, int, int(*)(void*), void*);
-
-</pre></blockquote>
-<p>
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Query Progress Callbacks</h2><blockquote><pre>void sqlite3_progress_handler(sqlite3*, int, int(*)(void*), void*);
+</pre></blockquote><p>
 This routine configures a callback function - the
 progress callback - that is invoked periodically during long
-running calls to 
-<a href="../c3ref/exec.html">sqlite3_exec()</a>, 
-<a href="../c3ref/step.html">sqlite3_step()</a> and
-
-<a href="../c3ref/free_table.html">sqlite3_get_table()</a>.   An example use for this
+running calls to <a href="../c3ref/exec.html">sqlite3_exec()</a>, <a href="../c3ref/step.html">sqlite3_step()</a> and
+<a href="../c3ref/free_table.html">sqlite3_get_table()</a>.  An example use for this
 interface is to keep a GUI updated during a large query.</p>
 
-<p>If the progress callback returns non-zero, the opertion is
+<p>If the progress callback returns non-zero, the operation is
 interrupted.  This feature can be used to implement a
 "Cancel" button on a GUI dialog box.</p>
 
 <p><h3>Invariants:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">F12911</td> 
+<tr><td valign="top">H12911</td> 
 <td valign="top">
-The callback function registered by 
-<a href="../c3ref/progress_handler.html">sqlite3_progress_handler()</a>
+The callback function registered by sqlite3_progress_handler()
 is invoked periodically during long running calls to
-
 <a href="../c3ref/step.html">sqlite3_step()</a>.</td></tr>
-<tr><td valign="top">F12912</td> 
+<tr><td valign="top">H12912</td> 
 <td valign="top">
 The progress callback is invoked once for every N virtual
 machine opcodes, where N is the second argument to
-the 
-<a href="../c3ref/progress_handler.html">sqlite3_progress_handler()</a> call that registered
-the callback.  <font color="red">(TODO: What if N is less than 1?)</font></td></tr>
-<tr><td valign="top">F12913</td> 
+the <a href="../c3ref/progress_handler.html">sqlite3_progress_handler()</a> call that registered
+the callback.  If N is less than 1, sqlite3_progress_handler()
+acts as if a NULL progress handler had been specified.</td></tr>
+<tr><td valign="top">H12913</td> 
 <td valign="top">
 The progress callback itself is identified by the third
-argument to 
-<a href="../c3ref/progress_handler.html">sqlite3_progress_handler()</a>.</td></tr>
-<tr><td valign="top">F12914</td> 
+argument to sqlite3_progress_handler().</td></tr>
+<tr><td valign="top">H12914</td> 
 <td valign="top">
-The fourth argument 
-<a href="../c3ref/progress_handler.html">sqlite3_progress_handler()</a> is a
+The fourth argument to sqlite3_progress_handler() is a
 void pointer passed to the progress callback
 function each time it is invoked.</td></tr>
-<tr><td valign="top">F12915</td> 
+<tr><td valign="top">H12915</td> 
 <td valign="top">
-If a call to 
-<a href="../c3ref/step.html">sqlite3_step()</a> results in fewer than
-N opcodes being executed,
-then the progress callback is never invoked.</td></tr>
-<tr><td valign="top">F12916</td> 
+If a call to <a href="../c3ref/step.html">sqlite3_step()</a> results in fewer than N opcodes
+being executed, then the progress callback is never invoked.</td></tr>
+<tr><td valign="top">H12916</td> 
 <td valign="top">
-Every call to 
-<a href="../c3ref/progress_handler.html">sqlite3_progress_handler()</a>
-overwrites any previously registere progress handler.</td></tr>
-<tr><td valign="top">F12917</td> 
+Every call to <a href="../c3ref/progress_handler.html">sqlite3_progress_handler()</a>
+overwrites any previously registered progress handler.</td></tr>
+<tr><td valign="top">H12917</td> 
 <td valign="top">
 If the progress handler callback is NULL then no progress
 handler is invoked.</td></tr>
-<tr><td valign="top">F12918</td> 
+<tr><td valign="top">H12918</td> 
 <td valign="top">
 If the progress callback returns a result other than 0, then
-the behavior is a if 
-<a href="../c3ref/interrupt.html">sqlite3_interrupt()</a> had been called.</td></tr>
+the behavior is a if <a href="../c3ref/interrupt.html">sqlite3_interrupt()</a> had been called.
+<S30500></td></tr>
 </table>
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

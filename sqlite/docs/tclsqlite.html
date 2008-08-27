@@ -73,7 +73,6 @@ a:visited { color: #734559 }
 
 
 
-
 <h2>The Tcl interface to the SQLite library</h2>
 
 <p>The SQLite library is designed to be very easy to use from
@@ -119,45 +118,15 @@ defined.</p>
 <p>
 <ul>
 
-
-<li><a href="#authorizer">authorizer</a></li>
-<li><a href="#busy">busy</a></li>
-<li><a href="#cache">cache</a></li>
-<li><a href="#changes">changes</a></li>
-<li><a href="#close">close</a></li>
-<li><a href="#collate">collate</a></li>
-<li><a href="#collation_needed">collation_needed</a></li>
-<li><a href="#commit_hook">commit_hook</a></li>
-<li><a href="#complete">complete</a></li>
-<li><a href="#copy">copy</a></li>
-<li><a href="#enable_load_extension">enable_load_extension</a></li>
-<li><a href="#errorcode">errorcode</a></li>
-<li><a href="#eval">eval</a></li>
-<li><a href="#exists">exists</a></li>
-<li><a href="#function">function</a></li>
-<li><a href="#last_insert_rowid">last_insert_rowid</a></li>
-<li><a href="#nullvalue">nullvalue</a></li>
-<li><a href="#onecolumn">onecolumn</a></li>
-<li><a href="#profile">profile</a></li>
-<li><a href="#progress">progress</a></li>
-<li><a href="#rollback_hook">rollback_hook</a></li>
-<li><a href="#timeout">timeout</a></li>
-<li><a href="#total_changes">total_changes</a></li>
-<li><a href="#trace">trace</a></li>
-<li><a href="#transaction">transaction</a></li>
-<li><a href="#update_hook">update_hook</a></li>
-<li><a href="#version">version</a></li>
-
+<li><a href="#authorizer">authorizer</a></li><li><a href="#busy">busy</a></li><li><a href="#cache">cache</a></li><li><a href="#changes">changes</a></li><li><a href="#close">close</a></li><li><a href="#collate">collate</a></li><li><a href="#collation_needed">collation_needed</a></li><li><a href="#commit_hook">commit_hook</a></li><li><a href="#complete">complete</a></li><li><a href="#copy">copy</a></li><li><a href="#enable_load_extension">enable_load_extension</a></li><li><a href="#errorcode">errorcode</a></li><li><a href="#eval">eval</a></li><li><a href="#exists">exists</a></li><li><a href="#function">function</a></li><li><a href="#last_insert_rowid">last_insert_rowid</a></li><li><a href="#nullvalue">nullvalue</a></li><li><a href="#onecolumn">onecolumn</a></li><li><a href="#profile">profile</a></li><li><a href="#progress">progress</a></li><li><a href="#rollback_hook">rollback_hook</a></li><li><a href="#timeout">timeout</a></li><li><a href="#total_changes">total_changes</a></li><li><a href="#trace">trace</a></li><li><a href="#transaction">transaction</a></li><li><a href="#update_hook">update_hook</a></li><li><a href="#version">version</a></li>
 </ul>
 </p>
 
 <p>The use of each of these methods will be explained in the sequel, though
 not in the order shown above.</p>
 
-
 <a name="eval"></a>
 <h3>The "eval" method</h3>
-
 
 <p>
 The most useful <i>dbcmd</i> method is "eval".  The eval method is used
@@ -190,7 +159,7 @@ then the returned list will contain 6 elements.  For example:</p>
 <b>db1 eval {INSERT INTO t1 VALUES(1,'hello')}<br>
 db1 eval {INSERT INTO t1 VALUES(2,'goodbye')}<br>
 db1 eval {INSERT INTO t1 VALUES(3,'howdy!')}<br>
-set x [db1 eval {SELECT * FROM t1 ORDER BY a}]</b>
+set x &#91;db1 eval {SELECT * FROM t1 ORDER BY a}&#93;</b>
 </blockquote>
 
 <p>The variable <b>$x</b> is set by the above code to</p>
@@ -292,10 +261,8 @@ If the variable does not have a bytearray representation, then "@" works
 just like "$".
 </p>
 
-
 <a name="close"></a>
 <h3>The "close" method</h3>
-
 
 
 <p>
@@ -319,10 +286,8 @@ to the previous:</p>
 <b>sqlite3 db1 ./testdb<br>
 rename db1 {}</b>
 </blockquote>
-
 <a name="transaction"></a>
 <h3>The "transaction" method</h3>
-
 
 
 <p>
@@ -358,10 +323,8 @@ The syntax looks like this:
 The <i>transaction-type</i> can be one of <b>deferred</b>,
 <b>exclusive</b> or <b>immediate</b>.  The default is deferred.
 </p>
-
 <a name="cache"></a>
 <h3>The "cache" method</h3>
-
 
 
 <p>
@@ -391,10 +354,8 @@ to 0, no caching is done.</p>
 all prepared statements currently
 in the cache.</p>
 
-
 <a name="complete"></a>
 <h3>The "complete" method</h3>
-
 
 
 <p>
@@ -407,10 +368,8 @@ in order to know when the user has finished entering a line of SQL code.
 This is really just an interface to the 
 <a href="c3ref/complete.html"><b>sqlite3_complete()</b></a> C
 function.
-
 <a name="copy"></a>
 <h3>The "copy" method</h3>
-
 
 
 <p>
@@ -459,10 +418,8 @@ dbcmd&nbsp;&nbsp;copy&nbsp;&nbsp;$conflictalgo
 &nbsp;&nbsp;\\N
 </blockquote>
 
-
 <a name="timeout"></a>
 <h3>The "timeout" method</h3>
-
 
 
 <p>The "timeout" method is used to control how long the SQLite library
@@ -489,10 +446,8 @@ number.  For example:</p>
 <p>The argument to the timeout method is the maximum number of milliseconds
 to wait for the lock to clear.  So in the example above, the maximum delay
 would be 2 seconds.</p>
-
 <a name="busy"></a>
 <h3>The "busy" method</h3>
-
 
 
 <p>The "busy" method, like "timeout", only comes into play when the
@@ -505,10 +460,23 @@ GUI events) then return
 so that the lock can be tried again.  The callback procedure should
 return "0" if it wants SQLite to try again to open the database and
 should return "1" if it wants SQLite to abandon the current operation.
+<a name="enable_load_extension"></a>
+<h3>The "enable_load_extension" method</h3>
 
+
+<p>The extension loading mechanism of SQLite (accessed using the
+<a href="lang_corefunc.html#load_extension">load_extension()</a> SQL function) is turned off by default.  This is
+a security precaution.  If an application wants to make use of the
+<a href="lang_corefunc.html#load_extension">load_extension()</a> function it must first turn the capability on using
+this method.</p>
+
+<p>This method takes a single boolean argument which will turn the
+extension loading functionality on or off.</p>
+
+<p>This method maps to the <a href="c3ref/enable_load_extension.html">sqlite3_enable_load_extension()</a> C/C++
+interface.</p>
 <a name="exists"></a>
 <h3>The "exists" method</h3>
-
 
 
 <p>The "exists" method is similar to "onecolumn" and "eval" in that
@@ -521,24 +489,20 @@ returns an empty set.</p>
 rows in a table.  For example:</p>
 
 <blockquote><b>
-if {[db exists {SELECT 1 FROM table1 WHERE user=$user}]} {<br>
+if {&#91;db exists {SELECT 1 FROM table1 WHERE user=$user}&#93;} {<br>
 &nbsp;&nbsp;&nbsp;# Processing if $user exists<br>
 } else {<br>
 &nbsp;&nbsp;&nbsp;# Processing if $user does not exist<br>
 }
 </b></blockquote>
-
 <a name="last_insert_rowid"></a>
 <h3>The "last_insert_rowid" method</h3>
 
 
-
 <p>The "last_insert_rowid" method returns an integer which is the ROWID
 of the most recently inserted database row.</p>
-
 <a name="function"></a>
 <h3>The "function" method</h3>
-
 
 
 <p>The "function" method registers new SQL functions with the SQLite engine.
@@ -555,10 +519,8 @@ its numeric argument in to a hexadecimal encoded string:
 db function hex {format 0x%X}
 </b></blockquote>
 
-
 <a name="nullvalue"></a>
 <h3>The "nullvalue" method</h3>
-
 
 
 <p>
@@ -572,10 +534,8 @@ db1 nullvalue NULL
 <p>The "nullvalue" method is useful to differ between NULL and empty
 column values as Tcl lacks a NULL representation.  The default
 representation for NULL values is an empty string.</p>
-
 <a name="onecolumn"></a>
 <h3>The "onecolumn" method</h3>
-
 
 
 <p>The "onecolumn" method works like 
@@ -585,30 +545,24 @@ SQL query statement given as its argument.  The difference is that
 first row of the query result.</p>
 
 <p>This is a convenience method.  It saves the user from having to
-do a "<tt>[lindex&nbsp;...&nbsp;0]</tt>" on the results of an "eval"
+do a "<tt>&#91;lindex&nbsp;...&nbsp;0&#93;</tt>" on the results of an "eval"
 in order to extract a single column result.</p>
-
 <a name="changes"></a>
 <h3>The "changes" method</h3>
-
 
 
 <p>The "changes" method returns an integer which is the number of rows
 in the database that were inserted, deleted, and/or modified by the most
 recent "eval" method.</p>
-
 <a name="total_changes"></a>
 <h3>The "total_changes" method</h3>
-
 
 
 <p>The "total_changes" method returns an integer which is the number of rows
 in the database that were inserted, deleted, and/or modified since the
 current database connection was first opened.</p>
-
 <a name="authorizer"></a>
 <h3>The "authorizer" method</h3>
-
 
 
 <p>The "authorizer" method provides access to the 
@@ -624,10 +578,8 @@ then the compilation fails with an error.
 
 <p>If the argument is an empty string then the authorizer is disabled.
 If the argument is omitted, then the current authorizer is returned.</p>
-
 <a name="progress"></a>
 <h3>The "progress" method</h3>
-
 
 
 <p>This method registers a callback that is invoked periodically during
@@ -637,10 +589,8 @@ Setting the progress callback to an empty string disables it.</p>
 
 <p>The progress callback can be used to display the status of a lengthy
 query or to process GUI events during a lengthy query.</p>
-
 <a name="collate"></a>
 <h3>The "collate" method</h3>
-
 
 
 <p>This method registers new text collating sequences.  There are
@@ -655,14 +605,12 @@ sequence.
 
 <blockquote><b>
 proc nocase_compare {a b} {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;return [string compare [string tolower $a] [string tolower $b]]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return &#91;string compare &#91;string tolower $a&#93; &#91;string tolower $b&#93;&#93;<br>
 }<br>
 db collate NOCASE nocase_compare<br>
 </b></blockquote>
-
 <a name="collation_needed"></a>
 <h3>The "collation_needed" method</h3>
-
 
 
 <p>This method registers a callback routine that is invoked when the SQLite
@@ -670,28 +618,22 @@ engine needs a particular collating sequence but does not have that
 collating sequence registered.  The callback can register the collating
 sequence.  The callback is invoked with a single parameter which is the
 name of the needed collating sequence.</p>
-
 <a name="commit_hook"></a>
 <h3>The "commit_hook" method</h3>
-
 
 
 <p>This method registers a callback routine that is invoked just before
 SQLite tries to commit changes to a database.  If the callback throws
 an exception or returns a non-zero result, then the transaction rolls back
 rather than commit.</p>
-
 <a name="rollback_hook"></a>
 <h3>The "rollback_hook" method</h3>
 
 
-
 <p>This method registers a callback routine that is invoked just before
 SQLite tries to do a rollback.  The script argument is run without change.</p>
-
 <a name="update_hook"></a>
 <h3>The "update_hook" method</h3>
-
 
 
 <p>This method registers a callback routine that is invoked just before
@@ -704,10 +646,8 @@ arguments are appended to the callback before it is invoked:</p>
 <li>The table that is being changed</li>
 <li>The rowid of the row in the table being changed</li>
 </ul>
-
 <a name="incrblob"></a>
 <h3>The "incrblob" method</h3>
-
 
 
 <p>This method opens a TCL channel that can be used to read or write
@@ -724,18 +664,14 @@ The channel is opened using the underlying
 <a href="c3ref/blob_open.html">sqlite3_blob_open()</a> C-langauge
 interface.  Close the channel using the <b>close</b> command of TCL.
 </p>
-
 <a name="errorcode"></a>
 <h3>The "errorcode" method</h3>
 
 
-
 <p>This method returns the numeric error code that resulted from the most
 recent SQLite operation.</p>
-
 <a name="trace"></a>
 <h3>The "trace" method</h3>
-
 
 
 <p>The "trace" method registers a callback that is invoked as each SQL
@@ -744,8 +680,6 @@ to the command before it is invoked.  This can be used (for example) to
 keep a log of all SQL operations that an application performs.
 </p>
 
-
-
-<hr><small<i>
-This page last modified 2007/12/20 02:19:54 UTC
+<hr><small><i>
+This page last modified 2008/07/16 18:55:20 UTC
 </i></small></div></body></html>

@@ -70,33 +70,27 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Declared Datatype Of A Query Result</h2>
-<blockquote><pre>
-const char *sqlite3_column_decltype(sqlite3_stmt*,int);
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Declared Datatype Of A Query Result</h2><blockquote><pre>const char *sqlite3_column_decltype(sqlite3_stmt*,int);
 const void *sqlite3_column_decltype16(sqlite3_stmt*,int);
-
-</pre></blockquote>
-<p>
-The first parameter is a 
-<a href="../c3ref/stmt.html">prepared statement</a>.
-If this statement is a SELECT statement and the Nth column of the
-returned result set of that SELECT is a table column (not an
+</pre></blockquote><p>
+The first parameter is a <a href="../c3ref/stmt.html">prepared statement</a>.
+If this statement is a <a href="../lang_select.html">SELECT</a> statement and the Nth column of the
+returned result set of that <a href="../lang_select.html">SELECT</a> is a table column (not an
 expression or subquery) then the declared type of the table
 column is returned.  If the Nth column of the result set is an
 expression or subquery, then a NULL pointer is returned.
-The returned string is always UTF-8 encoded.
-For example, in the database schema:</p>
+The returned string is always UTF-8 encoded.</p>
+
+<p>For example, given the database schema:</p>
 
 <p>CREATE TABLE t1(c1 VARIANT);</p>
 
-<p>And the following statement compiled:</p>
+<p>and the following statement to be compiled:</p>
 
 <p>SELECT c1 + 1, c1 FROM t1;</p>
 
-<p>Then this routine would return the string "VARIANT" for the second
-result column (i==1), and a NULL pointer for the first result column
-(i==0).</p>
+<p>this routine would return the string "VARIANT" for the second result
+column (i==1), and a NULL pointer for the first result column (i==0).</p>
 
 <p>SQLite uses dynamic run-time typing.  So just because a column
 is declared to contain a particular type does not mean that the
@@ -107,42 +101,32 @@ used to hold those values.</p>
 
 <p><h3>Invariants:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">F13761</td> 
+<tr><td valign="top">H13761</td> 
 <td valign="top">
-A successful call to 
-<a href="../c3ref/column_decltype.html">sqlite3_column_decltype(S,N)</a>
-returns a zero-terminated UTF-8 string containing the
-the declared datatype of the table column that appears
-as the Nth column (numbered from 0) of the result set to the
-
-<a href="../c3ref/stmt.html">prepared statement</a> S.</td></tr>
-<tr><td valign="top">F13762</td> 
+A successful call to <a href="../c3ref/column_decltype.html">sqlite3_column_decltype(S,N)</a> returns a
+zero-terminated UTF-8 string containing the declared datatype
+of the table column that appears as the Nth column (numbered
+from 0) of the result set to the <a href="../c3ref/stmt.html">prepared statement</a> S.</td></tr>
+<tr><td valign="top">H13762</td> 
 <td valign="top">
-A successful call to 
-<a href="../c3ref/column_decltype.html">sqlite3_column_decltype16(S,N)</a>
+A successful call to <a href="../c3ref/column_decltype.html">sqlite3_column_decltype16(S,N)</a>
 returns a zero-terminated UTF-16 native byte order string
 containing the declared datatype of the table column that appears
 as the Nth column (numbered from 0) of the result set to the
-
 <a href="../c3ref/stmt.html">prepared statement</a> S.</td></tr>
-<tr><td valign="top">F13763</td> 
+<tr><td valign="top">H13763</td> 
 <td valign="top">
 If N is less than 0 or N is greater than or equal to
-the number of columns in 
-<a href="../c3ref/stmt.html">prepared statement</a> S
+the number of columns in the <a href="../c3ref/stmt.html">prepared statement</a> S,
 or if the Nth column of S is an expression or subquery rather
-than a table column or if a memory allocation failure
+than a table column, or if a memory allocation failure
 occurs during encoding conversions, then
-calls to 
-<a href="../c3ref/column_decltype.html">sqlite3_column_decltype(S,N)</a> or
-
+calls to <a href="../c3ref/column_decltype.html">sqlite3_column_decltype(S,N)</a> or
 <a href="../c3ref/column_decltype.html">sqlite3_column_decltype16(S,N)</a> return NULL.</td></tr>
 </table>
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

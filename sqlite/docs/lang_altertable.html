@@ -70,28 +70,17 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a>
-<h3>ALTER TABLE</h3>
-<table cellpadding="10">
-<tr><td align="right" valign="top">
-<i><font color="#ff3434">sql-statement</font></i>&nbsp;::=</td>
-<td><b><font color="#2c2cf0">ALTER TABLE </font></b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">database-name</font></i><b><font color="#2c2cf0"> <big>.</big></font></b>]<b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">table-name</font></i><b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">alteration</font></i><b><font color="#2c2cf0"></font></b></td></tr>
-<tr><td align="right" valign="top">
-<i><font color="#ff3434">alteration</font></i>&nbsp;::=</td>
-<td><b><font color="#2c2cf0">RENAME TO </font></b><i><font color="#ff3434">new-table-name</font></i><b><font color="#2c2cf0"></font></b></td></tr>
-<tr><td align="right" valign="top">
-<i><font color="#ff3434">alteration</font></i>&nbsp;::=</td>
-<td><b><font color="#2c2cf0">ADD </font></b>[<b><font color="#2c2cf0">COLUMN</font></b>]<b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">column-def</font></i><b><font color="#2c2cf0"></font></b></td></tr>
-</table>
+<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a><h3>ALTER TABLE</h3><table cellpadding="10"><tr><td align="right" valign="top"><i><font color="#ff3434">sql-statement</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0">ALTER TABLE </font></b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">database-name</font></i><b><font color="#2c2cf0"> <big>.</big></font></b>]<b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">table-name</font></i><b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">alteration</font></i><b><font color="#2c2cf0"></font></b></td></tr><tr><td align="right" valign="top"><i><font color="#ff3434">alteration</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0">RENAME TO </font></b><i><font color="#ff3434">new-table-name</font></i><b><font color="#2c2cf0"></font></b></td></tr><tr><td align="right" valign="top"><i><font color="#ff3434">alteration</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0">ADD </font></b>[<b><font color="#2c2cf0">COLUMN</font></b>]<b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">column-def</font></i><b><font color="#2c2cf0"></font></b></td></tr></table>
 
-
-<p>SQLite's version of the ALTER TABLE command allows the user to 
-rename or add a new column to an existing table. It is not possible
-to remove a column from a table.
+<p>SQLite supports a limited subset of ALTER TABLE.
+The ALTER TABLE command in SQLite allows the user to rename a table
+or to add a new column to an existing table. It is not possible
+to rename a colum, remove a column, or add or remove constraints from a table.
 </p>
 
 <p>The RENAME TO syntax is used to rename the table identified by 
-<i>&#91;database-name.&#93;table-name</i> to <i>new-table-name</i>. This command 
+<i>&#91;database-name.&#93;table-name</i> to <i>new-table-name</i>.
+This command 
 cannot be used to move a table between attached databases, only to rename 
 a table within the same database.</p>
 
@@ -106,8 +95,7 @@ dropped and recreated to use the new table name by hand.
 <p>The ADD &#91;COLUMN&#93; syntax
 is used to add a new column to an existing table.
 The new column is always appended to the end of the list of existing columns.
-<i>Column-def</i> may take any of the forms permissable in a 
-<a href="lang_createtable.html">CREATE TABLE</a>
+<i>Column-def</i> may take any of the forms permissable in a <a href="lang_createtable.html">CREATE TABLE</a>
 statement, with the following restrictions:
 <ul>
 <li>The column may not have a PRIMARY KEY or UNIQUE constraint.</li>
@@ -123,10 +111,8 @@ on a table with 10 million rows as it does on a table with 1 row.
 </p>
 
 <p>After ADD COLUMN has been run on a database, that database will not
-be readable by SQLite version 3.1.3 and earlier until the database
-is <a href="lang_vacuum.html">VACUUM</a>ed.</p>
+be readable by SQLite version 3.1.3 and earlier.</p>
 
-
-<hr><small<i>
-This page last modified 2007/12/20 21:09:25 UTC
+<hr><small><i>
+This page last modified 2008/07/18 18:34:10 UTC
 </i></small></div></body></html>

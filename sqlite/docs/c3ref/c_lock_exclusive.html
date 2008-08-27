@@ -70,26 +70,18 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>File Locking Levels</h2>
-<blockquote><pre>
-#define SQLITE_LOCK_NONE          0
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>File Locking Levels</h2><blockquote><pre>#define SQLITE_LOCK_NONE          0
 #define SQLITE_LOCK_SHARED        1
 #define SQLITE_LOCK_RESERVED      2
 #define SQLITE_LOCK_PENDING       3
 #define SQLITE_LOCK_EXCLUSIVE     4
-
-</pre></blockquote>
-<p>
+</pre></blockquote><p>
 SQLite uses one of these integer values as the second
 argument to calls it makes to the xLock() and xUnlock() methods
-of an 
-<a href="../c3ref/io_methods.html">sqlite3_io_methods</a> object.
-</p>
-<p>See also lists of
+of an <a href="../c3ref/io_methods.html">sqlite3_io_methods</a> object.
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

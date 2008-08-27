@@ -70,10 +70,7 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Device Characteristics</h2>
-<blockquote><pre>
-#define SQLITE_IOCAP_ATOMIC          0x00000001
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Device Characteristics</h2><blockquote><pre>#define SQLITE_IOCAP_ATOMIC          0x00000001
 #define SQLITE_IOCAP_ATOMIC512       0x00000002
 #define SQLITE_IOCAP_ATOMIC1K        0x00000004
 #define SQLITE_IOCAP_ATOMIC2K        0x00000008
@@ -84,15 +81,11 @@ a:visited { color: #734559 }
 #define SQLITE_IOCAP_ATOMIC64K       0x00000100
 #define SQLITE_IOCAP_SAFE_APPEND     0x00000200
 #define SQLITE_IOCAP_SEQUENTIAL      0x00000400
-
-</pre></blockquote>
-<p>
-The xDeviceCapabilities method of the 
-<a href="../c3ref/io_methods.html">sqlite3_io_methods</a>
+</pre></blockquote><p>
+The xDeviceCapabilities method of the <a href="../c3ref/io_methods.html">sqlite3_io_methods</a>
 object returns an integer which is a vector of the these
 bit values expressing I/O characteristics of the mass storage
-device that holds the file that the 
-<a href="../c3ref/io_methods.html">sqlite3_io_methods</a>
+device that holds the file that the <a href="../c3ref/io_methods.html">sqlite3_io_methods</a>
 refers to.</p>
 
 <p>The SQLITE_IOCAP_ATOMIC property means that all writes of
@@ -105,11 +98,9 @@ first then the size of the file is extended, never the other
 way around.  The SQLITE_IOCAP_SEQUENTIAL property means that
 information is written to disk in the same order as calls
 to xWrite().
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

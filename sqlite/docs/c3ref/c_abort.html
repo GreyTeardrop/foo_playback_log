@@ -70,10 +70,7 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Result Codes</h2>
-<blockquote><pre>
-#define SQLITE_OK           0   /* Successful result */
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Result Codes</h2><blockquote><pre>#define SQLITE_OK           0   /* Successful result */
 /* beginning-of-error-codes */
 #define SQLITE_ERROR        1   /* SQL error or missing database */
 #define SQLITE_INTERNAL     2   /* Internal logic error in SQLite */
@@ -104,19 +101,16 @@ a:visited { color: #734559 }
 #define SQLITE_ROW         100  /* sqlite3_step() has another row ready */
 #define SQLITE_DONE        101  /* sqlite3_step() has finished executing */
 /* end-of-error-codes */
-
-</pre></blockquote>
-<p>
+</pre></blockquote><p>
 Many SQLite functions return an integer result code from the set shown
 here in order to indicates success or failure.</p>
 
-<p>See also: 
-<a href="../c3ref/c_ioerr_blocked.html">extended result codes</a>
-</p>
-<p>See also lists of
+<p>New error codes may be added in future versions of SQLite.</p>
+
+<p>See also: <a href="../c3ref/c_ioerr_access.html">extended result codes</a>
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

@@ -70,104 +70,61 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Error Codes And Messages</h2>
-<blockquote><pre>
-int sqlite3_errcode(sqlite3 *db);
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Error Codes And Messages</h2><blockquote><pre>int sqlite3_errcode(sqlite3 *db);
 const char *sqlite3_errmsg(sqlite3*);
 const void *sqlite3_errmsg16(sqlite3*);
-
-</pre></blockquote>
-<p>
-The sqlite3_errcode() interface returns the numeric
-
-<a href="../c3ref/c_abort.html">result code</a> or 
-<a href="../c3ref/c_ioerr_blocked.html">extended result code</a>
-for the most recent failed sqlite3_* API call associated
-with 
-<a href="../c3ref/sqlite3.html">sqlite3</a> handle 'db'. If a prior API call failed but the
-most recent API call succeeded, the return value from sqlite3_errcode()
-is undefined.</p>
+</pre></blockquote><p>
+The sqlite3_errcode() interface returns the numeric <a href="../c3ref/c_abort.html">result code</a> or
+<a href="../c3ref/c_ioerr_access.html">extended result code</a> for the most recent failed sqlite3_* API call
+associated with a <a href="../c3ref/sqlite3.html">database connection</a>. If a prior API call failed
+but the most recent API call succeeded, the return value from
+sqlite3_errcode() is undefined.</p>
 
 <p>The sqlite3_errmsg() and sqlite3_errmsg16() return English-language
-text that describes the error, as either UTF8 or UTF16 respectively.
+text that describes the error, as either UTF-8 or UTF-16 respectively.
 Memory to hold the error message string is managed internally.
-The application does not need to worry with freeing the result.
-However, the error string might be overwritten or deallocated b
+The application does not need to worry about freeing the result.
+However, the error string might be overwritten or deallocated by
 subsequent calls to other SQLite interface functions.</p>
+
+<p>If an interface fails with SQLITE_MISUSE, that means the interface
+was invoked incorrectly by the application.  In that case, the
+error code and message may or may not be set.</p>
 
 <p><h3>Invariants:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">F12801</td> 
+<tr><td valign="top">H12801</td> 
 <td valign="top">
-The 
-<a href="../c3ref/errcode.html">sqlite3_errcode(D)</a> interface returns the numeric
-
-<a href="../c3ref/c_abort.html">result code</a> or
-
-<a href="../c3ref/c_ioerr_blocked.html">extended result code</a>
-for the most recent failed interface call associated
-with 
-<a href="../c3ref/sqlite3.html">sqlite3</a> handle D.</td></tr>
-<tr><td valign="top">U12802</td> 
+The <a href="../c3ref/errcode.html">sqlite3_errcode(D)</a> interface returns the numeric
+<a href="../c3ref/c_abort.html">result code</a> or <a href="../c3ref/c_ioerr_access.html">extended result code</a> for the most recently
+failed interface call associated with the <a href="../c3ref/sqlite3.html">database connection</a> D.</td></tr>
+<tr><td valign="top">H12803</td> 
 <td valign="top">
-If a prior API call failed but the most recent API call
-succeeded, the return value from 
-<a href="../c3ref/errcode.html">sqlite3_errcode()</a>,
-
-<a href="../c3ref/errcode.html">sqlite3_errmsg()</a>, and 
-<a href="../c3ref/errcode.html">sqlite3_errmsg16()</a> are undefined.</td></tr>
-<tr><td valign="top">F12803</td> 
-<td valign="top">
-The 
-<a href="../c3ref/errcode.html">sqlite3_errmsg(D)</a> and 
-<a href="../c3ref/errcode.html">sqlite3_errmsg16(D)</a>
+The <a href="../c3ref/errcode.html">sqlite3_errmsg(D)</a> and <a href="../c3ref/errcode.html">sqlite3_errmsg16(D)</a>
 interfaces return English-language text that describes
 the error in the mostly recently failed interface call,
-encoded as either UTF8 or UTF16 respectively.</td></tr>
-<tr><td valign="top">U12804</td> 
+encoded as either UTF-8 or UTF-16 respectively.</td></tr>
+<tr><td valign="top">H12807</td> 
 <td valign="top">
-The strings returned by 
-<a href="../c3ref/errcode.html">sqlite3_errmsg()</a> and 
-<a href="../c3ref/errcode.html">sqlite3_errmsg16()</a>
-are only valid until the next SQLite interface call.</td></tr>
-<tr><td valign="top">F12807</td> 
-<td valign="top">
-Calls to 
-<a href="../c3ref/errcode.html">sqlite3_errcode()</a>, 
-<a href="../c3ref/errcode.html">sqlite3_errmsg()</a>, and
-
-<a href="../c3ref/errcode.html">sqlite3_errmsg16()</a> themselves do not affect the
-results of future invocations of these routines.</td></tr>
-<tr><td valign="top">F12808</td> 
+The strings returned by <a href="../c3ref/errcode.html">sqlite3_errmsg()</a> and <a href="../c3ref/errcode.html">sqlite3_errmsg16()</a>
+are valid until the next SQLite interface call.</td></tr>
+<tr><td valign="top">H12808</td> 
 <td valign="top">
 Calls to API routines that do not return an error code
-(example: 
-<a href="../c3ref/data_count.html">sqlite3_data_count()</a>) do not
+(example: <a href="../c3ref/data_count.html">sqlite3_data_count()</a>) do not
 change the error code or message returned by
-
-<a href="../c3ref/errcode.html">sqlite3_errcode()</a>, 
-<a href="../c3ref/errcode.html">sqlite3_errmsg()</a>, or 
-<a href="../c3ref/errcode.html">sqlite3_errmsg16()</a>.</td></tr>
-<tr><td valign="top">F12809</td> 
+<a href="../c3ref/errcode.html">sqlite3_errcode()</a>, <a href="../c3ref/errcode.html">sqlite3_errmsg()</a>, or <a href="../c3ref/errcode.html">sqlite3_errmsg16()</a>.</td></tr>
+<tr><td valign="top">H12809</td> 
 <td valign="top">
 Interfaces that are not associated with a specific
-
 <a href="../c3ref/sqlite3.html">database connection</a> (examples:
-
-<a href="../c3ref/mprintf.html">sqlite3_mprintf()</a> or 
-<a href="../c3ref/enable_shared_cache.html">sqlite3_enable_shared_cache()</a>
+<a href="../c3ref/mprintf.html">sqlite3_mprintf()</a> or <a href="../c3ref/enable_shared_cache.html">sqlite3_enable_shared_cache()</a>
 do not change the values returned by
-
-<a href="../c3ref/errcode.html">sqlite3_errcode()</a>, 
-<a href="../c3ref/errcode.html">sqlite3_errmsg()</a>, or 
-<a href="../c3ref/errcode.html">sqlite3_errmsg16()</a>.</td></tr>
+<a href="../c3ref/errcode.html">sqlite3_errcode()</a>, <a href="../c3ref/errcode.html">sqlite3_errmsg()</a>, or <a href="../c3ref/errcode.html">sqlite3_errmsg16()</a>.</td></tr>
 </table>
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

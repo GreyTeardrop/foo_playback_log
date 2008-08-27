@@ -70,33 +70,25 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a>
-<h3>DROP TABLE</h3>
-<table cellpadding="10">
-<tr><td align="right" valign="top">
-<i><font color="#ff3434">sql-command</font></i>&nbsp;::=</td>
-<td><b><font color="#2c2cf0">DROP TABLE </font></b>[<b><font color="#2c2cf0">IF EXISTS</font></b>]<b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">database-name</font></i><b><font color="#2c2cf0"><big>.</big></font></b>]<b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">table-name</font></i><b><font color="#2c2cf0"></font></b></td></tr>
-</table>
+<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a><h3>DROP TABLE</h3><table cellpadding="10"><tr><td align="right" valign="top"><i><font color="#ff3434">sql-command</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0">DROP TABLE </font></b>[<b><font color="#2c2cf0">IF EXISTS</font></b>]<b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">database-name</font></i><b><font color="#2c2cf0"><big>.</big></font></b>]<b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">table-name</font></i><b><font color="#2c2cf0"></font></b></td></tr></table>
 
-
-<p>The DROP TABLE statement removes a table added with the <a href=
-"lang_createtable.html">CREATE TABLE</a> statement.  The name specified is the
+<p>The DROP TABLE statement removes a table added with the
+<a href="lang_createtable.html">CREATE TABLE</a> statement.  The name specified is the
 table name.  It is completely removed from the database schema and the 
 disk file.  The table can not be recovered.  All indices associated 
 with the table are also deleted.</p>
 
 <p>The DROP TABLE statement does not reduce the size of the database 
 file in the default mode.  Empty space in the database is retained for
-later INSERTs.  To 
+later <a href="lang_insert.html">INSERT</a> statements.  To 
 remove free space in the database, 
-use the <a href="lang_vacuum.html">VACUUM</a> 
-command.  If AUTOVACUUM mode is enabled for a database then space
+use the <a href="lang_vacuum.html">VACUUM</a> statement.
+If <a href="pragma.html#pragma_auto_vacuum">auto_vacuum</a> mode is enabled for a database then space
 will be freed automatically by DROP TABLE.</p>
 
 <p>The optional IF EXISTS clause suppresses the error that would normally
 result if the table does not exist.</p>
 
-
-<hr><small<i>
-This page last modified 2007/12/20 21:09:25 UTC
+<hr><small><i>
+This page last modified 2008/07/18 18:34:10 UTC
 </i></small></div></body></html>

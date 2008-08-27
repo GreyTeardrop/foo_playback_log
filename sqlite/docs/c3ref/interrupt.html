@@ -70,13 +70,8 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Interrupt A Long-Running Query</h2>
-<blockquote><pre>
-void sqlite3_interrupt(sqlite3*);
-
-</pre></blockquote>
-<p>
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Interrupt A Long-Running Query</h2><blockquote><pre>void sqlite3_interrupt(sqlite3*);
+</pre></blockquote><p>
 This function causes any pending database operation to abort and
 return at its earliest opportunity. This routine is typically
 called in response to a user action such as pressing "Cancel"
@@ -85,50 +80,44 @@ immediately.</p>
 
 <p>It is safe to call this routine from a thread different from the
 thread that is currently running the database operation.  But it
-is not safe to call this routine with a database connection that
+is not safe to call this routine with a <a href="../c3ref/sqlite3.html">database connection</a> that
 is closed or might close before sqlite3_interrupt() returns.</p>
 
-<p>If an SQL is very nearly finished at the time when sqlite3_interrupt()
-is called, then it might not have an opportunity to be interrupted.
-It might continue to completion.
-An SQL operation that is interrupted will return
+<p>If an SQL operation is very nearly finished at the time when
+sqlite3_interrupt() is called, then it might not have an opportunity
+to be interrupted and might continue to completion.</p>
 
-<a href="../c3ref/c_abort.html">SQLITE_INTERRUPT</a>.  If the interrupted SQL operation is an
-INSERT, UPDATE, or DELETE that is inside an explicit transaction,
-then the entire transaction will be rolled back automatically.
-A call to sqlite3_interrupt() has no effect on SQL statements
+<p>An SQL operation that is interrupted will return <a href="../c3ref/c_abort.html">SQLITE_INTERRUPT</a>.
+If the interrupted SQL operation is an INSERT, UPDATE, or DELETE
+that is inside an explicit transaction, then the entire transaction
+will be rolled back automatically.</p>
+
+<p>A call to sqlite3_interrupt() has no effect on SQL statements
 that are started after sqlite3_interrupt() returns.</p>
 
 <p><h3>Invariants:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">F12271</td> 
+<tr><td valign="top">H12271</td> 
 <td valign="top">
-The 
-<a href="../c3ref/interrupt.html">sqlite3_interrupt()</a> interface will force all running
+The <a href="../c3ref/interrupt.html">sqlite3_interrupt()</a> interface will force all running
 SQL statements associated with the same database connection
-to halt after processing at most one additional row of
-data.</td></tr>
-<tr><td valign="top">F12272</td> 
+to halt after processing at most one additional row of data.</td></tr>
+<tr><td valign="top">H12272</td> 
 <td valign="top">
-Any SQL statement that is interrupted by 
-<a href="../c3ref/interrupt.html">sqlite3_interrupt()</a>
-will return 
-<a href="../c3ref/c_abort.html">SQLITE_INTERRUPT</a>.</td></tr>
+Any SQL statement that is interrupted by <a href="../c3ref/interrupt.html">sqlite3_interrupt()</a>
+will return <a href="../c3ref/c_abort.html">SQLITE_INTERRUPT</a>.</td></tr>
 </table></p>
 
-<p><h3>Limitations:</h3>
+<p><h3>Assumptions:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">U12279</td> 
+<tr><td valign="top">A12279</td> 
 <td valign="top">
-If the database connection closes while 
-<a href="../c3ref/interrupt.html">sqlite3_interrupt()</a>
+If the database connection closes while <a href="../c3ref/interrupt.html">sqlite3_interrupt()</a>
 is running then bad things will likely happen.</td></tr>
 </table>
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

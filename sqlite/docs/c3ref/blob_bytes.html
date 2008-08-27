@@ -70,21 +70,22 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Return The Size Of An Open BLOB</h2>
-<blockquote><pre>
-int sqlite3_blob_bytes(sqlite3_blob *);
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Return The Size Of An Open BLOB</h2><blockquote><pre>int sqlite3_blob_bytes(sqlite3_blob *);
+</pre></blockquote><p>
+Returns the size in bytes of the BLOB accessible via the open
+[]BLOB handle] in its only argument.</p>
 
-</pre></blockquote>
-<p>
- Return the size in bytes of the blob accessible via the open
-
-<a href="../c3ref/blob.html">blob-handle</a> passed as an argument.
-</p>
-<p>See also lists of
+<p><h3>Invariants:</h3>
+<table border="0" cellpadding="5" cellspacing="0">
+<tr><td valign="top">H17843</td> 
+<td valign="top">
+The <a href="../c3ref/blob_bytes.html">sqlite3_blob_bytes(P)</a> interface returns the size
+in bytes of the BLOB that the <a href="../c3ref/blob.html">sqlite3_blob</a> object P
+refers to.</td></tr>
+</table>
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

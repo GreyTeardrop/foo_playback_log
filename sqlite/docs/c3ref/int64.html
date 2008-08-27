@@ -70,10 +70,7 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>64-Bit Integer Types</h2>
-<blockquote><pre>
-#ifdef SQLITE_INT64_TYPE
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>64-Bit Integer Types</h2><blockquote><pre>#ifdef SQLITE_INT64_TYPE
   typedef SQLITE_INT64_TYPE sqlite_int64;
   typedef unsigned SQLITE_INT64_TYPE sqlite_uint64;
 #elif defined(_MSC_VER) || defined(__BORLANDC__)
@@ -85,36 +82,28 @@ a:visited { color: #734559 }
 #endif
 typedef sqlite_int64 sqlite3_int64;
 typedef sqlite_uint64 sqlite3_uint64;
-
-</pre></blockquote>
-<p>
+</pre></blockquote><p>
 Because there is no cross-platform way to specify 64-bit integer types
 SQLite includes typedefs for 64-bit signed and unsigned integers.</p>
 
-<p>The sqlite3_int64 and sqlite3_uint64 are the preferred type
-definitions.  The sqlite_int64 and sqlite_uint64 types are
-supported for backwards compatibility only.</p>
+<p>The sqlite3_int64 and sqlite3_uint64 are the preferred type definitions.
+The sqlite_int64 and sqlite_uint64 types are supported for backwards
+compatibility only.</p>
 
 <p><h3>Invariants:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">F10201</td> 
+<tr><td valign="top">H10201</td> 
 <td valign="top">
-The 
-<a href="../c3ref/int64.html">sqlite_int64</a> and 
-<a href="../c3ref/int64.html">sqlite3_int64</a> types specify a
-64-bit signed integer.</td></tr>
-<tr><td valign="top">F10202</td> 
+The <a href="../c3ref/int64.html">sqlite_int64</a> and <a href="../c3ref/int64.html">sqlite3_int64</a> type shall specify
+a 64-bit signed integer.</td></tr>
+<tr><td valign="top">H10202</td> 
 <td valign="top">
-The 
-<a href="../c3ref/int64.html">sqlite_uint64</a> and 
-<a href="../c3ref/int64.html">sqlite3_uint64</a> types specify
+The <a href="../c3ref/int64.html">sqlite_uint64</a> and <a href="../c3ref/int64.html">sqlite3_uint64</a> type shall specify
 a 64-bit unsigned integer.</td></tr>
 </table>
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

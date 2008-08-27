@@ -70,43 +70,27 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Enable Or Disable Extended Result Codes</h2>
-<blockquote><pre>
-int sqlite3_extended_result_codes(sqlite3*, int onoff);
-
-</pre></blockquote>
-<p>
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Enable Or Disable Extended Result Codes</h2><blockquote><pre>int sqlite3_extended_result_codes(sqlite3*, int onoff);
+</pre></blockquote><p>
 The sqlite3_extended_result_codes() routine enables or disables the
-
-<a href="../c3ref/c_ioerr_blocked.html">extended result codes</a> feature of SQLite.
-The extended result codes are disabled by default for historical
-compatibility.</p>
+<a href="../c3ref/c_ioerr_access.html">extended result codes</a> feature of SQLite. The extended result
+codes are disabled by default for historical compatibility considerations.</p>
 
 <p><h3>Invariants:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">F12201</td> 
+<tr><td valign="top">H12201</td> 
 <td valign="top">
-Each new 
-<a href="../c3ref/sqlite3.html">database connection</a> has the
-
-<a href="../c3ref/c_ioerr_blocked.html">extended result codes</a> feature
-disabled by default.</td></tr>
-<tr><td valign="top">F12202</td> 
+Each new <a href="../c3ref/sqlite3.html">database connection</a> shall have the
+<a href="../c3ref/c_ioerr_access.html">extended result codes</a> feature disabled by default.</td></tr>
+<tr><td valign="top">H12202</td> 
 <td valign="top">
-The 
-<a href="../c3ref/extended_result_codes.html">sqlite3_extended_result_codes(D,F)</a> interface will enable
-
-<a href="../c3ref/c_ioerr_blocked.html">extended result codes</a> for the
-
-<a href="../c3ref/sqlite3.html">database connection</a> D if the F parameter
-is true, or disable them if F is false.</td></tr>
+The <a href="../c3ref/extended_result_codes.html">sqlite3_extended_result_codes(D,F)</a> interface shall enable
+<a href="../c3ref/c_ioerr_access.html">extended result codes</a> for the  <a href="../c3ref/sqlite3.html">database connection</a> D
+if the F parameter is true, or disable them if F is false.</td></tr>
 </table>
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

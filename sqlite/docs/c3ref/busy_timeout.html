@@ -70,64 +70,46 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Set A Busy Timeout</h2>
-<blockquote><pre>
-int sqlite3_busy_timeout(sqlite3*, int ms);
-
-</pre></blockquote>
-<p>
-This routine sets a 
-<a href="../c3ref/busy_handler.html">busy handler</a>
-that sleeps for a while when a
-table is locked.  The handler will sleep multiple times until
-at least "ms" milliseconds of sleeping have been done. After
-"ms" milliseconds of sleeping, the handler returns 0 which
-causes 
-<a href="../c3ref/step.html">sqlite3_step()</a> to return 
-<a href="../c3ref/c_abort.html">SQLITE_BUSY</a> or 
-<a href="../c3ref/c_ioerr_blocked.html">SQLITE_IOERR_BLOCKED</a>.</p>
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Set A Busy Timeout</h2><blockquote><pre>int sqlite3_busy_timeout(sqlite3*, int ms);
+</pre></blockquote><p>
+This routine sets a <a href="../c3ref/busy_handler.html">busy handler</a> that sleeps
+for a specified amount of time when a table is locked.  The handler
+will sleep multiple times until at least "ms" milliseconds of sleeping
+have accumulated. After "ms" milliseconds of sleeping,
+the handler returns 0 which causes <a href="../c3ref/step.html">sqlite3_step()</a> to return
+<a href="../c3ref/c_abort.html">SQLITE_BUSY</a> or <a href="../c3ref/c_ioerr_access.html">SQLITE_IOERR_BLOCKED</a>.</p>
 
 <p>Calling this routine with an argument less than or equal to zero
 turns off all busy handlers.</p>
 
-<p>There can only be a single busy handler for a particular database
-connection.  If another busy handler was defined
-(using 
-<a href="../c3ref/busy_handler.html">sqlite3_busy_handler()</a>) prior to calling
+<p>There can only be a single busy handler for a particular
+<a href="../c3ref/sqlite3.html">database connection</a> any any given moment.  If another busy handler
+was defined  (using <a href="../c3ref/busy_handler.html">sqlite3_busy_handler()</a>) prior to calling
 this routine, that other busy handler is cleared.</p>
 
 <p><h3>Invariants:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">F12341</td> 
+<tr><td valign="top">H12341</td> 
 <td valign="top">
-The 
-<a href="../c3ref/busy_timeout.html">sqlite3_busy_timeout()</a> function overrides any prior
-
-<a href="../c3ref/busy_timeout.html">sqlite3_busy_timeout()</a> or 
-<a href="../c3ref/busy_handler.html">sqlite3_busy_handler()</a> setting
-on the same database connection.</td></tr>
-<tr><td valign="top">F12343</td> 
+The <a href="../c3ref/busy_timeout.html">sqlite3_busy_timeout()</a> function shall override any prior
+<a href="../c3ref/busy_timeout.html">sqlite3_busy_timeout()</a> or <a href="../c3ref/busy_handler.html">sqlite3_busy_handler()</a> setting
+on the same <a href="../c3ref/sqlite3.html">database connection</a>.</td></tr>
+<tr><td valign="top">H12343</td> 
 <td valign="top">
-If the 2nd parameter to 
-<a href="../c3ref/busy_timeout.html">sqlite3_busy_timeout()</a> is less than
-or equal to zero, then the busy handler is cleared so that
-all subsequent locking events immediately return 
-<a href="../c3ref/c_abort.html">SQLITE_BUSY</a>.</td></tr>
-<tr><td valign="top">F12344</td> 
+If the 2nd parameter to <a href="../c3ref/busy_timeout.html">sqlite3_busy_timeout()</a> is less than
+or equal to zero, then the busy handler shall be cleared so that
+all subsequent locking events immediately return <a href="../c3ref/c_abort.html">SQLITE_BUSY</a>.</td></tr>
+<tr><td valign="top">H12344</td> 
 <td valign="top">
-If the 2nd parameter to 
-<a href="../c3ref/busy_timeout.html">sqlite3_busy_timeout()</a> is a positive
-number N, then a busy handler is set that repeatedly calls
-the xSleep() method in the VFS interface until either the
-lock clears or until the cumulative sleep time reported back
-by xSleep() exceeds N milliseconds.</td></tr>
+If the 2nd parameter to <a href="../c3ref/busy_timeout.html">sqlite3_busy_timeout()</a> is a positive
+number N, then a busy handler shall be set that repeatedly calls
+the xSleep() method in the <a href="../c3ref/vfs.html">VFS interface</a> until
+either the lock clears or until the cumulative sleep time
+reported back by xSleep() exceeds N milliseconds.</td></tr>
 </table>
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

@@ -72,6 +72,7 @@ a:visited { color: #734559 }
   
 
 
+
 <h2>sqlite3: A command-line access program for SQLite databases</h2>
 
 <p>The SQLite library includes a simple command-line utility named
@@ -91,9 +92,7 @@ semicolon), press "Enter" and the SQL will be executed.</p>
 <p>For example, to create a new SQLite database named "ex1" 
 with a single table named "tbl1", you might do this:</p>
 
-
-<blockquote><tt>
-$&nbsp;<b>sqlite3&nbsp;ex1</b><br>
+<blockquote><tt>$&nbsp;<b>sqlite3&nbsp;ex1</b><br>
 SQLite&nbsp;version&nbsp;3.3.10<br>
 Enter&nbsp;".help"&nbsp;for&nbsp;instructions<br>
 sqlite&gt;&nbsp;<b>create&nbsp;table&nbsp;tbl1(one&nbsp;varchar(10),&nbsp;two&nbsp;smallint);</b><br>
@@ -102,9 +101,7 @@ sqlite&gt;&nbsp;<b>insert&nbsp;into&nbsp;tbl1&nbsp;values('goodbye',&nbsp;20);</
 sqlite&gt;&nbsp;<b>select&nbsp;*&nbsp;from&nbsp;tbl1;</b><br>
 hello!|10<br>
 goodbye|20<br>
-sqlite&gt;
-</tt></blockquote>
-
+sqlite&gt;</tt></blockquote>
 
 <p>You can terminate the sqlite3 program by typing your systems
 End-Of-File character (usually a Control-D) or the interrupt
@@ -118,16 +115,12 @@ added to the current SQL command.  This feature allows you to
 enter SQL commands that span multiple lines.  For example:</p>
 
 
-
-<blockquote><tt>
-sqlite&gt;&nbsp;<b>CREATE&nbsp;TABLE&nbsp;tbl2&nbsp;(</b><br>
+<blockquote><tt>sqlite&gt;&nbsp;<b>CREATE&nbsp;TABLE&nbsp;tbl2&nbsp;(</b><br>
 &nbsp;&nbsp;&nbsp;...&gt;&nbsp;<b>&nbsp;&nbsp;f1&nbsp;varchar(30)&nbsp;primary&nbsp;key,</b><br>
 &nbsp;&nbsp;&nbsp;...&gt;&nbsp;<b>&nbsp;&nbsp;f2&nbsp;text,</b><br>
 &nbsp;&nbsp;&nbsp;...&gt;&nbsp;<b>&nbsp;&nbsp;f3&nbsp;real</b><br>
 &nbsp;&nbsp;&nbsp;...&gt;&nbsp;<b>);</b><br>
-sqlite&gt;
-</tt></blockquote>
-
+sqlite&gt;</tt></blockquote>
 
 <h3>Aside: Querying the SQLITE_MASTER table</h3>
 
@@ -137,9 +130,7 @@ You can execute "SELECT" statements against the
 special sqlite_master table just like any other table
 in an SQLite database.  For example:</p>
 
-
-<blockquote><tt>
-$&nbsp;<b>sqlite3&nbsp;ex1</b><br>
+<blockquote><tt>$&nbsp;<b>sqlite3&nbsp;ex1</b><br>
 SQlite&nbsp;vresion&nbsp;3.3.10<br>
 Enter&nbsp;".help"&nbsp;for&nbsp;instructions<br>
 sqlite&gt;&nbsp;<b>select&nbsp;*&nbsp;from&nbsp;sqlite_master;</b><br>
@@ -148,9 +139,7 @@ sqlite&gt;&nbsp;<b>select&nbsp;*&nbsp;from&nbsp;sqlite_master;</b><br>
 tbl_name&nbsp;=&nbsp;tbl1<br>
 rootpage&nbsp;=&nbsp;3<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sql&nbsp;=&nbsp;create&nbsp;table&nbsp;tbl1(one&nbsp;varchar(10),&nbsp;two&nbsp;smallint)<br>
-sqlite&gt;
-</tt></blockquote>
-
+sqlite&gt;</tt></blockquote>
 
 <p>
 But you cannot execute DROP TABLE, UPDATE, INSERT or DELETE against
@@ -184,9 +173,7 @@ For a listing of the available dot commands, you can enter ".help"
 at any time.  For example:
 </p>
 
-
-<blockquote><tt>
-sqlite&gt;&nbsp;<b>.help</b><br>
+<blockquote><tt>sqlite&gt;&nbsp;<b>.help</b><br>
 .bail&nbsp;ON|OFF&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Stop&nbsp;after&nbsp;hitting&nbsp;an&nbsp;error.&nbsp;&nbsp;Default&nbsp;OFF<br>
 .databases&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;List&nbsp;names&nbsp;and&nbsp;files&nbsp;of&nbsp;attached&nbsp;databases<br>
 .dump&nbsp;?TABLE?&nbsp;...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dump&nbsp;the&nbsp;database&nbsp;in&nbsp;an&nbsp;SQL&nbsp;text&nbsp;format<br>
@@ -219,15 +206,13 @@ sqlite&gt;&nbsp;<b>.help</b><br>
 .tables&nbsp;?PATTERN?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;List&nbsp;names&nbsp;of&nbsp;tables&nbsp;matching&nbsp;a&nbsp;LIKE&nbsp;pattern<br>
 .timeout&nbsp;MS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Try&nbsp;opening&nbsp;locked&nbsp;tables&nbsp;for&nbsp;MS&nbsp;milliseconds<br>
 .width&nbsp;NUM&nbsp;NUM&nbsp;...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Set&nbsp;column&nbsp;widths&nbsp;for&nbsp;"column"&nbsp;mode<br>
-sqlite&gt;
-</tt></blockquote>
-
+sqlite&gt;</tt></blockquote>
 
 <h3>Changing Output Formats</h3>
 
 <p>The sqlite3 program is able to show the results of a query
 in eight different formats: "csv", "column", "html", "insert",
-"line", "tabs", and "tcl".
+"line", "list", "tabs", and "tcl".
 You can use the ".mode" dot command to switch between these output
 formats.</p>
 
@@ -238,29 +223,21 @@ separator string.  The default separator is a pipe symbol ("|").
 List mode is especially useful when you are going to send the output
 of a query to another program (such as AWK) for additional processing.</p>
 
-
-<blockquote><tt>
-sqlite&gt;&nbsp;<b>.mode&nbsp;list</b><br>
+<blockquote><tt>sqlite&gt;&nbsp;<b>.mode&nbsp;list</b><br>
 sqlite&gt;&nbsp;<b>select&nbsp;*&nbsp;from&nbsp;tbl1;</b><br>
 hello|10<br>
 goodbye|20<br>
-sqlite&gt;
-</tt></blockquote>
-
+sqlite&gt;</tt></blockquote>
 
 <p>You can use the ".separator" dot command to change the separator
 for list mode.  For example, to change the separator to a comma and
 a space, you could do this:</p>
 
-
-<blockquote><tt>
-sqlite&gt;&nbsp;<b>.separator&nbsp;",&nbsp;"</b><br>
+<blockquote><tt>sqlite&gt;&nbsp;<b>.separator&nbsp;",&nbsp;"</b><br>
 sqlite&gt;&nbsp;<b>select&nbsp;*&nbsp;from&nbsp;tbl1;</b><br>
 hello,&nbsp;10<br>
 goodbye,&nbsp;20<br>
-sqlite&gt;
-</tt></blockquote>
-
+sqlite&gt;</tt></blockquote>
 
 <p>In "line" mode, each column in a row of the database
 is shown on a line by itself.  Each line consists of the column
@@ -268,49 +245,37 @@ name, an equal sign and the column data.  Successive records are
 separated by a blank line.  Here is an example of line mode
 output:</p>
 
-
-<blockquote><tt>
-sqlite&gt;&nbsp;<b>.mode&nbsp;line</b><br>
+<blockquote><tt>sqlite&gt;&nbsp;<b>.mode&nbsp;line</b><br>
 sqlite&gt;&nbsp;<b>select&nbsp;*&nbsp;from&nbsp;tbl1;</b><br>
 one&nbsp;=&nbsp;hello<br>
 two&nbsp;=&nbsp;10<br>
 <br>
 one&nbsp;=&nbsp;goodbye<br>
 two&nbsp;=&nbsp;20<br>
-sqlite&gt;
-</tt></blockquote>
-
+sqlite&gt;</tt></blockquote>
 
 <p>In column mode, each record is shown on a separate line with the
 data aligned in columns.  For example:</p>
 
-
-<blockquote><tt>
-sqlite&gt;&nbsp;<b>.mode&nbsp;column</b><br>
+<blockquote><tt>sqlite&gt;&nbsp;<b>.mode&nbsp;column</b><br>
 sqlite&gt;&nbsp;<b>select&nbsp;*&nbsp;from&nbsp;tbl1;</b><br>
 one&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;two&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
 ----------&nbsp;&nbsp;----------<br>
 hello&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
 goodbye&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-sqlite&gt;
-</tt></blockquote>
-
+sqlite&gt;</tt></blockquote>
 
 <p>By default, each column is at least 10 characters wide. 
 Data that is too wide to fit in a column is truncated.  You can
 adjust the column widths using the ".width" command.  Like this:</p>
 
-
-<blockquote><tt>
-sqlite&gt;&nbsp;<b>.width&nbsp;12&nbsp;6</b><br>
+<blockquote><tt>sqlite&gt;&nbsp;<b>.width&nbsp;12&nbsp;6</b><br>
 sqlite&gt;&nbsp;<b>select&nbsp;*&nbsp;from&nbsp;tbl1;</b><br>
 one&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;two&nbsp;&nbsp;&nbsp;<br>
 ------------&nbsp;&nbsp;------<br>
 hello&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10&nbsp;&nbsp;&nbsp;&nbsp;<br>
 goodbye&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;20&nbsp;&nbsp;&nbsp;&nbsp;<br>
-sqlite&gt;
-</tt></blockquote>
-
+sqlite&gt;</tt></blockquote>
 
 <p>The ".width" command in the example above sets the width of the first
 column to 12 and the width of the second column to 6.  All other column
@@ -330,15 +295,11 @@ can be turned on and off using the ".header" dot command.  In the
 examples above, the column labels are on.  To turn them off you
 could do this:</p>
 
-
-<blockquote><tt>
-sqlite&gt;&nbsp;<b>.header&nbsp;off</b><br>
+<blockquote><tt>sqlite&gt;&nbsp;<b>.header&nbsp;off</b><br>
 sqlite&gt;&nbsp;<b>select&nbsp;*&nbsp;from&nbsp;tbl1;</b><br>
 hello&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10&nbsp;&nbsp;&nbsp;&nbsp;<br>
 goodbye&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;20&nbsp;&nbsp;&nbsp;&nbsp;<br>
-sqlite&gt;
-</tt></blockquote>
-
+sqlite&gt;</tt></blockquote>
 
 <p>Another useful output mode is "insert".  In insert mode, the output
 is formatted to look like SQL INSERT statements.  You can use insert
@@ -348,15 +309,11 @@ different database.</p>
 <p>When specifying insert mode, you have to give an extra argument
 which is the name of the table to be inserted into.  For example:</p>
 
-
-<blockquote><tt>
-sqlite&gt;&nbsp;<b>.mode&nbsp;insert&nbsp;new_table</b><br>
+<blockquote><tt>sqlite&gt;&nbsp;<b>.mode&nbsp;insert&nbsp;new_table</b><br>
 sqlite&gt;&nbsp;<b>select&nbsp;*&nbsp;from&nbsp;tbl1;</b><br>
 INSERT&nbsp;INTO&nbsp;'new_table'&nbsp;VALUES('hello',10);<br>
 INSERT&nbsp;INTO&nbsp;'new_table'&nbsp;VALUES('goodbye',20);<br>
-sqlite&gt;
-</tt></blockquote>
-
+sqlite&gt;</tt></blockquote>
 
 
 <p>The last output mode is "html".  In this mode, sqlite3 writes
@@ -376,9 +333,7 @@ an output file as an argument to the .output command and all subsequent
 query results will be written to that file.  Use ".output stdout" to
 begin writing to standard output again.  For example:</p>
 
-
-<blockquote><tt>
-sqlite&gt;&nbsp;<b>.mode&nbsp;list</b><br>
+<blockquote><tt>sqlite&gt;&nbsp;<b>.mode&nbsp;list</b><br>
 sqlite&gt;&nbsp;<b>.separator&nbsp;|</b><br>
 sqlite&gt;&nbsp;<b>.output&nbsp;test_file_1.txt</b><br>
 sqlite&gt;&nbsp;<b>select&nbsp;*&nbsp;from&nbsp;tbl1;</b><br>
@@ -386,9 +341,7 @@ sqlite&gt;&nbsp;<b>.exit</b><br>
 $&nbsp;<b>cat&nbsp;test_file_1.txt</b><br>
 hello|10<br>
 goodbye|20<br>
-$
-</tt></blockquote>
-
+$</tt></blockquote>
 
 
 <h3>Querying the database schema</h3>
@@ -402,14 +355,10 @@ means.  These commands are provided purely as a shortcut.</p>
 can enter ".tables".</p>
 
 
-
-<blockquote><tt>
-sqlite&gt;&nbsp;<b>.tables</b><br>
+<blockquote><tt>sqlite&gt;&nbsp;<b>.tables</b><br>
 tbl1<br>
 tbl2<br>
-sqlite&gt;
-</tt></blockquote>
-
+sqlite&gt;</tt></blockquote>
 
 
 <p>The ".tables" command is similar to setting list mode then
@@ -438,9 +387,7 @@ If you give the name of a table to ".schema", it shows the original
 CREATE statement used to make that table and all if its indices.
 We have:</p>
 
-
-<blockquote><tt>
-sqlite&gt;&nbsp;<b>.schema</b><br>
+<blockquote><tt>sqlite&gt;&nbsp;<b>.schema</b><br>
 create&nbsp;table&nbsp;tbl1(one&nbsp;varchar(10),&nbsp;two&nbsp;smallint)<br>
 CREATE&nbsp;TABLE&nbsp;tbl2&nbsp;(<br>
 &nbsp;&nbsp;f1&nbsp;varchar(30)&nbsp;primary&nbsp;key,<br>
@@ -453,9 +400,7 @@ CREATE&nbsp;TABLE&nbsp;tbl2&nbsp;(<br>
 &nbsp;&nbsp;f2&nbsp;text,<br>
 &nbsp;&nbsp;f3&nbsp;real<br>
 )<br>
-sqlite&gt;
-</tt></blockquote>
-
+sqlite&gt;</tt></blockquote>
 
 
 <p>The ".schema" command accomplishes the same thing as setting
@@ -498,11 +443,7 @@ ORDER BY substr(type,2,1), name
 to view the schema for some subset of the database.</p>
 
 
-
-<blockquote><tt>
-sqlite&gt;&nbsp;<b>.schema&nbsp;%abc%</b>
-</tt></blockquote>
-
+<blockquote><tt>sqlite&gt;&nbsp;<b>.schema&nbsp;%abc%</b></tt></blockquote>
 
 
 <p>
@@ -521,11 +462,7 @@ databases listed for databases attached using the ATTACH statement.
 The first output column is the name the database is attached with, 
 and the second column is the filename of the external file.</p>
 
-
-<blockquote><tt>
-sqlite&gt;&nbsp;<b>.databases</b>
-</tt></blockquote>
-
+<blockquote><tt>sqlite&gt;&nbsp;<b>.databases</b></tt></blockquote>
 
 
 <h3>Converting An Entire Database To An ASCII Text File</h3>
@@ -537,11 +474,7 @@ back into a database by piping it back into <b>sqlite3</b>.</p>
 <p>A good way to make an archival copy of a database is this:</p>
 
 
-
-<blockquote><tt>
-$&nbsp;<b>echo&nbsp;'.dump'&nbsp;|&nbsp;sqlite3&nbsp;ex1&nbsp;|&nbsp;gzip&nbsp;-c&nbsp;&gt;ex1.dump.gz</b>
-</tt></blockquote>
-
+<blockquote><tt>$&nbsp;<b>echo&nbsp;'.dump'&nbsp;|&nbsp;sqlite3&nbsp;ex1&nbsp;|&nbsp;gzip&nbsp;-c&nbsp;&gt;ex1.dump.gz</b></tt></blockquote>
 
 
 <p>This generates a file named <b>ex1.dump.gz</b> that contains everything
@@ -549,11 +482,7 @@ you need to reconstruct the database at a later time, or on another
 machine.  To reconstruct the database, just type:</p>
 
 
-
-<blockquote><tt>
-$&nbsp;<b>zcat&nbsp;ex1.dump.gz&nbsp;|&nbsp;sqlite3&nbsp;ex2</b>
-</tt></blockquote>
-
+<blockquote><tt>$&nbsp;<b>zcat&nbsp;ex1.dump.gz&nbsp;|&nbsp;sqlite3&nbsp;ex2</b></tt></blockquote>
 
 
 <p>The text format is pure SQL so you
@@ -561,12 +490,8 @@ can also use the .dump command to export an SQLite database
 into other popular SQL database engines.  Like this:</p>
 
 
-
-<blockquote><tt>
-$&nbsp;<b>createdb&nbsp;ex2</b><br>
-$&nbsp;<b>sqlite3&nbsp;ex1&nbsp;.dump&nbsp;|&nbsp;psql&nbsp;ex2</b>
-</tt></blockquote>
-
+<blockquote><tt>$&nbsp;<b>createdb&nbsp;ex2</b><br>
+$&nbsp;<b>sqlite3&nbsp;ex1&nbsp;.dump&nbsp;|&nbsp;psql&nbsp;ex2</b></tt></blockquote>
 
 
 <h3>Other Dot Commands</h3>
@@ -580,9 +505,7 @@ analyzed but is not executed.  Instead, the sequence of virtual machine
 instructions that would have been used to execute the SQL command are
 returned like a query result.  For example:</p>
 
-
-<blockquote><tt>
-sqlite&gt;&nbsp;<b>.explain</b><br>
+<blockquote><tt>sqlite&gt;&nbsp;<b>.explain</b><br>
 sqlite&gt;&nbsp;<b>explain&nbsp;delete&nbsp;from&nbsp;tbl1&nbsp;where&nbsp;two&lt;20;</b><br>
 addr&nbsp;&nbsp;opcode&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
 ----&nbsp;&nbsp;------------&nbsp;&nbsp;-----&nbsp;&nbsp;-----&nbsp;&nbsp;-------------------------------------&nbsp;&nbsp;&nbsp;<br>
@@ -600,9 +523,7 @@ addr&nbsp;&nbsp;opcode&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p1&nbsp;&n
 11&nbsp;&nbsp;&nbsp;&nbsp;ListRead&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;14&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
 12&nbsp;&nbsp;&nbsp;&nbsp;Delete&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
 13&nbsp;&nbsp;&nbsp;&nbsp;Goto&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;11&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-14&nbsp;&nbsp;&nbsp;&nbsp;ListClose&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0
-</tt></blockquote>
-
+14&nbsp;&nbsp;&nbsp;&nbsp;ListClose&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0</tt></blockquote>
 
 
 
@@ -631,15 +552,11 @@ in list mode, and the program exits.  This mechanism is designed
 to make sqlite3 easy to use in conjunction with programs like
 "awk".  For example:</p>
 
-
-<blockquote><tt>
-$&nbsp;<b>sqlite3&nbsp;ex1&nbsp;'select&nbsp;*&nbsp;from&nbsp;tbl1'&nbsp;|</b><br>
+<blockquote><tt>$&nbsp;<b>sqlite3&nbsp;ex1&nbsp;'select&nbsp;*&nbsp;from&nbsp;tbl1'&nbsp;|</b><br>
 &gt;&nbsp;<b>&nbsp;awk&nbsp;'{printf&nbsp;"&lt;tr&gt;&lt;td&gt;%s&lt;td&gt;%s\n",$1,$2&nbsp;}'</b><br>
 &lt;tr&gt;&lt;td&gt;hello&lt;td&gt;10<br>
 &lt;tr&gt;&lt;td&gt;goodbye&lt;td&gt;20<br>
-$
-</tt></blockquote>
-
+$</tt></blockquote>
 
 
 <h3>Ending shell commands</h3>
@@ -662,7 +579,6 @@ SQLite library.  Just get a copy of the source tree, run
 "configure" and then "make".</p>
 
 footer $rcsid
-
-<hr><small<i>
-This page last modified 2007/12/20 02:09:02 UTC
+<hr><small><i>
+This page last modified 2008/06/26 17:47:37 UTC
 </i></small></div></body></html>

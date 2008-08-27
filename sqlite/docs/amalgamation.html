@@ -72,24 +72,25 @@ a:visited { color: #734559 }
   
 
 
+
 <h2>The SQLite Amalgamation</h2>
 
-<p>The core SQLite library consists of about 74 files of C code
-(as of version 3.5.5) in the core with 9 additional files
-in the FTS3 extension.
+<p>The core SQLite library consists of about 76 files of C code
+(as of version 3.6.0) in the core with 11 additional files
+in the FTS3 and <a href="rtree.html">RTREE</a> extensions.
 Most of these are "source" files in the sense that they are stored 
 in the configuration management system and are maintained directly. 
 But 6 of the core C files are generated automatically during the 
-compilation process.  Of the 83 code files, 64 are C code and 
-19 are C header files.</p>
+compilation process.  Of the 87 code files, 66 are C code and 
+21 are C header files.</p>
 
 <p>The standard makefiles for SQLite have a target for building
 an object we call the "amalgamation".  
 The amalgamation is a single C code file, named "sqlite3.c",
 that contains all C code 
-for the core SQLite library and the FTS3 extension.
-This file contains about 73K lines of code 
-(51K if you omit blank lines and comments) and is nearly 2.7MiB 
+for the core SQLite library and the FTS3 and <a href="rtree.html">RTREE</a> extensions.
+This file contains about 91K lines of code 
+(55K if you omit blank lines and comments) and is over 3 megabytes
 in size.</p>
 
 <p>The amalgamation contains everything you need to integrate SQLite 
@@ -119,7 +120,6 @@ the sqlite3.h header file are available on
 the <a href="download.html">download page</a> as a file 
 named sqlite-amalgamation-X_X_X.zip 
 where the X's are replaced by the appropriate version number.</p>
-
-<hr><small<i>
-This page last modified 2008/01/31 18:22:01 UTC
+<hr><small><i>
+This page last modified 2008/06/27 18:54:02 UTC
 </i></small></div></body></html>

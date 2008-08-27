@@ -70,30 +70,22 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Flags for the xAccess VFS method</h2>
-<blockquote><pre>
-#define SQLITE_ACCESS_EXISTS    0
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Flags for the xAccess VFS method</h2><blockquote><pre>#define SQLITE_ACCESS_EXISTS    0
 #define SQLITE_ACCESS_READWRITE 1
 #define SQLITE_ACCESS_READ      2
-
-</pre></blockquote>
-<p>
+</pre></blockquote><p>
  These integer constants can be used as the third parameter to
-the xAccess method of an 
-<a href="../c3ref/vfs.html">sqlite3_vfs</a> object.  They determine
-the kind of what kind of permissions the xAccess method is
-looking for. With SQLITE_ACCESS_EXISTS, the xAccess method
-simply checks to see if the file exists. With
-SQLITE_ACCESS_READWRITE, the xAccess method checks to see
-if the file is both readable and writable. With
-SQLITE_ACCESS_READ the xAccess method
-checks to see if the file is readable.
-</p>
-<p>See also lists of
+the xAccess method of an <a href="../c3ref/vfs.html">sqlite3_vfs</a> object.  They determine
+what kind of permissions the xAccess method is looking for.
+ With SQLITE_ACCESS_EXISTS, the xAccess method
+simply checks whether the file exists.
+ With SQLITE_ACCESS_READWRITE, the xAccess method
+checks whether the file is both readable and writable.
+ With SQLITE_ACCESS_READ, the xAccess method
+checks whether the file is readable.
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

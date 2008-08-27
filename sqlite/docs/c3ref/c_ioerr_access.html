@@ -70,35 +70,30 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Extended Result Codes</h2>
-<blockquote><pre>
-#define SQLITE_IOERR_READ          (SQLITE_IOERR | (1&lt;&lt;8))
-#define SQLITE_IOERR_SHORT_READ    (SQLITE_IOERR | (2&lt;&lt;8))
-#define SQLITE_IOERR_WRITE         (SQLITE_IOERR | (3&lt;&lt;8))
-#define SQLITE_IOERR_FSYNC         (SQLITE_IOERR | (4&lt;&lt;8))
-#define SQLITE_IOERR_DIR_FSYNC     (SQLITE_IOERR | (5&lt;&lt;8))
-#define SQLITE_IOERR_TRUNCATE      (SQLITE_IOERR | (6&lt;&lt;8))
-#define SQLITE_IOERR_FSTAT         (SQLITE_IOERR | (7&lt;&lt;8))
-#define SQLITE_IOERR_UNLOCK        (SQLITE_IOERR | (8&lt;&lt;8))
-#define SQLITE_IOERR_RDLOCK        (SQLITE_IOERR | (9&lt;&lt;8))
-#define SQLITE_IOERR_DELETE        (SQLITE_IOERR | (10&lt;&lt;8))
-#define SQLITE_IOERR_BLOCKED       (SQLITE_IOERR | (11&lt;&lt;8))
-#define SQLITE_IOERR_NOMEM         (SQLITE_IOERR | (12&lt;&lt;8))
-
-</pre></blockquote>
-<p>
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Extended Result Codes</h2><blockquote><pre>#define SQLITE_IOERR_READ              (SQLITE_IOERR | (1&lt;&lt;8))
+#define SQLITE_IOERR_SHORT_READ        (SQLITE_IOERR | (2&lt;&lt;8))
+#define SQLITE_IOERR_WRITE             (SQLITE_IOERR | (3&lt;&lt;8))
+#define SQLITE_IOERR_FSYNC             (SQLITE_IOERR | (4&lt;&lt;8))
+#define SQLITE_IOERR_DIR_FSYNC         (SQLITE_IOERR | (5&lt;&lt;8))
+#define SQLITE_IOERR_TRUNCATE          (SQLITE_IOERR | (6&lt;&lt;8))
+#define SQLITE_IOERR_FSTAT             (SQLITE_IOERR | (7&lt;&lt;8))
+#define SQLITE_IOERR_UNLOCK            (SQLITE_IOERR | (8&lt;&lt;8))
+#define SQLITE_IOERR_RDLOCK            (SQLITE_IOERR | (9&lt;&lt;8))
+#define SQLITE_IOERR_DELETE            (SQLITE_IOERR | (10&lt;&lt;8))
+#define SQLITE_IOERR_BLOCKED           (SQLITE_IOERR | (11&lt;&lt;8))
+#define SQLITE_IOERR_NOMEM             (SQLITE_IOERR | (12&lt;&lt;8))
+#define SQLITE_IOERR_ACCESS            (SQLITE_IOERR | (13&lt;&lt;8))
+#define SQLITE_IOERR_CHECKRESERVEDLOCK (SQLITE_IOERR | (14&lt;&lt;8))
+</pre></blockquote><p>
 In its default configuration, SQLite API routines return one of 26 integer
-
-<a href="../c3ref/c_abort.html">result codes</a>.  However, experience has shown that
-many of these result codes are too course-grained.  They do not provide as
+<a href="../c3ref/c_abort.html">result codes</a>.  However, experience has shown that many of
+these result codes are too coarse-grained.  They do not provide as
 much information about problems as programmers might like.  In an effort to
 address this, newer versions of SQLite (version 3.3.8 and later) include
 support for additional result codes that provide more detailed information
 about errors. The extended result codes are enabled or disabled
-for each database connection using the 
-<a href="../c3ref/extended_result_codes.html">sqlite3_extended_result_codes()</a>
-API.</p>
+on a per database connection basis using the
+<a href="../c3ref/extended_result_codes.html">sqlite3_extended_result_codes()</a> API.</p>
 
 <p>Some of the available extended result codes are listed here.
 One may expect the number of extended result codes will be expand
@@ -110,27 +105,25 @@ be exactly zero.</p>
 
 <p><h3>Invariants:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">F10223</td> 
+<tr><td valign="top">H10223</td> 
 <td valign="top">
-The symbolic name for an extended result code always contains
+The symbolic name for an extended result code shall contains
 a related primary result code as a prefix.</td></tr>
-<tr><td valign="top">F10224</td> 
+<tr><td valign="top">H10224</td> 
 <td valign="top">
-Primary result code names contain a single "_" character.</td></tr>
-<tr><td valign="top">F10225</td> 
+Primary result code names shall contain a single "_" character.</td></tr>
+<tr><td valign="top">H10225</td> 
 <td valign="top">
-Extended result code names contain two or more "_" characters.</td></tr>
-<tr><td valign="top">F10226</td> 
+Extended result code names shall contain two or more "_" characters.</td></tr>
+<tr><td valign="top">H10226</td> 
 <td valign="top">
-The numeric value of an extended result code contains the
-numeric value of its corresponding primary result code it
+The numeric value of an extended result code shall contain the
+numeric value of its corresponding primary result code in
 its least significant 8 bits.</td></tr>
 </table>
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

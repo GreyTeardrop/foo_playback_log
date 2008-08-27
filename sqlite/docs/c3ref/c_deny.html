@@ -70,27 +70,17 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Authorizer Return Codes</h2>
-<blockquote><pre>
-#define SQLITE_DENY   1   /* Abort the SQL statement with an error */
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Authorizer Return Codes</h2><blockquote><pre>#define SQLITE_DENY   1   /* Abort the SQL statement with an error */
 #define SQLITE_IGNORE 2   /* Don't allow access, but don't generate an error */
-
-</pre></blockquote>
-<p>
-The 
-<a href="../c3ref/set_authorizer.html">authorizer callback function</a> must
-return either 
-<a href="../c3ref/c_abort.html">SQLITE_OK</a> or one of these two constants in order
+</pre></blockquote><p>
+The <a href="../c3ref/set_authorizer.html">authorizer callback function</a> must
+return either <a href="../c3ref/c_abort.html">SQLITE_OK</a> or one of these two constants in order
 to signal SQLite whether or not the action is permitted.  See the
-
 <a href="../c3ref/set_authorizer.html">authorizer documentation</a> for additional
 information.
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

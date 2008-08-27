@@ -70,18 +70,12 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Constants Defining Special Destructor Behavior</h2>
-<blockquote><pre>
-typedef void (*sqlite3_destructor_type)(void*);
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Constants Defining Special Destructor Behavior</h2><blockquote><pre>typedef void (*sqlite3_destructor_type)(void*);
 #define SQLITE_STATIC      ((sqlite3_destructor_type)0)
 #define SQLITE_TRANSIENT   ((sqlite3_destructor_type)-1)
-
-</pre></blockquote>
-<p>
-These are special value for the destructor that is passed in as the
-final argument to routines like 
-<a href="../c3ref/result_blob.html">sqlite3_result_blob()</a>.  If the destructor
+</pre></blockquote><p>
+These are special values for the destructor that is passed in as the
+final argument to routines like <a href="../c3ref/result_blob.html">sqlite3_result_blob()</a>.  If the destructor
 argument is SQLITE_STATIC, it means that the content pointer is constant
 and will never change.  It does not need to be destroyed.  The
 SQLITE_TRANSIENT value means that the content will likely change in
@@ -90,11 +84,9 @@ the content before returning.</p>
 
 <p>The typedef is necessary to work around problems in certain
 C++ compilers.  See ticket #2191.
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

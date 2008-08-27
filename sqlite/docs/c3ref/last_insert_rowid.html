@@ -70,33 +70,27 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Last Insert Rowid</h2>
-<blockquote><pre>
-sqlite3_int64 sqlite3_last_insert_rowid(sqlite3*);
-
-</pre></blockquote>
-<p>
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Last Insert Rowid</h2><blockquote><pre>sqlite3_int64 sqlite3_last_insert_rowid(sqlite3*);
+</pre></blockquote><p>
 Each entry in an SQLite table has a unique 64-bit signed
 integer key called the "rowid". The rowid is always available
 as an undeclared column named ROWID, OID, or _ROWID_ as long as those
 names are not also used by explicitly declared columns. If
 the table has a column of type INTEGER PRIMARY KEY then that column
-is another an alias for the rowid.</p>
+is another alias for the rowid.</p>
 
 <p>This routine returns the rowid of the most recent
-successful INSERT into the database from the database connection
-shown in the first argument.  If no successful inserts
-have ever occurred on this database connection, zero is returned.</p>
+successful INSERT into the database from the <a href="../c3ref/sqlite3.html">database connection</a>
+in the first argument.  If no successful INSERTs
+have ever occurred on that database connection, zero is returned.</p>
 
-<p>If an INSERT occurs within a trigger, then the rowid of the
-inserted row is returned by this routine as long as the trigger
-is running.  But once the trigger terminates, the value returned
-by this routine reverts to the last value inserted before the
-trigger fired.</p>
+<p>If an INSERT occurs within a trigger, then the rowid of the inserted
+row is returned by this routine as long as the trigger is running.
+But once the trigger terminates, the value returned by this routine
+reverts to the last value inserted before the trigger fired.</p>
 
 <p>An INSERT that fails due to a constraint violation is not a
-successful insert and does not change the value returned by this
+successful INSERT and does not change the value returned by this
 routine.  Thus INSERT OR FAIL, INSERT OR IGNORE, INSERT OR ROLLBACK,
 and INSERT OR ABORT make no changes to the return value of this
 routine when their insertion fails.  When INSERT OR REPLACE
@@ -105,45 +99,38 @@ INSERT continues to completion after deleting rows that caused
 the constraint problem so INSERT OR REPLACE will always change
 the return value of this interface.</p>
 
-<p>For the purposes of this routine, an insert is considered to
+<p>For the purposes of this routine, an INSERT is considered to
 be successful even if it is subsequently rolled back.</p>
 
 <p><h3>Invariants:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">F12221</td> 
+<tr><td valign="top">H12221</td> 
 <td valign="top">
-The 
-<a href="../c3ref/last_insert_rowid.html">sqlite3_last_insert_rowid()</a> function returns the
-rowid of the most recent successful insert done
-on the same database connection and within the same
-trigger context, or zero if there have
-been no qualifying inserts on that connection.</td></tr>
-<tr><td valign="top">F12223</td> 
+The <a href="../c3ref/last_insert_rowid.html">sqlite3_last_insert_rowid()</a> function returns the rowid
+of the most recent successful INSERT performed on the same
+<a href="../c3ref/sqlite3.html">database connection</a> and within the same or higher level
+trigger context, or zero if there have been no qualifying inserts.</td></tr>
+<tr><td valign="top">H12223</td> 
 <td valign="top">
-The 
-<a href="../c3ref/last_insert_rowid.html">sqlite3_last_insert_rowid()</a> function returns
+The <a href="../c3ref/last_insert_rowid.html">sqlite3_last_insert_rowid()</a> function returns the
 same value when called from the same trigger context
 immediately before and after a ROLLBACK.</td></tr>
 </table></p>
 
-<p><h3>Limitations:</h3>
+<p><h3>Assumptions:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">U12232</td> 
+<tr><td valign="top">A12232</td> 
 <td valign="top">
-If separate thread does a new insert on the same
-database connection while the 
-<a href="../c3ref/last_insert_rowid.html">sqlite3_last_insert_rowid()</a>
+If a separate thread performs a new INSERT on the same
+database connection while the <a href="../c3ref/last_insert_rowid.html">sqlite3_last_insert_rowid()</a>
 function is running and thus changes the last insert rowid,
-then the value returned by 
-<a href="../c3ref/last_insert_rowid.html">sqlite3_last_insert_rowid()</a> is
+then the value returned by <a href="../c3ref/last_insert_rowid.html">sqlite3_last_insert_rowid()</a> is
 unpredictable and might not equal either the old or the new
 last insert rowid.</td></tr>
 </table>
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

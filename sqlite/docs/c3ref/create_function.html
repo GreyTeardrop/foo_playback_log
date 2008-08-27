@@ -70,10 +70,7 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Create Or Redefine SQL Functions</h2>
-<blockquote><pre>
-int sqlite3_create_function(
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Create Or Redefine SQL Functions</h2><blockquote><pre>int sqlite3_create_function(
   sqlite3 *db,
   const char *zFunctionName,
   int nArg,
@@ -93,36 +90,30 @@ int sqlite3_create_function16(
   void (*xStep)(sqlite3_context*,int,sqlite3_value**),
   void (*xFinal)(sqlite3_context*)
 );
+</pre></blockquote><p>
+These two functions (collectively known as "function creation routines")
+are used to add SQL functions or aggregates or to redefine the behavior
+of existing SQL functions or aggregates.  The only difference between the
+two is that the second parameter, the name of the (scalar) function or
+aggregate, is encoded in UTF-8 for sqlite3_create_function() and UTF-16
+for sqlite3_create_function16().</p>
 
-</pre></blockquote>
-<p>
-These two functions (collectively known as
-"function creation routines") are used to add SQL functions or aggregates
-or to redefine the behavior of existing SQL functions or aggregates.  The
-difference only between the two is that the second parameter, the
-name of the (scalar) function or aggregate, is encoded in UTF-8 for
-sqlite3_create_function() and UTF-16 for sqlite3_create_function16().</p>
+<p>The first parameter is the <a href="../c3ref/sqlite3.html">database connection</a> to which the SQL
+function is to be added.  If a single program uses more than one database
+connection internally, then SQL functions must be added individually to
+each database connection.</p>
 
-<p>The first argument is the 
-<a href="../c3ref/sqlite3.html">database connection</a> that holds the
-SQL function or aggregate is to be added or redefined. If a single
-program uses more than one database handle internally, then SQL
-functions or aggregates must be added individually to each database
-handle with which they will be used.</p>
-
-<p>The second parameter is the name of the SQL function to be created
-or redefined.
-The length of the name is limited to 255 bytes, exclusive of the
-zero-terminator.  Note that the name length limit is in bytes, not
+<p>The second parameter is the name of the SQL function to be created or
+redefined.  The length of the name is limited to 255 bytes, exclusive of
+the zero-terminator.  Note that the name length limit is in bytes, not
 characters.  Any attempt to create a function with a longer name
-will result in an SQLITE_ERROR error.</p>
+will result in <a href="../c3ref/c_abort.html">SQLITE_ERROR</a> being returned.</p>
 
 <p>The third parameter is the number of arguments that the SQL function or
 aggregate takes. If this parameter is negative, then the SQL function or
 aggregate may take any number of arguments.</p>
 
 <p>The fourth parameter, eTextRep, specifies what
-
 <a href="../c3ref/c_any.html">text encoding</a> this SQL function prefers for
 its parameters.  Any SQL function implementation should be able to work
 work with UTF-8, UTF-16le, or UTF-16be.  But some implementations may be
@@ -131,50 +122,108 @@ invoke sqlite3_create_function() or sqlite3_create_function16() multiple
 times with the same function but with different values of eTextRep.
 When multiple implementations of the same function are available, SQLite
 will pick the one that involves the least amount of data conversion.
-If there is only a single implementation which does not care what
-text encoding is used, then the fourth argument should be
+If there is only a single implementation which does not care what text
+encoding is used, then the fourth argument should be <a href="../c3ref/c_any.html">SQLITE_ANY</a>.</p>
 
-<a href="../c3ref/c_any.html">SQLITE_ANY</a>.</p>
-
-<p>The fifth parameter is an arbitrary pointer.  The implementation
-of the function can gain access to this pointer using
-
-<a href="../c3ref/user_data.html">sqlite3_user_data()</a>.</p>
+<p>The fifth parameter is an arbitrary pointer.  The implementation of the
+function can gain access to this pointer using <a href="../c3ref/user_data.html">sqlite3_user_data()</a>.</p>
 
 <p>The seventh, eighth and ninth parameters, xFunc, xStep and xFinal, are
-pointers to C-language functions that implement the SQL
-function or aggregate. A scalar SQL function requires an implementation of
-the xFunc callback only, NULL pointers should be passed as the xStep
-and xFinal parameters. An aggregate SQL function requires an implementation
-of xStep and xFinal and NULL should be passed for xFunc. To delete an
-existing SQL function or aggregate, pass NULL for all three function
-callback.</p>
+pointers to C-language functions that implement the SQL function or
+aggregate. A scalar SQL function requires an implementation of the xFunc
+callback only, NULL pointers should be passed as the xStep and xFinal
+parameters. An aggregate SQL function requires an implementation of xStep
+and xFinal and NULL should be passed for xFunc. To delete an existing
+SQL function or aggregate, pass NULL for all three function callbacks.</p>
 
 <p>It is permitted to register multiple implementations of the same
 functions with the same name but with either differing numbers of
-arguments or differing perferred text encodings.  SQLite will use
+arguments or differing preferred text encodings.  SQLite will use
 the implementation most closely matches the way in which the
 SQL function is used.</p>
 
 <p><h3>Invariants:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">F16103</td> 
+<tr><td valign="top">H16103</td> 
 <td valign="top">
-The 
-<a href="../c3ref/create_function.html">sqlite3_create_function16()</a> interface behaves exactly
-like 
-<a href="../c3ref/create_function.html">sqlite3_create_function()</a> in every way except that it
-interprets the zFunctionName argument as
-zero-terminated UTF-16 native byte order instead of as a
-zero-terminated UTF-8.</p>
-
-<p></td></tr>
+The <a href="../c3ref/create_function.html">sqlite3_create_function16()</a> interface behaves exactly
+like <a href="../c3ref/create_function.html">sqlite3_create_function()</a> in every way except that it
+interprets the zFunctionName argument as zero-terminated UTF-16
+native byte order instead of as zero-terminated UTF-8.</td></tr>
+<tr><td valign="top">H16106</td> 
+<td valign="top">
+A successful invocation of
+the <a href="../c3ref/create_function.html">sqlite3_create_function(D,X,N,E,...)</a> interface registers
+or replaces callback functions in the <a href="../c3ref/sqlite3.html">database connection</a> D
+used to implement the SQL function named X with N parameters
+and having a preferred text encoding of E.</td></tr>
+<tr><td valign="top">H16109</td> 
+<td valign="top">
+A successful call to <a href="../c3ref/create_function.html">sqlite3_create_function(D,X,N,E,P,F,S,L)</a>
+replaces the P, F, S, and L values from any prior calls with
+the same D, X, N, and E values.</td></tr>
+<tr><td valign="top">H16112</td> 
+<td valign="top">
+The <a href="../c3ref/create_function.html">sqlite3_create_function(D,X,...)</a> interface fails with
+a return code of <a href="../c3ref/c_abort.html">SQLITE_ERROR</a> if the SQL function name X is
+longer than 255 bytes exclusive of the zero terminator.</td></tr>
+<tr><td valign="top">H16118</td> 
+<td valign="top">
+Either F must be NULL and S and L are non-NULL or else F
+is non-NULL and S and L are NULL, otherwise
+<a href="../c3ref/create_function.html">sqlite3_create_function(D,X,N,E,P,F,S,L)</a> returns <a href="../c3ref/c_abort.html">SQLITE_ERROR</a>.</td></tr>
+<tr><td valign="top">H16121</td> 
+<td valign="top">
+The <a href="../c3ref/create_function.html">sqlite3_create_function(D,...)</a> interface fails with an
+error code of <a href="../c3ref/c_abort.html">SQLITE_BUSY</a> if there exist <a href="../c3ref/stmt.html">prepared statements</a>
+associated with the <a href="../c3ref/sqlite3.html">database connection</a> D.</td></tr>
+<tr><td valign="top">H16124</td> 
+<td valign="top">
+The <a href="../c3ref/create_function.html">sqlite3_create_function(D,X,N,...)</a> interface fails with an
+error code of <a href="../c3ref/c_abort.html">SQLITE_ERROR</a> if parameter N (specifying the number
+of arguments to the SQL function being registered) is less
+than -1 or greater than 127.</td></tr>
+<tr><td valign="top">H16127</td> 
+<td valign="top">
+When N is non-negative, the <a href="../c3ref/create_function.html">sqlite3_create_function(D,X,N,...)</a>
+interface causes callbacks to be invoked for the SQL function
+named X when the number of arguments to the SQL function is
+exactly N.</td></tr>
+<tr><td valign="top">H16130</td> 
+<td valign="top">
+When N is -1, the <a href="../c3ref/create_function.html">sqlite3_create_function(D,X,N,...)</a>
+interface causes callbacks to be invoked for the SQL function
+named X with any number of arguments.</td></tr>
+<tr><td valign="top">H16133</td> 
+<td valign="top">
+When calls to <a href="../c3ref/create_function.html">sqlite3_create_function(D,X,N,...)</a>
+specify multiple implementations of the same function X
+and when one implementation has N>=0 and the other has N=(-1)
+the implementation with a non-zero N is preferred.</td></tr>
+<tr><td valign="top">H16136</td> 
+<td valign="top">
+When calls to <a href="../c3ref/create_function.html">sqlite3_create_function(D,X,N,E,...)</a>
+specify multiple implementations of the same function X with
+the same number of arguments N but with different
+encodings E, then the implementation where E matches the
+database encoding is preferred.</td></tr>
+<tr><td valign="top">H16139</td> 
+<td valign="top">
+For an aggregate SQL function created using
+<a href="../c3ref/create_function.html">sqlite3_create_function(D,X,N,E,P,0,S,L)</a> the finalizer
+function L will always be invoked exactly once if the
+step function S is called one or more times.</td></tr>
+<tr><td valign="top">H16142</td> 
+<td valign="top">
+When SQLite invokes either the xFunc or xStep function of
+an application-defined SQL function or aggregate created
+by <a href="../c3ref/create_function.html">sqlite3_create_function()</a> or <a href="../c3ref/create_function.html">sqlite3_create_function16()</a>,
+then the array of <a href="../c3ref/value.html">sqlite3_value</a> objects passed as the
+third parameter are always <a href="../c3ref/value.html">protected sqlite3_value</a> objects.</td></tr>
 </table>
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

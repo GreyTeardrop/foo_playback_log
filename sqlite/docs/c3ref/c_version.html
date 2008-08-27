@@ -70,52 +70,42 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Compile-Time Library Version Numbers</h2>
-<blockquote><pre>
-#define SQLITE_VERSION         "3.5.6"
-#define SQLITE_VERSION_NUMBER 3005006
-
-</pre></blockquote>
-<p>
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Compile-Time Library Version Numbers</h2><blockquote><pre>#define SQLITE_VERSION         "3.6.1"
+#define SQLITE_VERSION_NUMBER  3006001
+</pre></blockquote><p>
 The SQLITE_VERSION and SQLITE_VERSION_NUMBER #defines in
 the sqlite3.h file specify the version of SQLite with which
 that header file is associated.</p>
 
-<p>The "version" of SQLite is a strong of the form "X.Y.Z".
+<p>The "version" of SQLite is a string of the form "X.Y.Z".
 The phrase "alpha" or "beta" might be appended after the Z.
 The X value is major version number always 3 in SQLite3.
-The X value only changes when  backwards compatibility is
-broken and we intend to never break
-backwards compatibility.  The Y value is the minor version
-number and only changes when
+The X value only changes when backwards compatibility is
+broken and we intend to never break backwards compatibility.
+The Y value is the minor version number and only changes when
 there are major feature enhancements that are forwards compatible
-but not backwards compatible.  The Z value is release number
-and is incremented with
-each release but resets back to 0 when Y is incremented.</p>
+but not backwards compatible.
+The Z value is the release number and is incremented with
+each release but resets back to 0 whenever Y is incremented.</p>
 
-<p>See also: 
-<a href="../c3ref/libversion.html">sqlite3_libversion()</a> and 
-<a href="../c3ref/libversion.html">sqlite3_libversion_number()</a>.</p>
+<p>See also: <a href="../c3ref/libversion.html">sqlite3_libversion()</a> and <a href="../c3ref/libversion.html">sqlite3_libversion_number()</a>.</p>
 
 <p><h3>Invariants:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">F10011</td> 
+<tr><td valign="top">H10011</td> 
 <td valign="top">
-The SQLITE_VERSION #define in the sqlite3.h header file
-evaluates to a string literal that is the SQLite version
+The SQLITE_VERSION #define in the sqlite3.h header file shall
+evaluate to a string literal that is the SQLite version
 with which the header file is associated.</td></tr>
-<tr><td valign="top">F10014</td> 
+<tr><td valign="top">H10014</td> 
 <td valign="top">
-The SQLITE_VERSION_NUMBER #define resolves to an integer
-with the value  (X*1000000 + Y*1000 + Z) where X, Y, and
-Z are the major version, minor version, and release number.</td></tr>
+The SQLITE_VERSION_NUMBER #define shall resolve to an integer
+with the value (X*1000000 + Y*1000 + Z) where X, Y, and Z
+are the major version, minor version, and release number.</td></tr>
 </table>
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

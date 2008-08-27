@@ -70,45 +70,31 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Index Of A Parameter With A Given Name</h2>
-<blockquote><pre>
-int sqlite3_bind_parameter_index(sqlite3_stmt*, const char *zName);
-
-</pre></blockquote>
-<p>
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Index Of A Parameter With A Given Name</h2><blockquote><pre>int sqlite3_bind_parameter_index(sqlite3_stmt*, const char *zName);
+</pre></blockquote><p>
 Return the index of an SQL parameter given its name.  The
 index value returned is suitable for use as the second
-parameter to 
-<a href="../c3ref/bind_blob.html">sqlite3_bind()</a>.  A zero
+parameter to <a href="../c3ref/bind_blob.html">sqlite3_bind()</a>.  A zero
 is returned if no matching parameter is found.  The parameter
 name must be given in UTF-8 even if the original statement
-was prepared from UTF-16 text using 
-<a href="../c3ref/prepare.html">sqlite3_prepare16_v2()</a>.</p>
+was prepared from UTF-16 text using <a href="../c3ref/prepare.html">sqlite3_prepare16_v2()</a>.</p>
 
-<p>See also: 
-<a href="../c3ref/bind_blob.html">sqlite3_bind()</a>,
-
+<p>See also: <a href="../c3ref/bind_blob.html">sqlite3_bind()</a>,
 <a href="../c3ref/bind_parameter_count.html">sqlite3_bind_parameter_count()</a>, and
-
 <a href="../c3ref/bind_parameter_index.html">sqlite3_bind_parameter_index()</a>.</p>
 
 <p><h3>Invariants:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">F13641</td> 
+<tr><td valign="top">H13641</td> 
 <td valign="top">
-The 
-<a href="../c3ref/bind_parameter_index.html">sqlite3_bind_parameter_index(S,N)</a> interface returns
-the index of SQL parameter in 
-<a href="../c3ref/stmt.html">prepared statement</a>
+The <a href="../c3ref/bind_parameter_index.html">sqlite3_bind_parameter_index(S,N)</a> interface returns
+the index of SQL parameter in the <a href="../c3ref/stmt.html">prepared statement</a>
 S whose name matches the UTF-8 string N, or 0 if there is
 no match.</td></tr>
 </table>
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

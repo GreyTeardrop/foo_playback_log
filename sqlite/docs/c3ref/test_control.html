@@ -70,16 +70,11 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Testing Interface</h2>
-<blockquote><pre>
-int sqlite3_test_control(int op, ...);
-
-</pre></blockquote>
-<p>
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Testing Interface</h2><blockquote><pre>int sqlite3_test_control(int op, ...);
+</pre></blockquote><p>
 The sqlite3_test_control() interface is used to read out internal
 state of SQLite and to inject faults into SQLite for testing
-purposes.  The first parameter a operation code that determines
+purposes.  The first parameter is an operation code that determines
 the number, meaning, and operation of all subsequent parameters.</p>
 
 <p>This interface is not for use by applications.  It exists solely
@@ -90,11 +85,9 @@ on how the SQLite library is compiled, this interface might not exist.</p>
 they take, and what they do are all subject to change without notice.
 Unlike most of the SQLite API, this function is not guaranteed to
 operate consistently from one release to the next.
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

@@ -70,30 +70,22 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Synchronization Type Flags</h2>
-<blockquote><pre>
-#define SQLITE_SYNC_NORMAL        0x00002
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Synchronization Type Flags</h2><blockquote><pre>#define SQLITE_SYNC_NORMAL        0x00002
 #define SQLITE_SYNC_FULL          0x00003
 #define SQLITE_SYNC_DATAONLY      0x00010
-
-</pre></blockquote>
-<p>
+</pre></blockquote><p>
 When SQLite invokes the xSync() method of an
-
-<a href="../c3ref/io_methods.html">sqlite3_io_methods</a> object it uses a combination of the
+<a href="../c3ref/io_methods.html">sqlite3_io_methods</a> object it uses a combination of
 these integer values as the second argument.</p>
 
 <p>When the SQLITE_SYNC_DATAONLY flag is used, it means that the
 sync operation only needs to flush data to mass storage.  Inode
-information need not be flushed. The SQLITE_SYNC_NORMAL means
+information need not be flushed. The SQLITE_SYNC_NORMAL flag means
 to use normal fsync() semantics. The SQLITE_SYNC_FULL flag means
 to use Mac OS-X style fullsync instead of fsync().
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
-<title>Test To See If The Database Is In Auto-Commit Mode</title>
+<title>Test For Auto-Commit Mode</title>
 <style type="text/css">
 body {
     margin: auto;
@@ -70,70 +70,51 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Test To See If The Database Is In Auto-Commit Mode</h2>
-<blockquote><pre>
-int sqlite3_get_autocommit(sqlite3*);
-
-</pre></blockquote>
-<p>
-The sqlite3_get_autocommit() interfaces returns non-zero or
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Test For Auto-Commit Mode</h2><blockquote><pre>int sqlite3_get_autocommit(sqlite3*);
+</pre></blockquote><p>
+The sqlite3_get_autocommit() interface returns non-zero or
 zero if the given database connection is or is not in autocommit mode,
-respectively.   Autocommit mode is on
-by default.  Autocommit mode is disabled by a 
-<a href="../lang_transaction.html">BEGIN</a> statement.
-Autocommit mode is reenabled by a 
-<a href="../lang_transaction.html">COMMIT</a> or 
-<a href="../lang_transaction.html">ROLLBACK</a>.</p>
+respectively.  Autocommit mode is on by default.
+Autocommit mode is disabled by a <a href="../lang_transaction.html">BEGIN</a> statement.
+Autocommit mode is re-enabled by a <a href="../lang_transaction.html">COMMIT</a> or <a href="../lang_transaction.html">ROLLBACK</a>.</p>
 
 <p>If certain kinds of errors occur on a statement within a multi-statement
-transactions (errors including 
-<a href="../c3ref/c_abort.html">SQLITE_FULL</a>, 
-<a href="../c3ref/c_abort.html">SQLITE_IOERR</a>,
-
-<a href="../c3ref/c_abort.html">SQLITE_NOMEM</a>, 
-<a href="../c3ref/c_abort.html">SQLITE_BUSY</a>, and 
-<a href="../c3ref/c_abort.html">SQLITE_INTERRUPT</a>) then the
+transaction (errors including <a href="../c3ref/c_abort.html">SQLITE_FULL</a>, <a href="../c3ref/c_abort.html">SQLITE_IOERR</a>,
+<a href="../c3ref/c_abort.html">SQLITE_NOMEM</a>, <a href="../c3ref/c_abort.html">SQLITE_BUSY</a>, and <a href="../c3ref/c_abort.html">SQLITE_INTERRUPT</a>) then the
 transaction might be rolled back automatically.  The only way to
-find out if SQLite automatically rolled back the transaction after
+find out whether SQLite automatically rolled back the transaction after
 an error is to use this function.</p>
 
 <p><h3>Invariants:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">F12931</td> 
+<tr><td valign="top">H12931</td> 
 <td valign="top">
-The 
-<a href="../c3ref/get_autocommit.html">sqlite3_get_autocommit()</a> interface returns non-zero or
-zero if the given database connection is or is not in autocommit
+The <a href="../c3ref/get_autocommit.html">sqlite3_get_autocommit(D)</a> interface returns non-zero or
+zero if the <a href="../c3ref/sqlite3.html">database connection</a> D is or is not in autocommit
 mode, respectively.</td></tr>
-<tr><td valign="top">F12932</td> 
+<tr><td valign="top">H12932</td> 
 <td valign="top">
 Autocommit mode is on by default.</td></tr>
-<tr><td valign="top">F12933</td> 
+<tr><td valign="top">H12933</td> 
 <td valign="top">
-Autocommit mode is disabled by a successful 
-<a href="../lang_transaction.html">BEGIN</a> statement.</td></tr>
-<tr><td valign="top">F12934</td> 
+Autocommit mode is disabled by a successful <a href="../lang_transaction.html">BEGIN</a> statement.</td></tr>
+<tr><td valign="top">H12934</td> 
 <td valign="top">
-Autocommit mode is enabled by a successful 
-<a href="../lang_transaction.html">COMMIT</a> or 
-<a href="../lang_transaction.html">ROLLBACK</a>
+Autocommit mode is enabled by a successful <a href="../lang_transaction.html">COMMIT</a> or <a href="../lang_transaction.html">ROLLBACK</a>
 statement.</td></tr>
 </table></p>
 
-<p><h3>Limitations:</h3>
+<p><h3>Assumptions:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">U12936</td> 
+<tr><td valign="top">A12936</td> 
 <td valign="top">
 If another thread changes the autocommit status of the database
 connection while this routine is running, then the return value
 is undefined.</td></tr>
 </table>
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

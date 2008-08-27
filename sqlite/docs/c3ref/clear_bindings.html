@@ -70,36 +70,22 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Reset All Bindings On A Prepared Statement</h2>
-<blockquote><pre>
-int sqlite3_clear_bindings(sqlite3_stmt*);
-
-</pre></blockquote>
-<p>
-Contrary to the intuition of many, 
-<a href="../c3ref/reset.html">sqlite3_reset()</a> does not
-reset the 
-<a href="../c3ref/bind_blob.html">bindings</a> on a
-
-<a href="../c3ref/stmt.html">prepared statement</a>.  Use this routine to
-reset all host parameters to NULL.</p>
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Reset All Bindings On A Prepared Statement</h2><blockquote><pre>int sqlite3_clear_bindings(sqlite3_stmt*);
+</pre></blockquote><p>
+Contrary to the intuition of many, <a href="../c3ref/reset.html">sqlite3_reset()</a> does not reset
+the <a href="../c3ref/bind_blob.html">bindings</a> on a <a href="../c3ref/stmt.html">prepared statement</a>.
+Use this routine to reset all host parameters to NULL.</p>
 
 <p><h3>Invariants:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">F13661</td> 
+<tr><td valign="top">H13661</td> 
 <td valign="top">
-The 
-<a href="../c3ref/clear_bindings.html">sqlite3_clear_bindings(S)</a> interface resets all
-SQL parameter bindings in 
-<a href="../c3ref/stmt.html">prepared statement</a> S
-back to NULL.</td></tr>
+The <a href="../c3ref/clear_bindings.html">sqlite3_clear_bindings(S)</a> interface resets all SQL
+parameter bindings in the <a href="../c3ref/stmt.html">prepared statement</a> S back to NULL.</td></tr>
 </table>
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

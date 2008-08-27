@@ -72,23 +72,18 @@ a:visited { color: #734559 }
   
 
 
-
 <a name=""></a>
-<h1> The SQLite Query Optimizer Overview</h1>
-<p>
+<h1> The SQLite Query Optimizer Overview</h1><p>
   This document provides a terse overview of how the query optimizer
   for SQLite works.  This is not a tutorial.  The reader is likely to
   need some prior knowledge of how database engines operate 
   in order to fully understand this text.
 </p>
-
 <a name="where_clause"></a>
-<h2>1.0 WHERE clause analysis</h2>
-<p>
+<h2>1.0 WHERE clause analysis</h2><p>
   The WHERE clause on a query is broken up into "terms" where each term
   is separated from the others by an AND operator.
 </p>
-
 <p>
   All terms of the WHERE clause are analyzed to see if they can be
   satisfied using indices.
@@ -99,21 +94,17 @@ a:visited { color: #734559 }
   one or more terms will provide hints to indices but still must be
   evaluated against each row of the input tables.
 </p>
-
 <p>
   The analysis of a term might cause new "virtual" terms to
   be added to the WHERE clause.  Virtual terms can be used with
   indices to restrict a search.  But virtual terms never generate code
   that is tested against input rows.
 </p>
-
 <p>
   To be usable by an index a term must be of one of the following
   forms:
 </p>
-
-<blockquote><pre>
-<b>
+<blockquote><pre><b>
   </b><i>column</i><b> = </b><i>expression</i><b>
   </b><i>column</i><b> &gt; </b><i>expression</i><b>
   </b><i>column</i><b> &gt;= </b><i>expression</i><b>
@@ -126,18 +117,12 @@ a:visited { color: #734559 }
   </b><i>expression</i><b> &lt;= </b><i>column</i><b>
   </b><i>column</i><b> IN (</b><i>expression-list</i><b>)
   </b><i>column</i><b> IN (</b><i>subquery</i><b>)
-</b>
-</pre></blockquote>
-<p>
+</b></pre></blockquote><p>
   If an index is created using a statement like this:
 </p>
-
 <blockquote><pre>
-
   CREATE INDEX idx_ex1 ON ex1(a,b,c,d,e,...,y,z);
-
-</pre></blockquote>
-<p>
+</pre></blockquote><p>
   Then the index might be used if the initial columns of the index
   (columns a, b, and so forth) appear in WHERE clause terms.
   All index columns must be used with
@@ -146,7 +131,6 @@ a:visited { color: #734559 }
   column of an index that is used, there can be up to two inequalities
   that must sandwich the allowed values of the column between two extremes.
 </p>
-
 <p>
   It is not necessary for every column of an index to appear in a
   WHERE clause term in order for that index to be used. 
@@ -159,39 +143,25 @@ a:visited { color: #734559 }
   column that is constrained only by inequalities.
   For the index above and WHERE clause like this:
 </p>
-
 <blockquote><pre>
-
   ... WHERE a=5 AND b IN (1,2,3) AND c>12 AND d='hello'
-
-</pre></blockquote>
-<p>
+</pre></blockquote><p>
   Only columns a, b, and c of the index would be usable.  The d column
   would not be usable because it occurs to the right of c and c is
   constrained only by inequalities.
 </p>
-
 <a name="between_opt"></a>
-<h2>2.0 The BETWEEN optimization</h2>
-<p>
+<h2>2.0 The BETWEEN optimization</h2><p>
   If a term of the WHERE clause is of the following form:
 </p>
-
-<blockquote><pre>
-<b>
+<blockquote><pre><b>
   </b><i>expr1</i><b> BETWEEN </b><i>expr2</i><b> AND </b><i>expr3</i><b>
-</b>
-</pre></blockquote>
-<p>
+</b></pre></blockquote><p>
   Then two virtual terms are added as follows:
 </p>
-
-<blockquote><pre>
-<b>
+<blockquote><pre><b>
   </b><i>expr1</i><b> &gt;= </b><i>expr2</i><b> AND </b><i>expr1</i><b> &lt;= </b><i>expr3</i><b>
-</b>
-</pre></blockquote>
-<p>
+</b></pre></blockquote><p>
   If both virtual terms end up being used as constraints on an index,
   then the original BETWEEN term is omitted and the corresponding test
   is not performed on input rows.
@@ -204,44 +174,31 @@ a:visited { color: #734559 }
   instead must be used to test input rows, the <i>expr1</i> expression is
   only evaluated once.
 </p>
-
 <a name="or_opt"></a>
-<h2>3.0 The OR optimization</h2>
-<p>
+<h2>3.0 The OR optimization</h2><p>
   If a term consists of multiple subterms containing a common column
   name and separated by OR, like this:
 </p>
-
-<blockquote><pre>
-<b>
+<blockquote><pre><b>
   </b><i>column</i><b> = </b><i>expr1</i><b> OR </b><i>column</i><b> = </b><i>expr2</i><b> OR </b><i>column</i><b> = </b><i>expr3</i><b> OR ...
-</b>
-</pre></blockquote>
-<p>
+</b></pre></blockquote><p>
   Then the term is rewritten as follows:
 </p>
-
-<blockquote><pre>
-<b>
+<blockquote><pre><b>
   </b><i>column</i><b> IN (</b><i>expr1</i><b>,</b><i>expr2</i><b>,</b><i>expr3</i><b>,</b><i>expr4</i><b>,...)
-</b>
-</pre></blockquote>
-<p>
+</b></pre></blockquote><p>
   The rewritten term then might go on to constraint an index using the
   normal rules for <tt><b><big>IN</big></b></tt> operators.
   Note that <i>column</i> must be the same column in every OR-connected subterm,
   although the column can occur on either the left or the right side of
   the <tt><b><big>=</big></b></tt> operator.
 </p>
-
 <a name="like_opt"></a>
-<h2>4.0 The LIKE optimization</h2>
-<p>
+<h2>4.0 The LIKE optimization</h2><p>
   Terms that are composed of the LIKE or GLOB operator
   can sometimes be used to constrain indices.
   There are many conditions on this use:
 </p>
-
 <p>
   <ol>
   <li>The left-hand side of the LIKE or GLOB operator must be the name
@@ -259,29 +216,20 @@ a:visited { color: #734559 }
       built-in NOCASE collating sequence.</li>
   </ol>
 </p>
-
 <p>
   The LIKE operator has two modes that can be set by a pragma.  The
   default mode is for LIKE comparisons to be insensitive to differences
   of case for latin1 characters.  Thus, by default, the following
   expression is true:
 </p>
-
 <blockquote><pre>
-
   'a' LIKE 'A'
-
-</pre></blockquote>
-<p>
+</pre></blockquote><p>
   By turned on the case_sensitive_like pragma as follows:
 </p>
-
 <blockquote><pre>
-
   PRAGMA case_sensitive_like=ON;
-
-</pre></blockquote>
-<p>
+</pre></blockquote><p>
   Then the LIKE operator pays attention to case and the example above would
   evaluate to false.  Note that case insensitivity only applies to
   latin1 characters - basically the upper and lower case letters of English
@@ -290,14 +238,12 @@ a:visited { color: #734559 }
   sequence is used.  But if you employ a user-supplied collating sequence,
   the LIKE optimization describe here will never be taken.
 </p>
-
 <p>
   The LIKE operator is case insensitive by default because this is what
   the SQL standard requires.  You can change the default behavior at
   compile time by using the -DSQLITE_CASE_SENSITIVE_LIKE command-line option
   to the compiler.
 </p>
-
 <p>
   The LIKE optimization might occur if the column named on the left of the
   operator uses the BINARY collating sequence (which is the default) and
@@ -309,13 +255,11 @@ a:visited { color: #734559 }
   than the built-in BINARY and NOCASE collating sequences, then no optimizations
   will ever be attempted on the LIKE operator.
 </p>
-
 <p>
   The GLOB operator is always case sensitive.  The column on the left side
   of the GLOB operator must always use the built-in BINARY collating sequence
   or no attempt will be made to optimize that operator with indices.
 </p>
-
 <p>
   The right-hand side of the GLOB or LIKE operator must be a literal string
   value that does not begin with a wildcard.  If the right-hand side is a
@@ -323,7 +267,6 @@ a:visited { color: #734559 }
   If the right-hand side begins with a wildcard character then no 
   optimization is attempted.
 </p>
-
 <p>
   Suppose the initial sequence of non-wildcard characters on the right-hand
   side of the LIKE or GLOB operator is <i>x</i>.  We are using a single 
@@ -335,13 +278,9 @@ a:visited { color: #734559 }
   The LIKE and GLOB optimizations consist of adding two virtual terms
   like this:
 </p>
-
-<blockquote><pre>
-<b>
+<blockquote><pre><b>
   </b><i>column</i><b> &gt;= </b><i>x</i><b> AND </b><i>column</i><b> &lt; </b><i>y</i><b>
-</b>
-</pre></blockquote>
-<p>
+</b></pre></blockquote><p>
   Under most circumstances, the original LIKE or GLOB operator is still
   tested against each input row even if the virtual terms are used to
   constrain an index.  This is because we do not know what additional
@@ -350,27 +289,20 @@ a:visited { color: #734559 }
   to the right of <i>x</i>, then the original LIKE or GLOB test is disabled.
   In other words, if the pattern is like this:
 </p>
-
-<blockquote><pre>
-<b>
+<blockquote><pre><b>
   </b><i>column</i><b> LIKE </b><i>x</i><b>%
   </b><i>column</i><b> GLOB </b><i>x</i><b>*
-</b>
-</pre></blockquote>
-<p>
+</b></pre></blockquote><p>
   Then the original LIKE or GLOB tests are disabled when the virtual
   terms constrain an index because in that case we know that all of the
   rows selected by the index will pass the LIKE or GLOB test.
 </p>
-
 <a name="joins"></a>
-<h2>5.0 Joins</h2>
-<p>
+<h2>5.0 Joins</h2><p>
   The current implementation of 
   SQLite uses only loop joins.  That is to say, joins are implemented as
   nested loops.
 </p>
-
 <p>
   The default order of the nested loops in a join is for the left-most
   table in the FROM clause to form the outer loop and the right-most
@@ -378,7 +310,6 @@ a:visited { color: #734559 }
   However, SQLite will nest the loops in a different order if doing so
   will help it to select better indices.
 </p>
-
 <p>
   Inner joins can be freely reordered.  However a left outer join is
   neither commutative nor associative and hence will not be reordered.
@@ -386,12 +317,10 @@ a:visited { color: #734559 }
   if the optimizer thinks that is advantageous but the outer joins are
   always evaluated in the order in which they occur.
 </p>
-
 <p>
   When selecting the order of tables in a join, SQLite uses a greedy
   algorithm that runs in polynomial time.
 </p>
-
 <p>
   The ON and USING clauses of a join are converted into additional
   terms of the WHERE clause prior to WHERE clause analysis described
@@ -400,7 +329,6 @@ a:visited { color: #734559 }
   over the older SQL89 comma-join syntax.  They both end up accomplishing
   exactly the same thing.
 </p>
-
 <p>
   Join reordering is automatic and usually works well enough that
   programmer do not have to think about it.  But occasionally some
@@ -409,38 +337,30 @@ a:visited { color: #734559 }
   <a href="http://www.sqlite.org/cvstrac/wiki?p=QueryPlans">QueryPlans</a>
   page in the Wiki.
 </p>
-
 <a name="multi_index"></a>
-<h2>6.0 Choosing between multiple indices</h2>
-<p>
+<h2>6.0 Choosing between multiple indices</h2><p>
   Each table in the FROM clause of a query can use at most one index,
   and SQLite strives to use at least one index on each table.  Sometimes,
   two or more indices might be candidates for use on a single table.
   For example:
 </p>
-
 <blockquote><pre>
-
   CREATE TABLE ex2(x,y,z);
   CREATE INDEX ex2i1 ON ex2(x);
   CREATE INDEX ex2i2 ON ex2(y);
   SELECT z FROM ex2 WHERE x=5 AND y=6;
-
-</pre></blockquote>
-<p>
+</pre></blockquote><p>
   For the SELECT statement above, the optimizer can use the ex2i1 index
   to lookup rows of ex2 that contain x=5 and then test each row against
   the y=6 term.  Or it can use the ex2i2 index to lookup rows
   of ex2 that contain y=6 then test each of those rows against the
   x=5 term.
 </p>
-
 <p>
   When faced with a choice of two or more indices, SQLite tries to estimate
   the total amount of work needed to perform the query using each option.
   It then selects the option that gives the least estimated work.
 </p>
-
 <p>
   To help the optimizer get a more accurate estimate of the work involved
   in using various indices, the user may optional run the ANALYZE command.
@@ -454,7 +374,6 @@ a:visited { color: #734559 }
   The results of an ANALYZE command are only available to database connections
   that are opened after the ANALYZE command completes.
 </p>
-
 <p>
   Once created, the sqlite_stat1 table cannot be dropped.  But its
   content can be viewed, modified, or erased.  Erasing the entire content
@@ -464,7 +383,6 @@ a:visited { color: #734559 }
   updates to the sqlite_stat1 table (except by running ANALYZE) is
   not recommended.
 </p>
-
 <p>
   Terms of the WHERE clause can be manually disqualified for use with
   indices by prepending a unary <tt><b><big>+</big></b></tt> operator to the column name.  The
@@ -473,20 +391,14 @@ a:visited { color: #734559 }
   But it will prevent the term from constraining an index.
   So, in the example above, if the query were rewritten as:
 </p>
-
 <blockquote><pre>
-
   SELECT z FROM ex2 WHERE +x=5 AND y=6;
-
-</pre></blockquote>
-<p>
+</pre></blockquote><p>
   The <tt><b><big>+</big></b></tt> operator on the <tt><b><big>x</big></b></tt> column would prevent that term from 
   constraining an index.  This would force the use of the ex2i2 index.
 </p>
-
 <a name="index_only"></a>
-<h2>7.0 Avoidance of table lookups</h2>
-<p>
+<h2>7.0 Avoidance of table lookups</h2><p>
   When doing an indexed lookup of a row, the usual procedure is to
   do a binary search on the index to find the index entry, then extract
   the rowid from the index and use that rowid to do a binary search on
@@ -498,10 +410,8 @@ a:visited { color: #734559 }
   row.  This saves one binary search for each row and can make many
   queries run twice as fast.
 </p>
-
 <a name="order_by"></a>
-<h2>8.0 ORDER BY optimizations</h2>
-<p>
+<h2>8.0 ORDER BY optimizations</h2><p>
   SQLite attempts to use an index to satisfy the ORDER BY clause of a
   query when possible.
   When faced with the choice of using an index to satisfy WHERE clause
@@ -510,10 +420,8 @@ a:visited { color: #734559 }
   and chooses the index that it believes will result in the fastest answer.
 
 </p>
-
 <a name="flattening"></a>
-<h2>9.0 Subquery flattening</h2>
-<p>
+<h2>9.0 Subquery flattening</h2><p>
   When a subquery occurs in the FROM clause of a SELECT, the default
   behavior is to evaluate the subquery into a transient table, then run
   the outer SELECT against the transient table. 
@@ -521,7 +429,6 @@ a:visited { color: #734559 }
   and the outer query (which is likely a join) will be forced to do a
   full table scan on the transient table.
 </p>
-
 <p>
   To overcome this problem, SQLite attempts to flatten subqueries in
   the FROM clause of a SELECT.
@@ -530,26 +437,17 @@ a:visited { color: #734559 }
   the outer query that refer to the result set of the subquery.
   For example:
 </p>
-
 <blockquote><pre>
-
   SELECT a FROM (SELECT x+y AS a FROM t1 WHERE z<100) WHERE a>5
-
-</pre></blockquote>
-<p>
+</pre></blockquote><p>
   Would be rewritten using query flattening as:
 </p>
-
 <blockquote><pre>
-
   SELECT x+y AS a FROM t1 WHERE z<100 AND a>5
-
-</pre></blockquote>
-<p>
+</pre></blockquote><p>
   There is a long list of conditions that must all be met in order for
   query flattening to occur.
 </p>
-
 <p>
   <ol>
   <li> The subquery and the outer query do not both use aggregates.</li>
@@ -572,31 +470,23 @@ a:visited { color: #734559 }
          subquery has no WHERE clause.  </li>
   </ol>
 </p>
-
 <p>
   The proof that query flattening may safely occur if all of the the
   above conditions are met is left as an exercise to the reader.
 </p>
-
 <p>
   Query flattening is an important optimization when views are used as
   each use of a view is translated into a subquery.
 </p>
-
 <a name="minmax"></a>
-<h2>10.0 The MIN/MAX optimization</h2>
-<p>
+<h2>10.0 The MIN/MAX optimization</h2><p>
   Queries of the following forms will be optimized to run in logarithmic
   time assuming appropriate indices exist:
 </p>
-
 <blockquote><pre>
-
   SELECT MIN(x) FROM table;
   SELECT MAX(x) FROM table;
-
-</pre></blockquote>
-<p>
+</pre></blockquote><p>
   In order for these optimizations to occur, they must appear in exactly
   the form shown above - changing only the name of the table and column.
   It is not permissible to add a WHERE clause or do any arithmetic on the
@@ -604,8 +494,6 @@ a:visited { color: #734559 }
   The column in the MIN or MAX function must be an indexed column.
 </p>
 
-
-
-<hr><small<i>
+<hr><small><i>
 This page last modified 2007/12/20 02:18:57 UTC
 </i></small></div></body></html>

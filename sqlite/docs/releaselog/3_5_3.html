@@ -70,9 +70,7 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<h2>SQLite Release 3.5.3 On 2007 Nov 27 (3.5.3)</h2>
-<p>Changes associated with this release include the following:</p>
-<p><ul>
+<h2>SQLite Release 3.5.3 On 2007 Nov 27 (3.5.3)</h2><p>Changes associated with this release include the following:</p><p><ul>
 <li>Move website and documentation files out of the source tree into
 a <a href="http://www.sqlite.org/docsrc/">separate CM system</a>.
 <li>Fix a long-standing bug in INSERT INTO ... SELECT ... statements
@@ -82,12 +80,9 @@ where the SELECT is compound.
 <li>On win32, do not return an error when attempting to delete a file
 that does not exist.
 <li>Allow collating sequence names to be quoted.
-<li>Modify the TCL interface to use 
-<a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a>.
+<li>Modify the TCL interface to use <a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a>.
 <li>Fix multiple bugs that can occur following a malloc() failure.
-<li>
-<a href="../c3ref/step.html">sqlite3_step()</a> returns 
-<a href="../c3ref/c_abort.html">SQLITE_MISUSE</a> instead of crashing when
+<li><a href="../c3ref/step.html">sqlite3_step()</a> returns <a href="../c3ref/c_abort.html">SQLITE_MISUSE</a> instead of crashing when
 called with a NULL parameter.
 <li>FTS3 now uses the SQLite memory allocator exclusively.  The
 FTS3 amalgamation can now be appended to the SQLite amalgamation to
@@ -96,13 +91,11 @@ generate a super-amalgamation containing both.
 appropriate index is available and the optimizer thinks its use
 might be advantageous.
 </ul></p>
-
       <p>A <a href="../changes.html">complete list of SQLite releases</a>
       in a single pages is also available.  A detailed history of every
       check-in is available at
       <a href="http://www.sqlite.org/cvstrac/timeline">
       http://www.sqlite.org/cvstrac/timeline</a>.</p>
-    
-<hr><small<i>
-This page last modified 2008/02/06 14:41:27 UTC
+    <hr><small><i>
+This page last modified 2008/08/05 18:20:45 UTC
 </i></small></div></body></html>

@@ -72,9 +72,7 @@ a:visited { color: #734559 }
   
 
 
-
 <h2>1.0 File Locking And Concurrency In SQLite Version 3</h2>
-
 <p>Version 3 of SQLite introduces a more complex locking and journaling 
 mechanism designed to improve concurrency and reduce the writer starvation 
 problem.  The new mechanism also allows atomic commits of transactions
@@ -84,10 +82,7 @@ The intended audience is programmers who want to understand and/or modify
 the pager code and reviewers working to verify the design
 of SQLite version 3.
 </p>
-
-<a name="overview"></a>
-<h2>2.0 Overview</h2>
-
+<a name="overview"></a><h2>2.0 Overview</h2>
 <p>
 Locking and concurrency control are handled by the the 
 <a href="http://www.sqlite.org/cvstrac/getfile/sqlite/src/pager.c">
@@ -122,10 +117,7 @@ that provides a uniform abstraction for operating system services.
 separate processes, or both.  Throughout this document whenever the
 word "process" is written you may substitute the word "thread" without
 changing the truth of the statement.</p>
-
-<a name="locking"></a>
-<h2>3.0 Locking</h2>
-
+<a name="locking"></a><h2>3.0 Locking</h2>
 <p>
 From the point of view of a single process, a database file
 can be in one of five locking states:
@@ -144,6 +136,8 @@ permit.  This is the default state.
 
 <tr><td valign="top">SHARED</td>
 <td valign="top">
+<a name="shared_lock"></a>
+
 The database may be read but not written.  Any number of 
 processes can hold SHARED locks at the same time, hence there can be
 many simultaneous readers.  But no other thread or process is allowed
@@ -152,6 +146,8 @@ to write to the database file while one or more SHARED locks are active.
 
 <tr><td valign="top">RESERVED</td>
 <td valign="top">
+<a name="reserved_lock"></a>
+
 A RESERVED lock means that the process is planning on writing to the
 database file at some point in the future but that it is currently just
 reading from the file.  Only a single RESERVED lock may be active at one
@@ -162,6 +158,8 @@ while there is a RESERVED lock.
 
 <tr><td valign="top">PENDING</td>
 <td valign="top">
+<a name="pending_lock"></a>
+
 A PENDING lock means that the process holding the lock wants to write
 to the database as soon as possible and is just waiting on all current
 SHARED locks to clear so that it can get an EXCLUSIVE lock.  No new 
@@ -172,6 +170,8 @@ continue.
 
 <tr><td valign="top">EXCLUSIVE</td>
 <td valign="top">
+<a name="exclusive_lock"></a>
+
 An EXCLUSIVE lock is needed in order to write to the database file.
 Only one EXCLUSIVE lock is allowed on the file and no other locks of
 any kind are allowed to coexist with an EXCLUSIVE lock.  In order to
@@ -189,10 +189,7 @@ A PENDING lock is always just a temporary
 stepping stone on the path to an EXCLUSIVE lock and so the pager module
 does not track PENDING locks.
 </p>
-
-<a name="rollback"></a>
-<h2>4.0 The Rollback Journal</h2>
-
+<a name="rollback"></a><h2>4.0 The Rollback Journal</h2>
 <p>Any time a process wants to make a changes to a database file, it
 first records enough information in the <em>rollback journal</em> to
 restore the database file back to its initial condition.  Thus, before
@@ -252,10 +249,7 @@ preceding rules will be repeated in bullets:
     </ul>
 </li>
 </ul>
-
-<a name="hot_journals"></a>
-<h3>4.1 Dealing with hot journals</h3>
-
+<a name="hot_journals"></a><h3>4.1 Dealing with hot journals</h3>
 <p>
 Before reading from a a database file, SQLite always checks to see if that
 database file has a hot journal.  If the file does have a hot journal, then
@@ -295,10 +289,7 @@ the following sequence of steps:
 <p>After the algorithm above completes successfully, it is safe to 
 read from the database file.  Once all reading has completed, the
 SHARED lock is dropped.</p>
-
-<a name="stale_master_journals"></a>
-<h3>4.2 Deleting stale master journals</h3>
-
+<a name="stale_master_journals"></a><h3>4.2 Deleting stale master journals</h3>
 <p>A stale master journal is a master journal that is no longer being
 used for anything.  There is no requirement that stale master journals
 be deleted.  The only reason for doing so is to free up disk space.</p>
@@ -311,10 +302,7 @@ in the master journal exists and points back to the master journal, then
 the master journal is not stale.  If all file journals are either missing
 or refer to other master journals or no master journal at all, then the
 master journal we are testing is stale and can be safely deleted.</p>
-
-<a name="writing"></a>
-<h2>5.0 Writing to a database file</h2>
-
+<a name="writing"></a><h2>5.0 Writing to a database file</h2>
 <p>To write to a database, a process must first acquire a SHARED lock
 as described above (possibly rolling back incomplete changes if there
 is a hot journal). 
@@ -355,7 +343,7 @@ The steps are as follows:</p>
     system's  or disk controllers cache) so that if a power failure occurs
     the data will still be there after power is restored.</li>
 <li>Obtain a PENDING lock and then an EXCLUSIVE lock on the database file.
-    If other processes are still have SHARED locks, the writer might have
+    If other processes still have SHARED locks, the writer might have
     to wait until those SHARED locks clear before it is able to obtain
     an EXCLUSIVE lock.</li>
 <li>Write all page modifications currently held in memory out to the
@@ -437,10 +425,7 @@ commit sequence is used, as follows:</p>
 <li>Drop the EXCLUSIVE and PENDING locks from all database files.
     </li>
 </ol>
-
-<a name="writer_starvation"></a>
-<h3>5.1 Writer starvation</h3>
-
+<a name="writer_starvation"></a><h3>5.1 Writer starvation</h3>
 <p>In SQLite version 2, if many processes are reading from the database,
 it might be the case that there is never a time when there are
 no active readers.  And if there is always at least one read lock on the
@@ -455,10 +440,7 @@ process wants to write a busy database, it can set a PENDING lock which
 will prevent new readers from coming in.  Assuming existing readers do
 eventually complete, all SHARED locks will eventually clear and the
 writer will be given a chance to make its changes.</p>
-
-<a name="how_to_corrupt"></a>
-<h2>6.0 How To Corrupt Your Database Files</h2>
-
+<a name="how_to_corrupt"></a><h2>6.0 How To Corrupt Your Database Files</h2>
 <p>The pager module is robust but it is not completely failsafe.
 It can be subverted.  This section attempts to identify and explain
 the risks.</p>
@@ -549,10 +531,7 @@ To defend against this problem, keep all databases
 on the same disk volume and/or remount disks using exactly the same names
 after a power failure.
 </p>
-
-<a name="transaction_control"></a>
-<h2>7.0 Transaction Control At The SQL Level</h2>
-
+<a name="transaction_control"></a><h2>7.0 Transaction Control At The SQL Level</h2>
 <p>
 The changes to locking and concurrency control in SQLite version 3 also
 introduce some subtle changes in the way transactions work at the SQL
@@ -597,8 +576,6 @@ commands can be executed against other tables in the database.  But none
 of these changes will commit until the original SELECT statement finishes.
 </p>
 
-
-
-<hr><small<i>
-This page last modified 2007/12/20 02:13:52 UTC
+<hr><small><i>
+This page last modified 2008/06/26 02:51:28 UTC
 </i></small></div></body></html>

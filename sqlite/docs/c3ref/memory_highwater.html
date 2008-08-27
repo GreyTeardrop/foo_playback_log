@@ -70,63 +70,42 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Memory Allocator Statistics</h2>
-<blockquote><pre>
-sqlite3_int64 sqlite3_memory_used(void);
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Memory Allocator Statistics</h2><blockquote><pre>sqlite3_int64 sqlite3_memory_used(void);
 sqlite3_int64 sqlite3_memory_highwater(int resetFlag);
-
-</pre></blockquote>
-<p>
+</pre></blockquote><p>
 SQLite provides these two interfaces for reporting on the status
-of the 
-<a href="../c3ref/free.html">sqlite3_malloc()</a>, 
-<a href="../c3ref/free.html">sqlite3_free()</a>, and 
-<a href="../c3ref/free.html">sqlite3_realloc()</a>
-the memory allocation subsystem included within the SQLite.</p>
+of the <a href="../c3ref/free.html">sqlite3_malloc()</a>, <a href="../c3ref/free.html">sqlite3_free()</a>, and <a href="../c3ref/free.html">sqlite3_realloc()</a>
+routines, which form the built-in memory allocation subsystem.</p>
 
 <p><h3>Invariants:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">F17371</td> 
+<tr><td valign="top">H17371</td> 
 <td valign="top">
-The 
-<a href="../c3ref/memory_highwater.html">sqlite3_memory_used()</a> routine returns the
-number of bytes of memory currently outstanding
-(malloced but not freed).</td></tr>
-<tr><td valign="top">F17373</td> 
+The <a href="../c3ref/memory_highwater.html">sqlite3_memory_used()</a> routine returns the number of bytes
+of memory currently outstanding (malloced but not freed).</td></tr>
+<tr><td valign="top">H17373</td> 
 <td valign="top">
-The 
-<a href="../c3ref/memory_highwater.html">sqlite3_memory_highwater()</a> routine returns the maximum
-value of 
-<a href="../c3ref/memory_highwater.html">sqlite3_memory_used()</a>
-since the highwater mark was last reset.</td></tr>
-<tr><td valign="top">F17374</td> 
+The <a href="../c3ref/memory_highwater.html">sqlite3_memory_highwater()</a> routine returns the maximum
+value of <a href="../c3ref/memory_highwater.html">sqlite3_memory_used()</a> since the high-water mark
+was last reset.</td></tr>
+<tr><td valign="top">H17374</td> 
 <td valign="top">
-The values returned by 
-<a href="../c3ref/memory_highwater.html">sqlite3_memory_used()</a> and
-
+The values returned by <a href="../c3ref/memory_highwater.html">sqlite3_memory_used()</a> and
 <a href="../c3ref/memory_highwater.html">sqlite3_memory_highwater()</a> include any overhead
-added by SQLite in its implementation of 
-<a href="../c3ref/free.html">sqlite3_malloc()</a>,
+added by SQLite in its implementation of <a href="../c3ref/free.html">sqlite3_malloc()</a>,
 but not overhead added by the any underlying system library
-routines that 
-<a href="../c3ref/free.html">sqlite3_malloc()</a> may call.</td></tr>
-<tr><td valign="top">F17375</td> 
+routines that <a href="../c3ref/free.html">sqlite3_malloc()</a> may call.</td></tr>
+<tr><td valign="top">H17375</td> 
 <td valign="top">
-The memory highwater mark is reset to the current value of
-
+The memory high-water mark is reset to the current value of
 <a href="../c3ref/memory_highwater.html">sqlite3_memory_used()</a> if and only if the parameter to
-
 <a href="../c3ref/memory_highwater.html">sqlite3_memory_highwater()</a> is true.  The value returned
-by 
-<a href="../c3ref/memory_highwater.html">sqlite3_memory_highwater(1)</a> is the highwater mark
+by <a href="../c3ref/memory_highwater.html">sqlite3_memory_highwater(1)</a> is the high-water mark
 prior to the reset.</td></tr>
 </table>
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

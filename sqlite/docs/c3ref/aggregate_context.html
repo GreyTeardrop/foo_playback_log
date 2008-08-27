@@ -70,39 +70,56 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Obtain Aggregate Function Context</h2>
-<blockquote><pre>
-void *sqlite3_aggregate_context(sqlite3_context*, int nBytes);
-
-</pre></blockquote>
-<p>
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Obtain Aggregate Function Context</h2><blockquote><pre>void *sqlite3_aggregate_context(sqlite3_context*, int nBytes);
+</pre></blockquote><p>
 The implementation of aggregate SQL functions use this routine to allocate
-a structure for storing their state.
- The first time the sqlite3_aggregate_context() routine is
-is called for a particular aggregate, SQLite allocates nBytes of memory
-zeros that memory, and returns a pointer to it.
- On second and subsequent calls to sqlite3_aggregate_context()
-for the same aggregate function index, the same buffer is returned.
-The implementation
-of the aggregate can use the returned buffer to accumulate data.</p>
+a structure for storing their state.</p>
 
-<p> SQLite automatically frees the allocated buffer when the aggregate
+<p>The first time the sqlite3_aggregate_context() routine is called for a
+particular aggregate, SQLite allocates nBytes of memory, zeroes out that
+memory, and returns a pointer to it. On second and subsequent calls to
+sqlite3_aggregate_context() for the same aggregate function index,
+the same buffer is returned. The implementation of the aggregate can use
+the returned buffer to accumulate data.</p>
+
+<p>SQLite automatically frees the allocated buffer when the aggregate
 query concludes.</p>
 
 <p>The first parameter should be a copy of the
-
-<a href="../c3ref/context.html">SQL function context</a> that is the first
-parameter to the callback routine that implements the aggregate
-function.</p>
+<a href="../c3ref/context.html">SQL function context</a> that is the first parameter
+to the callback routine that implements the aggregate function.</p>
 
 <p>This routine must be called from the same thread in which
-the aggregate SQL function is running.
-</p>
-<p>See also lists of
+the aggregate SQL function is running.</p>
+
+<p><h3>Invariants:</h3>
+<table border="0" cellpadding="5" cellspacing="0">
+<tr><td valign="top">H16211</td> 
+<td valign="top">
+The first invocation of <a href="../c3ref/aggregate_context.html">sqlite3_aggregate_context(C,N)</a> for
+a particular instance of an aggregate function (for a particular
+context C) causes SQLite to allocate N bytes of memory,
+zero that memory, and return a pointer to the allocated memory.</td></tr>
+<tr><td valign="top">H16213</td> 
+<td valign="top">
+If a memory allocation error occurs during
+<a href="../c3ref/aggregate_context.html">sqlite3_aggregate_context(C,N)</a> then the function returns 0.</td></tr>
+<tr><td valign="top">H16215</td> 
+<td valign="top">
+Second and subsequent invocations of
+<a href="../c3ref/aggregate_context.html">sqlite3_aggregate_context(C,N)</a> for the same context pointer C
+ignore the N parameter and return a pointer to the same
+block of memory returned by the first invocation.</td></tr>
+<tr><td valign="top">H16217</td> 
+<td valign="top">
+The memory allocated by <a href="../c3ref/aggregate_context.html">sqlite3_aggregate_context(C,N)</a> is
+automatically freed on the next call to <a href="../c3ref/reset.html">sqlite3_reset()</a>
+or <a href="../c3ref/finalize.html">sqlite3_finalize()</a> for the <a href="../c3ref/stmt.html">prepared statement</a> containing
+the aggregate function associated with context C.</td></tr>
+</table>
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

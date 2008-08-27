@@ -70,23 +70,17 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Convenience Routines For Running Queries</h2>
-<blockquote><pre>
-int sqlite3_get_table(
-  sqlite3*,             /* An open database */
-  const char *sql,      /* SQL to be evaluated */
-  char ***pResult,      /* Results of the query */
-  int *nrow,            /* Number of result rows written here */
-  int *ncolumn,         /* Number of result columns written here */
-  char **errmsg         /* Error msg written here */
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Convenience Routines For Running Queries</h2><blockquote><pre>int sqlite3_get_table(
+  sqlite3 *db,          /* An open database */
+  const char *zSql,     /* SQL to be evaluated */
+  char ***pazResult,    /* Results of the query */
+  int *pnRow,           /* Number of result rows written here */
+  int *pnColumn,        /* Number of result columns written here */
+  char **pzErrmsg       /* Error msg written here */
 );
 void sqlite3_free_table(char **result);
-
-</pre></blockquote>
-<p>
+</pre></blockquote><p>
 Definition: A <b>result table</b> is memory data structure created by the
-
 <a href="../c3ref/free_table.html">sqlite3_get_table()</a> interface.  A result table records the
 complete query results from one or more queries.</p>
 
@@ -95,21 +89,16 @@ these numbers are not part of the result table itself.  These
 numbers are obtained separately.  Let N be the number of rows
 and M be the number of columns.</p>
 
-<p>A result table is an array of pointers to zero-terminated
-UTF-8 strings.  There are (N+1)*M elements in the array.
-The first M pointers point to zero-terminated strings that
-contain the names of the columns.
-The remaining entries all point to query results.  NULL
-values are give a NULL pointer.  All other values are in
-their UTF-8 zero-terminated string representation as returned by
+<p>A result table is an array of pointers to zero-terminated UTF-8 strings.
+There are (N+1)*M elements in the array.  The first M pointers point
+to zero-terminated strings that  contain the names of the columns.
+The remaining entries all point to query results.  NULL values result
+in NULL pointers.  All other values are in their UTF-8 zero-terminated
+string representation as returned by <a href="../c3ref/column_blob.html">sqlite3_column_text()</a>.</p>
 
-<a href="../c3ref/column_blob.html">sqlite3_column_text()</a>.</p>
-
-<p>A result table might consists of one or more memory allocations.
-It is not safe to pass a result table directly to 
-<a href="../c3ref/free.html">sqlite3_free()</a>.
-A result table should be deallocated using 
-<a href="../c3ref/free_table.html">sqlite3_free_table()</a>.</p>
+<p>A result table might consist of one or more memory allocations.
+It is not safe to pass a result table directly to <a href="../c3ref/free.html">sqlite3_free()</a>.
+A result table should be deallocated using <a href="../c3ref/free_table.html">sqlite3_free_table()</a>.</p>
 
 <p>As an example of the result table format, suppose a query result
 is as follows:</p>
@@ -144,65 +133,61 @@ pointer given in its 3rd parameter.</p>
 
 <p>After the calling function has finished using the result, it should
 pass the pointer to the result table to sqlite3_free_table() in order to
-release the memory that was malloc-ed.  Because of the way the
-
+release the memory that was malloced.  Because of the way the
 <a href="../c3ref/free.html">sqlite3_malloc()</a> happens within sqlite3_get_table(), the calling
-function must not try to call 
-<a href="../c3ref/free.html">sqlite3_free()</a> directly.  Only
-
+function must not try to call <a href="../c3ref/free.html">sqlite3_free()</a> directly.  Only
 <a href="../c3ref/free_table.html">sqlite3_free_table()</a> is able to release the memory properly and safely.</p>
 
 <p>The sqlite3_get_table() interface is implemented as a wrapper around
-
 <a href="../c3ref/exec.html">sqlite3_exec()</a>.  The sqlite3_get_table() routine does not have access
 to any internal data structures of SQLite.  It uses only the public
 interface defined here.  As a consequence, errors that occur in the
-wrapper layer outside of the internal 
-<a href="../c3ref/exec.html">sqlite3_exec()</a> call are not
-reflected in subsequent calls to 
-<a href="../c3ref/errcode.html">sqlite3_errcode()</a> or
-
-<a href="../c3ref/errcode.html">sqlite3_errmsg()</a>.</p>
+wrapper layer outside of the internal <a href="../c3ref/exec.html">sqlite3_exec()</a> call are not
+reflected in subsequent calls to <a href="../c3ref/errcode.html">sqlite3_errcode()</a> or <a href="../c3ref/errcode.html">sqlite3_errmsg()</a>.</p>
 
 <p><h3>Invariants:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">F12371</td> 
+<tr><td valign="top">H12371</td> 
 <td valign="top">
-If a 
-<a href="../c3ref/free_table.html">sqlite3_get_table()</a> fails a memory allocation, then
-it frees the result table under construction, aborts the
-query in process, skips any subsequent queries, sets the
-*resultp output pointer to NULL and returns 
-<a href="../c3ref/c_abort.html">SQLITE_NOMEM</a>.</td></tr>
-<tr><td valign="top">F12373</td> 
+If a <a href="../c3ref/free_table.html">sqlite3_get_table()</a> fails a memory allocation, then
+it shall free the result table under construction, abort the
+query in process, skip any subsequent queries, set the
+*pazResult output pointer to NULL and return <a href="../c3ref/c_abort.html">SQLITE_NOMEM</a>.</td></tr>
+<tr><td valign="top">H12373</td> 
 <td valign="top">
-If the ncolumn parameter to 
-<a href="../c3ref/free_table.html">sqlite3_get_table()</a> is not NULL
-then 
-<a href="../c3ref/free_table.html">sqlite3_get_table()</a> write the number of columns in the
-result set of the query into *ncolumn if the query is
-successful (if the function returns SQLITE_OK).</td></tr>
-<tr><td valign="top">F12374</td> 
+If the pnColumn parameter to <a href="../c3ref/free_table.html">sqlite3_get_table()</a> is not NULL
+then a successful invocation of <a href="../c3ref/free_table.html">sqlite3_get_table()</a> shall
+write the number of columns in the
+result set of the query into *pnColumn.</td></tr>
+<tr><td valign="top">H12374</td> 
 <td valign="top">
-If the nrow parameter to 
-<a href="../c3ref/free_table.html">sqlite3_get_table()</a> is not NULL
-then 
-<a href="../c3ref/free_table.html">sqlite3_get_table()</a> write the number of rows in the
-result set of the query into *nrow if the query is
-successful (if the function returns SQLITE_OK).</td></tr>
-<tr><td valign="top">F12376</td> 
+If the pnRow parameter to <a href="../c3ref/free_table.html">sqlite3_get_table()</a> is not NULL
+then a successful invocation of <a href="../c3ref/free_table.html">sqlite3_get_table()</a> shall
+writes the number of rows in the
+result set of the query into *pnRow.</td></tr>
+<tr><td valign="top">H12376</td> 
 <td valign="top">
-The 
-<a href="../c3ref/free_table.html">sqlite3_get_table()</a> function sets its *ncolumn value
-to the number of columns in the result set of the query in the
-sql parameter, or to zero if the query in sql has an empty
-result set.</td></tr>
+A successful invocation of <a href="../c3ref/free_table.html">sqlite3_get_table()</a> that computes
+N rows of result with C columns per row shall make *pazResult
+point to an array of pointers to (N+1)*C strings where the first
+C strings are column names as obtained from
+<a href="../c3ref/column_name.html">sqlite3_column_name()</a> and the rest are column result values
+obtained from <a href="../c3ref/column_blob.html">sqlite3_column_text()</a>.</td></tr>
+<tr><td valign="top">H12379</td> 
+<td valign="top">
+The values in the pazResult array returned by <a href="../c3ref/free_table.html">sqlite3_get_table()</a>
+shall remain valid until cleared by <a href="../c3ref/free_table.html">sqlite3_free_table()</a>.</td></tr>
+<tr><td valign="top">H12382</td> 
+<td valign="top">
+When an error occurs during evaluation of <a href="../c3ref/free_table.html">sqlite3_get_table()</a>
+the function shall set *pazResult to NULL, write an error message
+into memory obtained from <a href="../c3ref/free.html">sqlite3_malloc()</a>, make
+**pzErrmsg point to that error message, and return a
+appropriate <a href="../c3ref/c_abort.html">error code</a>.</td></tr>
 </table>
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

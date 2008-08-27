@@ -70,23 +70,17 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Count The Number Of Rows Modified</h2>
-<blockquote><pre>
-int sqlite3_changes(sqlite3*);
-
-</pre></blockquote>
-<p>
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Count The Number Of Rows Modified</h2><blockquote><pre>int sqlite3_changes(sqlite3*);
+</pre></blockquote><p>
 This function returns the number of database rows that were changed
 or inserted or deleted by the most recently completed SQL statement
-on the connection specified by the first parameter.  Only
-changes that are directly specified by the INSERT, UPDATE, or
-DELETE statement are counted.  Auxiliary changes caused by
-triggers are not counted. Use the 
-<a href="../c3ref/total_changes.html">sqlite3_total_changes()</a> function
+on the <a href="../c3ref/sqlite3.html">database connection</a> specified by the first parameter.
+Only changes that are directly specified by the INSERT, UPDATE,
+or DELETE statement are counted.  Auxiliary changes caused by
+triggers are not counted. Use the <a href="../c3ref/total_changes.html">sqlite3_total_changes()</a> function
 to find the total number of changes including changes caused by triggers.</p>
 
-<p>A "row changes" is a change to a single row of a single table
+<p>A "row change" is a change to a single row of a single table
 caused by an INSERT, DELETE, or UPDATE statement.  Rows that
 are changed as side effects of REPLACE constraint resolution,
 rollback, ABORT processing, DROP TABLE, or by any other
@@ -99,61 +93,59 @@ trigger context.  If a trigger fires from the top level, a
 new trigger context is entered for the duration of that one
 trigger.  Subtriggers create subcontexts for their duration.</p>
 
-<p>Calling 
-<a href="../c3ref/exec.html">sqlite3_exec()</a> or 
-<a href="../c3ref/step.html">sqlite3_step()</a> recursively does
+<p>Calling <a href="../c3ref/exec.html">sqlite3_exec()</a> or <a href="../c3ref/step.html">sqlite3_step()</a> recursively does
 not create a new trigger context.</p>
 
 <p>This function returns the number of direct row changes in the
 most recent INSERT, UPDATE, or DELETE statement within the same
 trigger context.</p>
 
-<p>So when called from the top level, this function returns the
+<p>Thus, when called from the top level, this function returns the
 number of changes in the most recent INSERT, UPDATE, or DELETE
-that also occurred at the top level.
-Within the body of a trigger, the sqlite3_changes() interface
-can be called to find the number of
+that also occurred at the top level.  Within the body of a trigger,
+the sqlite3_changes() interface can be called to find the number of
 changes in the most recently completed INSERT, UPDATE, or DELETE
 statement within the body of the same trigger.
-However, the number returned does not include in changes
-caused by subtriggers since they have their own context.</p>
+However, the number returned does not include changes
+caused by subtriggers since those have their own context.</p>
 
-<p>SQLite implements the command "DELETE FROM table" without
-a WHERE clause by dropping and recreating the table.  (This is much
-faster than going through and deleting individual elements from the
-table.)  Because of this optimization, the deletions in
-"DELETE FROM table" are not row changes and will not be counted
-by the sqlite3_changes() or 
-<a href="../c3ref/total_changes.html">sqlite3_total_changes()</a> functions.
-To get an accurate count of the number of rows deleted, use
+<p>SQLite implements the command "DELETE FROM table" without a WHERE clause
+by dropping and recreating the table.  (This is much faster than going
+through and deleting individual elements from the table.)  Because of this
+optimization, the deletions in "DELETE FROM table" are not row changes and
+will not be counted by the sqlite3_changes() or <a href="../c3ref/total_changes.html">sqlite3_total_changes()</a>
+functions, regardless of the number of elements that were originally
+in the table.  To get an accurate count of the number of rows deleted, use
 "DELETE FROM table WHERE 1" instead.</p>
 
 <p><h3>Invariants:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">F12241</td> 
+<tr><td valign="top">H12241</td> 
 <td valign="top">
-The 
-<a href="../c3ref/changes.html">sqlite3_changes()</a> function returns the number of
+The <a href="../c3ref/changes.html">sqlite3_changes()</a> function shall return the number of
 row changes caused by the most recent INSERT, UPDATE,
 or DELETE statement on the same database connection and
-within the same trigger context, or zero if there have
+within the same or higher trigger context, or zero if there have
 not been any qualifying row changes.</td></tr>
+<tr><td valign="top">H12243</td> 
+<td valign="top">
+Statements of the form "DELETE FROM tablename" with no
+WHERE clause shall cause subsequent calls to
+<a href="../c3ref/changes.html">sqlite3_changes()</a> to return zero, regardless of the
+number of rows originally in the table.</td></tr>
 </table></p>
 
-<p><h3>Limitations:</h3>
+<p><h3>Assumptions:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">U12252</td> 
+<tr><td valign="top">A12252</td> 
 <td valign="top">
 If a separate thread makes changes on the same database connection
-while 
-<a href="../c3ref/changes.html">sqlite3_changes()</a> is running then the value returned
-is unpredictable and unmeaningful.</td></tr>
+while <a href="../c3ref/changes.html">sqlite3_changes()</a> is running then the value returned
+is unpredictable and not meaningful.</td></tr>
 </table>
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

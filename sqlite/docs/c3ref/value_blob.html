@@ -70,10 +70,7 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Obtaining SQL Function Parameter Values</h2>
-<blockquote><pre>
-const void *sqlite3_value_blob(sqlite3_value*);
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Obtaining SQL Function Parameter Values</h2><blockquote><pre>const void *sqlite3_value_blob(sqlite3_value*);
 int sqlite3_value_bytes(sqlite3_value*);
 int sqlite3_value_bytes16(sqlite3_value*);
 double sqlite3_value_double(sqlite3_value*);
@@ -85,74 +82,127 @@ const void *sqlite3_value_text16le(sqlite3_value*);
 const void *sqlite3_value_text16be(sqlite3_value*);
 int sqlite3_value_type(sqlite3_value*);
 int sqlite3_value_numeric_type(sqlite3_value*);
-
-</pre></blockquote>
-<p>
+</pre></blockquote><p>
 The C-language implementation of SQL functions and aggregates uses
 this set of interface routines to access the parameter values on
 the function or aggregate.</p>
 
 <p>The xFunc (for scalar functions) or xStep (for aggregates) parameters
-to 
-<a href="../c3ref/create_function.html">sqlite3_create_function()</a> and 
-<a href="../c3ref/create_function.html">sqlite3_create_function16()</a>
+to <a href="../c3ref/create_function.html">sqlite3_create_function()</a> and <a href="../c3ref/create_function.html">sqlite3_create_function16()</a>
 define callbacks that implement the SQL functions and aggregates.
 The 4th parameter to these callbacks is an array of pointers to
-
-<a href="../c3ref/value.html">sqlite3_value</a> objects.  There is one 
-<a href="../c3ref/value.html">sqlite3_value</a> object for
+<a href="../c3ref/value.html">protected sqlite3_value</a> objects.  There is one <a href="../c3ref/value.html">sqlite3_value</a> object for
 each parameter to the SQL function.  These routines are used to
-extract values from the 
-<a href="../c3ref/value.html">sqlite3_value</a> objects.</p>
+extract values from the <a href="../c3ref/value.html">sqlite3_value</a> objects.</p>
 
-<p>These routines work just like the corresponding
+<p>These routines work only with <a href="../c3ref/value.html">protected sqlite3_value</a> objects.
+Any attempt to use these routines on an <a href="../c3ref/value.html">unprotected sqlite3_value</a>
+object results in undefined behavior.</p>
 
-<a href="../c3ref/column_blob.html">sqlite3_column_* routines</a> except that
-these routines take a single 
-<a href="../c3ref/value.html">sqlite3_value*</a> pointer instead
-of an 
-<a href="../c3ref/stmt.html">sqlite3_stmt*</a> pointer and an integer column number.</p>
+<p>These routines work just like the corresponding <a href="../c3ref/column_blob.html">column access functions</a>
+except that  these routines take a single <a href="../c3ref/value.html">protected sqlite3_value</a> object
+pointer instead of a <a href="../c3ref/stmt.html">sqlite3_stmt*</a> pointer and an integer column number.</p>
 
-<p>The sqlite3_value_text16() interface extracts a UTF16 string
+<p>The sqlite3_value_text16() interface extracts a UTF-16 string
 in the native byte-order of the host machine.  The
 sqlite3_value_text16be() and sqlite3_value_text16le() interfaces
-extract UTF16 strings as big-endian and little-endian respectively.</p>
+extract UTF-16 strings as big-endian and little-endian respectively.</p>
 
 <p>The sqlite3_value_numeric_type() interface attempts to apply
 numeric affinity to the value.  This means that an attempt is
 made to convert the value to an integer or floating point.  If
 such a conversion is possible without loss of information (in other
-words if the value is a string that looks like a number)
-then the conversion is done.  Otherwise no conversion occurs.  The
+words, if the value is a string that looks like a number)
+then the conversion is performed.  Otherwise no conversion occurs.
+The <a href="../c3ref/c_blob.html">datatype</a> after conversion is returned.</p>
 
-<a href="../c3ref/c_blob.html">datatype</a> after conversion is returned.</p>
-
-<p>Please pay particular attention to the fact that the pointer that
-is returned from 
-<a href="../c3ref/value_blob.html">sqlite3_value_blob()</a>, 
-<a href="../c3ref/value_blob.html">sqlite3_value_text()</a>, or
-
+<p>Please pay particular attention to the fact that the pointer returned
+from <a href="../c3ref/value_blob.html">sqlite3_value_blob()</a>, <a href="../c3ref/value_blob.html">sqlite3_value_text()</a>, or
 <a href="../c3ref/value_blob.html">sqlite3_value_text16()</a> can be invalidated by a subsequent call to
-
-<a href="../c3ref/value_blob.html">sqlite3_value_bytes()</a>, 
-<a href="../c3ref/value_blob.html">sqlite3_value_bytes16()</a>, 
-<a href="../c3ref/value_blob.html">sqlite3_value_text()</a>,
-or 
-<a href="../c3ref/value_blob.html">sqlite3_value_text16()</a>.</p>
+<a href="../c3ref/value_blob.html">sqlite3_value_bytes()</a>, <a href="../c3ref/value_blob.html">sqlite3_value_bytes16()</a>, <a href="../c3ref/value_blob.html">sqlite3_value_text()</a>,
+or <a href="../c3ref/value_blob.html">sqlite3_value_text16()</a>.</p>
 
 <p>These routines must be called from the same thread as
-the SQL function that supplied the sqlite3_value* parameters.
-Or, if the sqlite3_value* argument comes from the 
-<a href="../c3ref/column_blob.html">sqlite3_column_value()</a>
-interface, then these routines should be called from the same thread
-that ran 
-<a href="../c3ref/column_blob.html">sqlite3_column_value()</a>.</p>
+the SQL function that supplied the <a href="../c3ref/value.html">sqlite3_value*</a> parameters.</p>
 
-<p></p>
-<p>See also lists of
+<p><h3>Invariants:</h3>
+<table border="0" cellpadding="5" cellspacing="0">
+<tr><td valign="top">H15103</td> 
+<td valign="top">
+The <a href="../c3ref/value_blob.html">sqlite3_value_blob(V)</a> interface converts the
+<a href="../c3ref/value.html">protected sqlite3_value</a> object V into a BLOB and then
+returns a pointer to the converted value.</td></tr>
+<tr><td valign="top">H15106</td> 
+<td valign="top">
+The <a href="../c3ref/value_blob.html">sqlite3_value_bytes(V)</a> interface returns the
+number of bytes in the BLOB or string (exclusive of the
+zero terminator on the string) that was returned by the
+most recent call to <a href="../c3ref/value_blob.html">sqlite3_value_blob(V)</a> or
+<a href="../c3ref/value_blob.html">sqlite3_value_text(V)</a>.</td></tr>
+<tr><td valign="top">H15109</td> 
+<td valign="top">
+The <a href="../c3ref/value_blob.html">sqlite3_value_bytes16(V)</a> interface returns the
+number of bytes in the string (exclusive of the
+zero terminator on the string) that was returned by the
+most recent call to <a href="../c3ref/value_blob.html">sqlite3_value_text16(V)</a>,
+<a href="../c3ref/value_blob.html">sqlite3_value_text16be(V)</a>, or <a href="../c3ref/value_blob.html">sqlite3_value_text16le(V)</a>.</td></tr>
+<tr><td valign="top">H15112</td> 
+<td valign="top">
+The <a href="../c3ref/value_blob.html">sqlite3_value_double(V)</a> interface converts the
+<a href="../c3ref/value.html">protected sqlite3_value</a> object V into a floating point value and
+returns a copy of that value.</td></tr>
+<tr><td valign="top">H15115</td> 
+<td valign="top">
+The <a href="../c3ref/value_blob.html">sqlite3_value_int(V)</a> interface converts the
+<a href="../c3ref/value.html">protected sqlite3_value</a> object V into a 64-bit signed integer and
+returns the lower 32 bits of that integer.</td></tr>
+<tr><td valign="top">H15118</td> 
+<td valign="top">
+The <a href="../c3ref/value_blob.html">sqlite3_value_int64(V)</a> interface converts the
+<a href="../c3ref/value.html">protected sqlite3_value</a> object V into a 64-bit signed integer and
+returns a copy of that integer.</td></tr>
+<tr><td valign="top">H15121</td> 
+<td valign="top">
+The <a href="../c3ref/value_blob.html">sqlite3_value_text(V)</a> interface converts the
+<a href="../c3ref/value.html">protected sqlite3_value</a> object V into a zero-terminated UTF-8
+string and returns a pointer to that string.</td></tr>
+<tr><td valign="top">H15124</td> 
+<td valign="top">
+The <a href="../c3ref/value_blob.html">sqlite3_value_text16(V)</a> interface converts the
+<a href="../c3ref/value.html">protected sqlite3_value</a> object V into a zero-terminated 2-byte
+aligned UTF-16 native byte order
+string and returns a pointer to that string.</td></tr>
+<tr><td valign="top">H15127</td> 
+<td valign="top">
+The <a href="../c3ref/value_blob.html">sqlite3_value_text16be(V)</a> interface converts the
+<a href="../c3ref/value.html">protected sqlite3_value</a> object V into a zero-terminated 2-byte
+aligned UTF-16 big-endian
+string and returns a pointer to that string.</td></tr>
+<tr><td valign="top">H15130</td> 
+<td valign="top">
+The <a href="../c3ref/value_blob.html">sqlite3_value_text16le(V)</a> interface converts the
+<a href="../c3ref/value.html">protected sqlite3_value</a> object V into a zero-terminated 2-byte
+aligned UTF-16 little-endian
+string and returns a pointer to that string.</td></tr>
+<tr><td valign="top">H15133</td> 
+<td valign="top">
+The <a href="../c3ref/value_blob.html">sqlite3_value_type(V)</a> interface returns
+one of <a href="../c3ref/c_blob.html">SQLITE_NULL</a>, <a href="../c3ref/c_blob.html">SQLITE_INTEGER</a>, <a href="../c3ref/c_blob.html">SQLITE_FLOAT</a>,
+<a href="../c3ref/c_blob.html">SQLITE_TEXT</a>, or <a href="../c3ref/c_blob.html">SQLITE_BLOB</a> as appropriate for
+the <a href="../c3ref/value.html">sqlite3_value</a> object V.</td></tr>
+<tr><td valign="top">H15136</td> 
+<td valign="top">
+The <a href="../c3ref/value_blob.html">sqlite3_value_numeric_type(V)</a> interface converts
+the <a href="../c3ref/value.html">protected sqlite3_value</a> object V into either an integer or
+a floating point value if it can do so without loss of
+information, and returns one of <a href="../c3ref/c_blob.html">SQLITE_NULL</a>,
+<a href="../c3ref/c_blob.html">SQLITE_INTEGER</a>, <a href="../c3ref/c_blob.html">SQLITE_FLOAT</a>, <a href="../c3ref/c_blob.html">SQLITE_TEXT</a>, or
+<a href="../c3ref/c_blob.html">SQLITE_BLOB</a> as appropriate for the
+<a href="../c3ref/value.html">protected sqlite3_value</a> object V after the conversion attempt.</td></tr>
+</table>
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

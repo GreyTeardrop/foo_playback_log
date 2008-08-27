@@ -215,7 +215,7 @@ database corruption will likely result.</p>
 
 <p>SQLite assumes that the detection and/or correction of 
 bit errors caused by cosmic rays, thermal noise, quantum
-fluctuations, device driver bugs, or some other mechanism, is the 
+fluctuations, device driver bugs, or other mechanisms, is the 
 responsibility of the underlying hardware and operating system.  
 SQLite does not add any redundancy to the database file for
 the purpose of detecting corruption or I/O errors.
@@ -489,6 +489,20 @@ of a file appears to be an atomic operation from the point of
 view of a user-space process.  Therefore, 
 a transaction appears to be an atomic operation.</p>
 
+<p>The act of deleting a file is expensive on many systems.
+As an optimization, SQLite can be configured to truncate
+the journal file to zero bytes in length
+or overwrite the journal file header with zeros.  In either
+case, the resulting journal file is no longer capable of rolling
+back and so the transaction still commits.  Truncating a file
+to zero length, like deleting a file, is assumed to be an atomic
+operation from the point of view of a user process.  Overwriting
+the header of the journal with zeros is not atomic, but if any
+part of the header is malformed the journal will not roll back.
+Hence, one can say that the commit occurs as soon as the header
+is sufficiently changed to make it invalid.  Typically this happens
+as soon as the first byte of the header is zeroed.</p>
+
 <br clear="both">
 <a name="section_3_12"></a>
 <h3>3.12 Releasing The Lock</h3>
@@ -567,7 +581,9 @@ are true:</p>
 <li>The rollback journal exist.
 <li>The rollback journal is not an empty file.
 <li>There is no reserved lock on the main database file.
-<li>The rollback journal header does not
+<li>The header of the rollback journal is well-formed and in particular
+    has not been zeroed out.
+<li>The rollback journal does not
 contain the name of a master journal file (see
 <a href="#section_5_5">section 5.5</a> below) or if does
 contain the name of a master journal, then that master journal
@@ -577,7 +593,7 @@ file exists.
 <p>The presence of a hot journal is our indication
 that a previous process was trying to commit a transaction but
 it aborted for some reason prior to the completion of the
-commit.  The presence of a hot journal is our indication that
+commit.  A hot journal means that
 the database file is in an inconsistent state and needs to
 be repaired (by rollback) prior to being used.</p>
 
@@ -616,6 +632,12 @@ the aborted transaction.</p>
 played back into the database file (and flushed to disk in case
 we encounter yet another power failure), the hot rollback journal
 can be deleted.</p>
+
+<p>As in <a href="#section_3_11">section 3.11</a>, the journal
+file might be truncated to zero length or its header might
+be overwritten with zeros as an optimization on systems where
+deleting a file is expense.  Either way, the journal is no 
+long hot after this step.</p>
 
 <br clear="both">
 <h3>4.6 Continue As If The Uncompleted Writes Had Never Happened</h3>
@@ -832,11 +854,11 @@ SQLite records the number of pages in the rollback journal in the header
 of the rollback journal.  This number is initially zero.  So during an
 attempt to rollback an incomplete (and possibly corrupt) rollback
 journal, the process doing the rollback will see that the journal
-contains zero pages will thus make no changes to the database.  Prior
+contains zero pages and will thus make no changes to the database.  Prior
 to a commit, the rollback journal is flushed to disk to ensure that
 all content has been synched to disk and there is no "garbage" left
-in the file, and only then is the page count in the header increased
-true number of pages in the rollback journal.  The rollback journal
+in the file, and only then is the page count in the header changed from
+zero to true number of pages in the rollback journal.  The rollback journal
 header is always kept in a separate sector from any page data so that
 it can be overwritten and flushed without risking damage to a data
 page if a power outage occurs.  Notice that the rollback journal
@@ -951,13 +973,14 @@ acquiring the next database lock it compares the saved counter value
 against the current counter value and erases the cache if the values
 are different, or reuses the cache if they are the same.</p>
 
+<a name="section_7_2"></a>
 <h3>7.2 Exclusive Access Mode</h3>
 
 <p>SQLite version 3.3.14 adds the concept of "Exclusive Access Mode".
 In exclusive access mode, SQLite retains the exclusive
 database lock at the conclusion of each transaction.  This prevents
 other processes for accessing the database, but in many deployments
-only a single process is using a database so often this is not a
+only a single process is using a database so this is not a
 serious problem.  The advantage of exclusive access mode is that
 disk I/O can be reduced in three ways:</p>
 
@@ -971,23 +994,26 @@ journal and the main database file.</p></li>
 a need to check the change counter and clear the user-space cache
 at the beginning of a transaction.</p></li>
 
-<li><p>The rollback journal file can be truncated rather than deleted
-at the end of each transaction.  On many operating systems, truncating
-a file is much faster than deleting it.</p></li>
+<li><p>Each transaction can be committed by overwriting the rollback
+journal header with zeros rather than deleting the journal file.
+This avoids having to modify the directory entry for the journal file
+and it avoids having to deallocate disk sectors associated with the 
+journal.  Furthermore, the next transaction will overwrite existing
+journal file content rather than append new content and on most systems
+overwriting is much faster than appending.</p></li>
 </ol>
 
-<p>The third optimization, truncating rather than deleting the rollback
-journal file, does not depend on holding an exclusive lock at all times.
-We could, in theory, do that optimization at all times, not just when
-exclusive access mode is enabled, and we may well choose to do so in 
-some future release of SQLite.  But for now (version 3.5.0) the
-rollback journal truncation optimization is only enabled in conjunction
-with exclusive access mode.</p>
+<p>The third optimization, zeroing the journal file header rather than
+deleting the rollback journal file,
+does not depend on holding an exclusive lock at all times.
+This optimization can be set independently of exclusive lock mode
+using the <a href="pragma.html#pragma_journal_mode">journal_mode</a>
+pragma as described in <a href="#section_7_6">section 7.6</a> below.</p>
 
 <h3>7.3 Do Not Journal Freelist Pages</h3>
 
 <p>When information is deleted from an SQLite database, the pages used
-to old the deleted information are added to a "freelist".  Subsequent
+to hold the deleted information are added to a "freelist".  Subsequent
 inserts will draw pages off of this freelist rather than expanding the
 database file.</p>
 
@@ -1071,6 +1097,51 @@ the first page of the journal file.  Furthermore, when a cache
 spill occurs we no longer need to append a new journal header
 to the end of the journal; we can simply continue appending
 new pages to the end of the existing journal.</p>
+
+<a name="section_7_6"></a>
+<h3>7.6 Persistent Rollback Journals</h3>
+
+<p>Deleting a file is an expensive operation on many systems.
+So as an optimization, SQLite can be configured to avoid the
+delete operation of <a href="#section_3_11">section 3.11</a>.
+Instead of deleting the journal file in order to commit a transaction,
+the file is either truncated to zero bytes in length or its
+header is overwritten with zeros.  Truncating the file to zero
+length saves having to make modifications to the directory containing
+the file since the file is not removed from the directory. 
+Overwriting the header has the additional savings of not having
+to update the length of the file (in the "inode" on many systems)
+and not having to deal with newly freed disk sectors.  Furthermore,
+at the next transaction the journal will be created by overwriting
+existing content rather than appending new content onto the end
+of a file, and overwriting is often much faster than appending.</p>
+
+<p>SQLite can be configured to commit transactions by overwriting
+the journal header with zeros instead of deleting the journal file
+by setting the "PERSIST" journaling mode using the 
+<a href="pragma.html#pragma_journal_mode">journal_mode</a> PRAGMA.
+For example:</p>
+
+<blockquote><pre>
+PRAGMA journal_mode=PERSIST;
+</per></blockquote>
+
+<p>The use of persistent journal mode provide a noticable performance
+improvement on many systems.  Of course, the drawback is that the 
+journal files remain on the disk, using disk space and cluttering
+directories, long after the transaction commits.  The only safe way
+to delete a persistent journal file is to commit a transaction
+with journaling mode set to DELETE:</p>
+
+<blockquote><pre>
+PRAGMA journal_mode=DELETE;
+BEGIN EXCLUSIVE;
+COMMIT;
+</per></blockquote>
+
+<p>Beware of deleting persistent journal files by any other means
+since the journal file might be hot, in which case deleting it will
+corrupt the corresponding database file.</p>
 
 <h2>8.0 Testing Atomic Commit Behavior</h2>
 
@@ -1254,7 +1325,6 @@ particular, we suspect that most modern filesystems exhibit the
 safe append property and that many of them might support atomic
 sector writes.  But until this is known for certain, SQLite will
 take the conservative approach and assume the worst.</p>
-
-<hr><small<i>
-This page last modified 2007/11/28 16:23:23 UTC
+<hr><small><i>
+This page last modified 2008/04/26 11:22:07 UTC
 </i></small></div></body></html>

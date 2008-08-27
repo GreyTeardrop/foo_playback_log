@@ -70,10 +70,7 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Authorizer Action Codes</h2>
-<blockquote><pre>
-/******************************************* 3rd ************ 4th ***********/
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Authorizer Action Codes</h2><blockquote><pre>/******************************************* 3rd ************ 4th ***********/
 #define SQLITE_CREATE_INDEX          1   /* Index Name      Table Name      */
 #define SQLITE_CREATE_TABLE          2   /* Table Name      NULL            */
 #define SQLITE_CREATE_TEMP_INDEX     3   /* Index Name      Table Name      */
@@ -106,12 +103,9 @@ a:visited { color: #734559 }
 #define SQLITE_DROP_VTABLE          30   /* Table Name      Module Name     */
 #define SQLITE_FUNCTION             31   /* Function Name   NULL            */
 #define SQLITE_COPY                  0   /* No longer used */
-
-</pre></blockquote>
-<p>
-The 
-<a href="../c3ref/set_authorizer.html">sqlite3_set_authorizer()</a> interface registers a callback function
-that is invoked to authorizer certain SQL statement actions.  The
+</pre></blockquote><p>
+The <a href="../c3ref/set_authorizer.html">sqlite3_set_authorizer()</a> interface registers a callback function
+that is invoked to authorize certain SQL statement actions.  The
 second parameter to the callback is an integer code that specifies
 what action is being authorized.  These are the integer action codes that
 the authorizer callback may be passed.</p>
@@ -128,41 +122,34 @@ top-level SQL code.</p>
 
 <p><h3>Invariants:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">F12551</td> 
+<tr><td valign="top">H12551</td> 
 <td valign="top">
 The second parameter to an
-
-<a href="../c3ref/set_authorizer.html">authorizer callback is always an integer
-[SQLITE_COPY</a> that specifies what action
+<a href="../c3ref/set_authorizer.html">authorizer callback</a> is always an integer
+<a href="../c3ref/c_alter_table.html">authorizer code</a> that specifies what action
 is being authorized.</td></tr>
-<tr><td valign="top">F12552</td> 
+<tr><td valign="top">H12552</td> 
 <td valign="top">
 The 3rd and 4th parameters to the
-
-<a href="../c3ref/set_authorizer.html">authorization callback function</a>
+<a href="../c3ref/set_authorizer.html">authorization callback</a>
 will be parameters or NULL depending on which
-
 <a href="../c3ref/c_alter_table.html">authorizer code</a> is used as the second parameter.</td></tr>
-<tr><td valign="top">F12553</td> 
+<tr><td valign="top">H12553</td> 
 <td valign="top">
 The 5th parameter to the
-
 <a href="../c3ref/set_authorizer.html">authorizer callback</a> is the name
 of the database (example: "main", "temp", etc.) if applicable.</td></tr>
-<tr><td valign="top">F12554</td> 
+<tr><td valign="top">H12554</td> 
 <td valign="top">
 The 6th parameter to the
-
 <a href="../c3ref/set_authorizer.html">authorizer callback</a> is the name
 of the inner-most trigger or view that is responsible for
 the access attempt or NULL if this access attempt is directly from
 top-level SQL code.</td></tr>
 </table>
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

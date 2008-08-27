@@ -70,48 +70,28 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Number of columns in a result set</h2>
-<blockquote><pre>
-int sqlite3_data_count(sqlite3_stmt *pStmt);
-
-</pre></blockquote>
-<p>
-Return the number of values in the current row of the result set.</p>
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Number of columns in a result set</h2><blockquote><pre>int sqlite3_data_count(sqlite3_stmt *pStmt);
+</pre></blockquote><p>
+Returns the number of values in the current row of the result set.</p>
 
 <p><h3>Invariants:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">F13771</td> 
+<tr><td valign="top">H13771</td> 
 <td valign="top">
-After a call to 
-<a href="../c3ref/step.html">sqlite3_step(S)</a> that returns
-
-<a href="../c3ref/c_abort.html">SQLITE_ROW</a>, the 
-<a href="../c3ref/data_count.html">sqlite3_data_count(S)</a> routine
-will return the same value as the
-
-<a href="../c3ref/column_count.html">sqlite3_column_count(S)</a> function.</td></tr>
-<tr><td valign="top">F13772</td> 
+After a call to <a href="../c3ref/step.html">sqlite3_step(S)</a> that returns <a href="../c3ref/c_abort.html">SQLITE_ROW</a>,
+the <a href="../c3ref/data_count.html">sqlite3_data_count(S)</a> routine will return the same value
+as the <a href="../c3ref/column_count.html">sqlite3_column_count(S)</a> function.</td></tr>
+<tr><td valign="top">H13772</td> 
 <td valign="top">
-After 
-<a href="../c3ref/step.html">sqlite3_step(S)</a> has returned any value other than
-
-<a href="../c3ref/c_abort.html">SQLITE_ROW</a> or before 
-<a href="../c3ref/step.html">sqlite3_step(S)</a> has been
-called on the 
-<a href="../c3ref/stmt.html">prepared statement</a> for
-the first time since it was 
-<a href="../c3ref/prepare.html">prepared</a>
-or 
-<a href="../c3ref/reset.html">reset</a>, the 
-<a href="../c3ref/data_count.html">sqlite3_data_count(S)</a>
-routine returns zero.</td></tr>
+After <a href="../c3ref/step.html">sqlite3_step(S)</a> has returned any value other than
+<a href="../c3ref/c_abort.html">SQLITE_ROW</a> or before <a href="../c3ref/step.html">sqlite3_step(S)</a> has been called on the
+<a href="../c3ref/stmt.html">prepared statement</a> for the first time since it was
+<a href="../c3ref/prepare.html">prepared</a> or <a href="../c3ref/reset.html">reset</a>,
+the <a href="../c3ref/data_count.html">sqlite3_data_count(S)</a> routine returns zero.</td></tr>
 </table>
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

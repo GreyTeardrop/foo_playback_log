@@ -70,51 +70,79 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Data Change Notification Callbacks</h2>
-<blockquote><pre>
-void *sqlite3_update_hook(
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Data Change Notification Callbacks</h2><blockquote><pre>void *sqlite3_update_hook(
   sqlite3*, 
   void(*)(void *,int ,char const *,char const *,sqlite3_int64),
   void*
 );
+</pre></blockquote><p>
+The sqlite3_update_hook() interface registers a callback function
+with the <a href="../c3ref/sqlite3.html">database connection</a> identified by the first argument
+to be invoked whenever a row is updated, inserted or deleted.
+Any callback set by a previous call to this function
+for the same database connection is overridden.</p>
 
-</pre></blockquote>
-<p>
- The sqlite3_update_hook() interface
-registers a callback function with the database connection identified by the
-first argument to be invoked whenever a row is updated, inserted or deleted.
- Any callback set by a previous call to this function for the same
-database connection is overridden.</p>
-
-<p> The second argument is a pointer to the function to invoke when a
+<p>The second argument is a pointer to the function to invoke when a
 row is updated, inserted or deleted.
- The first argument to the callback is
-a copy of the third argument to sqlite3_update_hook().
- The second callback
-argument is one of 
-<a href="../c3ref/c_alter_table.html">SQLITE_INSERT</a>, 
-<a href="../c3ref/c_alter_table.html">SQLITE_DELETE</a> or 
-<a href="../c3ref/c_alter_table.html">SQLITE_UPDATE</a>,
-depending on the operation that caused the callback to be invoked.
- The third and
-fourth arguments to the callback contain pointers to the database and
-table name containing the affected row.
- The final callback parameter is
-the rowid of the row.
- In the case of an update, this is the rowid after
-the update takes place.</p>
+The first argument to the callback is a copy of the third argument
+to sqlite3_update_hook().
+The second callback argument is one of <a href="../c3ref/c_alter_table.html">SQLITE_INSERT</a>, <a href="../c3ref/c_alter_table.html">SQLITE_DELETE</a>,
+or <a href="../c3ref/c_alter_table.html">SQLITE_UPDATE</a>, depending on the operation that caused the callback
+to be invoked.
+The third and fourth arguments to the callback contain pointers to the
+database and table name containing the affected row.
+The final callback parameter is the rowid of the row. In the case of
+an update, this is the rowid after the update takes place.</p>
 
-<p> The update hook is not invoked when internal system tables are
+<p>The update hook is not invoked when internal system tables are
 modified (i.e. sqlite_master and sqlite_sequence).</p>
 
-<p> If another function was previously registered, its pArg value
-is returned. Otherwise NULL is returned.
-</p>
-<p>See also lists of
+<p>If another function was previously registered, its pArg value
+is returned.  Otherwise NULL is returned.</p>
+
+<p><h3>Invariants:</h3>
+<table border="0" cellpadding="5" cellspacing="0">
+<tr><td valign="top">H12971</td> 
+<td valign="top">
+The <a href="../c3ref/update_hook.html">sqlite3_update_hook(D,F,P)</a> interface causes the callback
+function F to be invoked with first parameter P whenever
+a table row is modified, inserted, or deleted on
+the <a href="../c3ref/sqlite3.html">database connection</a> D.</td></tr>
+<tr><td valign="top">H12973</td> 
+<td valign="top">
+The <a href="../c3ref/update_hook.html">sqlite3_update_hook(D,F,P)</a> interface returns the value
+of P for the previous call on the same <a href="../c3ref/sqlite3.html">database connection</a> D,
+or NULL for the first call.</td></tr>
+<tr><td valign="top">H12975</td> 
+<td valign="top">
+If the update hook callback F in <a href="../c3ref/update_hook.html">sqlite3_update_hook(D,F,P)</a>
+is NULL then the no update callbacks are made.</td></tr>
+<tr><td valign="top">H12977</td> 
+<td valign="top">
+Each call to <a href="../c3ref/update_hook.html">sqlite3_update_hook(D,F,P)</a> overrides prior calls
+to the same interface on the same <a href="../c3ref/sqlite3.html">database connection</a> D.</td></tr>
+<tr><td valign="top">H12979</td> 
+<td valign="top">
+The update hook callback is not invoked when internal system
+tables such as sqlite_master and sqlite_sequence are modified.</td></tr>
+<tr><td valign="top">H12981</td> 
+<td valign="top">
+The second parameter to the update callback
+is one of <a href="../c3ref/c_alter_table.html">SQLITE_INSERT</a>, <a href="../c3ref/c_alter_table.html">SQLITE_DELETE</a> or <a href="../c3ref/c_alter_table.html">SQLITE_UPDATE</a>,
+depending on the operation that caused the callback to be invoked.</td></tr>
+<tr><td valign="top">H12983</td> 
+<td valign="top">
+The third and fourth arguments to the callback contain pointers
+to zero-terminated UTF-8 strings which are the names of the
+database and table that is being updated.</td></tr>
+<tr><td valign="top">H12985</td> 
+<td valign="top">
+The final callback parameter is the rowid of the row after
+the change occurs.</td></tr>
+</table>
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

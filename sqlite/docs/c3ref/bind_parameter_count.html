@@ -70,48 +70,34 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Number Of SQL Parameters</h2>
-<blockquote><pre>
-int sqlite3_bind_parameter_count(sqlite3_stmt*);
-
-</pre></blockquote>
-<p>
-This routine can be used to find the number of SQL parameters
-in a prepared statement.  SQL parameters are tokens of the
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Number Of SQL Parameters</h2><blockquote><pre>int sqlite3_bind_parameter_count(sqlite3_stmt*);
+</pre></blockquote><p>
+This routine can be used to find the number of <a href="../c3ref/bind_blob.html">SQL parameters</a>
+in a <a href="../c3ref/stmt.html">prepared statement</a>.  SQL parameters are tokens of the
 form "?", "?NNN", ":AAA", "$AAA", or "@AAA" that serve as
-place-holders for values that are 
-<a href="../c3ref/bind_blob.html">bound</a>
+placeholders for values that are <a href="../c3ref/bind_blob.html">bound</a>
 to the parameters at a later time.</p>
 
-<p>This routine actually returns the index of the largest parameter.
-For all forms except ?NNN, this will correspond to the number of
-unique parameters.  If parameters of the ?NNN are used, there may
-be gaps in the list.</p>
+<p>This routine actually returns the index of the largest (rightmost)
+parameter. For all forms except ?NNN, this will correspond to the
+number of unique parameters.  If parameters of the ?NNN are used,
+there may be gaps in the list.</p>
 
-<p>See also: 
-<a href="../c3ref/bind_blob.html">sqlite3_bind()</a>,
-
+<p>See also: <a href="../c3ref/bind_blob.html">sqlite3_bind()</a>,
 <a href="../c3ref/bind_parameter_name.html">sqlite3_bind_parameter_name()</a>, and
-
 <a href="../c3ref/bind_parameter_index.html">sqlite3_bind_parameter_index()</a>.</p>
 
 <p><h3>Invariants:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">F13601</td> 
+<tr><td valign="top">H13601</td> 
 <td valign="top">
-The 
-<a href="../c3ref/bind_parameter_count.html">sqlite3_bind_parameter_count(S)</a> interface returns
+The <a href="../c3ref/bind_parameter_count.html">sqlite3_bind_parameter_count(S)</a> interface returns
 the largest index of all SQL parameters in the
-
-<a href="../c3ref/stmt.html">prepared statement</a> S, or 0 if S
-contains no SQL parameters.</td></tr>
+<a href="../c3ref/stmt.html">prepared statement</a> S, or 0 if S contains no SQL parameters.</td></tr>
 </table>
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

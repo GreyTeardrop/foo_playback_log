@@ -70,30 +70,18 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>A Handle To An Open BLOB</h2>
-<blockquote><pre>
-typedef struct sqlite3_blob sqlite3_blob;
-
-</pre></blockquote>
-<p>
-An instance of the following opaque structure is used to
-represent an blob-handle.  A blob-handle is created by
-
-<a href="../c3ref/blob_open.html">sqlite3_blob_open()</a> and destroyed by 
-<a href="../c3ref/blob_close.html">sqlite3_blob_close()</a>.
-The 
-<a href="../c3ref/blob_read.html">sqlite3_blob_read()</a> and 
-<a href="../c3ref/blob_write.html">sqlite3_blob_write()</a> interfaces
-can be used to read or write small subsections of the blob.
-The 
-<a href="../c3ref/blob_bytes.html">sqlite3_blob_bytes()</a> interface returns the size of the
-blob in bytes.
-</p>
-<p>See also lists of
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>A Handle To An Open BLOB</h2><blockquote><pre>typedef struct sqlite3_blob sqlite3_blob;
+</pre></blockquote><p>
+An instance of this object represents an open BLOB on which
+<a href="../c3ref/blob_open.html">incremental BLOB I/O</a> can be performed.
+Objects of this type are created by <a href="../c3ref/blob_open.html">sqlite3_blob_open()</a>
+and destroyed by <a href="../c3ref/blob_close.html">sqlite3_blob_close()</a>.
+The <a href="../c3ref/blob_read.html">sqlite3_blob_read()</a> and <a href="../c3ref/blob_write.html">sqlite3_blob_write()</a> interfaces
+can be used to read or write small subsections of the BLOB.
+The <a href="../c3ref/blob_bytes.html">sqlite3_blob_bytes()</a> interface returns the size of the BLOB in bytes.
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

@@ -70,42 +70,52 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Test To See If The Library Is Threadsafe</h2>
-<blockquote><pre>
-int sqlite3_threadsafe(void);
-
-</pre></blockquote>
-<p>
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Test To See If The Library Is Threadsafe</h2><blockquote><pre>int sqlite3_threadsafe(void);
+</pre></blockquote><p>
 SQLite can be compiled with or without mutexes.  When
-the SQLITE_THREADSAFE C preprocessor macro is true, mutexes
-are enabled and SQLite is threadsafe.  When that macro os false,
+the <a href="../compile.html#threadsafe">SQLITE_THREADSAFE</a> C preprocessor macro is true, mutexes
+are enabled and SQLite is threadsafe.  When that macro is false,
 the mutexes are omitted.  Without the mutexes, it is not safe
-to use SQLite from more than one thread.</p>
+to use SQLite concurrently from more than one thread.</p>
 
-<p>There is a measurable performance penalty for enabling mutexes.
+<p>Enabling mutexes incurs a measurable performance penalty.
 So if speed is of utmost importance, it makes sense to disable
 the mutexes.  But for maximum safety, mutexes should be enabled.
 The default behavior is for mutexes to be enabled.</p>
 
 <p>This interface can be used by a program to make sure that the
 version of SQLite that it is linking against was compiled with
-the desired setting of the SQLITE_THREADSAFE macro.</p>
+the desired setting of the <a href="../compile.html#threadsafe">SQLITE_THREADSAFE</a> macro.</p>
+
+<p>This interface only reports on the compile-time mutex setting
+of the <a href="../compile.html#threadsafe">SQLITE_THREADSAFE</a> flag.  If SQLite is compiled with
+SQLITE_THREADSAFE=1 then mutexes are enabled by default but
+can be fully or partially disabled using a call to <a href="../c3ref/config.html">sqlite3_config()</a>
+with the verbs <a href="../c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_SINGLETHREAD</a>, <a href="../c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_MULTITHREAD</a>,
+or <a href="../c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_MUTEX</a>.  The return value of this function shows
+only the default compile-time setting, not any run-time changes
+to that setting.</p>
 
 <p><h3>Invariants:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">F10101</td> 
+<tr><td valign="top">H10101</td> 
 <td valign="top">
-The 
-<a href="../c3ref/threadsafe.html">sqlite3_threadsafe()</a> function returns nonzero if
-SQLite was compiled with its mutexes enabled or zero
-if SQLite was compiled with mutexes disabled.</td></tr>
+The <a href="../c3ref/threadsafe.html">sqlite3_threadsafe()</a> function shall return nonzero if
+SQLite was compiled with the its mutexes enabled by default
+or zero if SQLite was compiled such that mutexes are
+permanently disabled.</td></tr>
+<tr><td valign="top">H10102</td> 
+<td valign="top">
+The value returned by the <a href="../c3ref/threadsafe.html">sqlite3_threadsafe()</a> function
+shall not change when mutex setting are modified at
+runtime using the <a href="../c3ref/config.html">sqlite3_config()</a> interface and
+especially the <a href="../c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_SINGLETHREAD</a>,
+<a href="../c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_MULTITHREAD</a>, <a href="../c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_SERIALIZED</a>,
+and <a href="../c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_MUTEX</a> verbs.</td></tr>
 </table>
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

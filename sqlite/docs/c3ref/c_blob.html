@@ -70,10 +70,7 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Fundamental Datatypes</h2>
-<blockquote><pre>
-#define SQLITE_INTEGER  1
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Fundamental Datatypes</h2><blockquote><pre>#define SQLITE_INTEGER  1
 #define SQLITE_FLOAT    2
 #define SQLITE_BLOB     4
 #define SQLITE_NULL     5
@@ -83,10 +80,8 @@ a:visited { color: #734559 }
 # define SQLITE_TEXT     3
 #endif
 #define SQLITE3_TEXT     3
-
-</pre></blockquote>
-<p>
-Every value in SQLite has one of five fundamental datatypes:</p>
+</pre></blockquote><p>
+ Every value in SQLite has one of five fundamental datatypes:</p>
 
 <p><ul>
 <li> 64-bit signed integer
@@ -100,13 +95,11 @@ Every value in SQLite has one of five fundamental datatypes:</p>
 
 <p>Note that the SQLITE_TEXT constant was also used in SQLite version 2
 for a completely different meaning.  Software that links against both
-SQLite version 2 and SQLite version 3 should use SQLITE3_TEXT not
+SQLite version 2 and SQLite version 3 should use SQLITE3_TEXT, not
 SQLITE_TEXT.
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>

@@ -70,30 +70,20 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a>
-<h2>Column Names In A Result Set</h2>
-<blockquote><pre>
-const char *sqlite3_column_name(sqlite3_stmt*, int N);
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Column Names In A Result Set</h2><blockquote><pre>const char *sqlite3_column_name(sqlite3_stmt*, int N);
 const void *sqlite3_column_name16(sqlite3_stmt*, int N);
-
-</pre></blockquote>
-<p>
+</pre></blockquote><p>
 These routines return the name assigned to a particular column
-in the result set of a SELECT statement.  The sqlite3_column_name()
-interface returns a pointer to a zero-terminated UTF8 string
+in the result set of a <a href="../lang_select.html">SELECT</a> statement.  The sqlite3_column_name()
+interface returns a pointer to a zero-terminated UTF-8 string
 and sqlite3_column_name16() returns a pointer to a zero-terminated
-UTF16 string.  The first parameter is the
+UTF-16 string.  The first parameter is the <a href="../c3ref/stmt.html">prepared statement</a>
+that implements the <a href="../lang_select.html">SELECT</a> statement. The second parameter is the
+column number.  The leftmost column is number 0.</p>
 
-<a href="../c3ref/stmt.html">prepared statement</a> that implements the SELECT statement.
-The second parameter is the column number.  The left-most column is
-number 0.</p>
-
-<p>The returned string pointer is valid until either the
-
-<a href="../c3ref/stmt.html">prepared statement</a> is destroyed by 
-<a href="../c3ref/finalize.html">sqlite3_finalize()</a>
-or until the next call sqlite3_column_name() or sqlite3_column_name16()
-on the same column.</p>
+<p>The returned string pointer is valid until either the <a href="../c3ref/stmt.html">prepared statement</a>
+is destroyed by <a href="../c3ref/finalize.html">sqlite3_finalize()</a> or until the next call to
+sqlite3_column_name() or sqlite3_column_name16() on the same column.</p>
 
 <p>If sqlite3_malloc() fails during the processing of either routine
 (for example during a conversion from UTF-8 to UTF-16) then a
@@ -106,59 +96,44 @@ one release of SQLite to the next.</p>
 
 <p><h3>Invariants:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
-<tr><td valign="top">F13721</td> 
+<tr><td valign="top">H13721</td> 
 <td valign="top">
-A successful invocation of the 
-<a href="../c3ref/column_name.html">sqlite3_column_name(S,N)</a>
-interface returns the name
-of the Nth column (where 0 is the left-most column) for the
-result set of 
-<a href="../c3ref/stmt.html">prepared statement</a> S as a
-zero-terminated UTF-8 string.</td></tr>
-<tr><td valign="top">F13723</td> 
+A successful invocation of the <a href="../c3ref/column_name.html">sqlite3_column_name(S,N)</a>
+interface returns the name of the Nth column (where 0 is
+the leftmost column) for the result set of the
+<a href="../c3ref/stmt.html">prepared statement</a> S as a zero-terminated UTF-8 string.</td></tr>
+<tr><td valign="top">H13723</td> 
 <td valign="top">
-A successful invocation of the 
-<a href="../c3ref/column_name.html">sqlite3_column_name16(S,N)</a>
-interface returns the name
-of the Nth column (where 0 is the left-most column) for the
-result set of 
-<a href="../c3ref/stmt.html">prepared statement</a> S as a
-zero-terminated UTF-16 string in the native byte order.</td></tr>
-<tr><td valign="top">F13724</td> 
+A successful invocation of the <a href="../c3ref/column_name.html">sqlite3_column_name16(S,N)</a>
+interface returns the name of the Nth column (where 0 is
+the leftmost column) for the result set of the
+<a href="../c3ref/stmt.html">prepared statement</a> S as a zero-terminated UTF-16 string
+in the native byte order.</td></tr>
+<tr><td valign="top">H13724</td> 
 <td valign="top">
-The 
-<a href="../c3ref/column_name.html">sqlite3_column_name()</a> and 
-<a href="../c3ref/column_name.html">sqlite3_column_name16()</a>
+The <a href="../c3ref/column_name.html">sqlite3_column_name()</a> and <a href="../c3ref/column_name.html">sqlite3_column_name16()</a>
 interfaces return a NULL pointer if they are unable to
-allocate memory memory to hold there normal return strings.</td></tr>
-<tr><td valign="top">F13725</td> 
+allocate memory to hold their normal return strings.</td></tr>
+<tr><td valign="top">H13725</td> 
 <td valign="top">
-If the N parameter to 
-<a href="../c3ref/column_name.html">sqlite3_column_name(S,N)</a> or
-
+If the N parameter to <a href="../c3ref/column_name.html">sqlite3_column_name(S,N)</a> or
 <a href="../c3ref/column_name.html">sqlite3_column_name16(S,N)</a> is out of range, then the
-interfaces returns a NULL pointer.</td></tr>
-<tr><td valign="top">F13726</td> 
+interfaces return a NULL pointer.</td></tr>
+<tr><td valign="top">H13726</td> 
 <td valign="top">
-The strings returned by 
-<a href="../c3ref/column_name.html">sqlite3_column_name(S,N)</a> and
-
+The strings returned by <a href="../c3ref/column_name.html">sqlite3_column_name(S,N)</a> and
 <a href="../c3ref/column_name.html">sqlite3_column_name16(S,N)</a> are valid until the next
 call to either routine with the same S and N parameters
-or until 
-<a href="../c3ref/finalize.html">sqlite3_finalize(S)</a> is called.</td></tr>
-<tr><td valign="top">F13727</td> 
+or until <a href="../c3ref/finalize.html">sqlite3_finalize(S)</a> is called.</td></tr>
+<tr><td valign="top">H13727</td> 
 <td valign="top">
-When a result column of a 
-<a href="../lang_select.html">SELECT</a> statement contains
-an AS clause, the name of that column is the indentifier
+When a result column of a <a href="../lang_select.html">SELECT</a> statement contains
+an AS clause, the name of that column is the identifier
 to the right of the AS keyword.</td></tr>
 </table>
-</p>
-<p>See also lists of
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
-<hr><small<i>
-This page last modified 2008/01/31 20:37:13 UTC
+  <a href="funclist.html">Functions</a>.</p><hr><small><i>
+This page last modified 2008/08/04 14:33:39 UTC
 </i></small></div></body></html>
