@@ -69,4 +69,4 @@ static initquit_factory_t<initquit_playback_log>
 	initquit_playback_log_instance;
 static playback_statistics_collector_factory_t<playback_log_collector>
 	playback_log_collector_instance;
-DECLARE_COMPONENT_VERSION("Playback log", "0.1.2", "Keeps history of played tracks in sqlite database.")
+DECLARE_COMPONENT_VERSION("Playback log", "0.1.3", "Keeps history of played tracks in sqlite database.")

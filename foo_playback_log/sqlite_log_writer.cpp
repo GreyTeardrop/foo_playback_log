@@ -3,6 +3,7 @@
 #include "..\sqlite\sqlite3.h"
 #include "sqlite_log_writer.h"
 #include "..\sdk\pfc\pfc.h"
+#include <boost/algorithm/string/replace.hpp>
 
 sqlite_log_writer::sqlite_log_writer() : db(NULL)
 {
@@ -85,20 +86,19 @@ void sqlite_log_writer::add_record(const char* artist, const char* title)
 	}
 
 	pfc::string8 sql_command = "INSERT INTO playback_log (artist, title) VALUES('";
-	pfc::string8 artist8 = artist;
-	artist8.replace_char('\'', '\'\'');
-	sql_command += artist8;
+	std::string artist_str = artist;
+	boost::algorithm::replace_all(artist_str, "'", "''");
+	sql_command += artist_str.c_str();
 	sql_command += "', '";
-	pfc::string8 title8 = title;
-	title8.replace_char('\'', '\'\'');
-	sql_command += title8;
+	std::string title_str = title;
+	boost::algorithm::replace_all(title_str, "'", "''");
+	sql_command += title_str.c_str();
 	sql_command += "')";
+
 	char* errorMessage;
 	int ret_value = sqlite3_exec(db, sql_command.get_ptr(), NULL, NULL, &errorMessage);
 	if (ret_value != SQLITE_OK)
 	{
-//		std::exception e(errorMessage);
 		sqlite3_free(errorMessage);
-//		throw e;
 	}
 }
