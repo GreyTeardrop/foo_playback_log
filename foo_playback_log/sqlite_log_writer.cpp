@@ -33,6 +33,8 @@ void sqlite_log_writer::init(const char* db_path)
 		"id INTEGER PRIMARY KEY AUTOINCREMENT,"
 		"artist TEXT,"
 		"title TEXT,"
+		"album TEXT,"
+		"date TEXT,"
 		"playback_timestamp TEXT DEFAULT CURRENT_TIMESTAMP)", NULL, NULL, &errorMessage);
 	if (ret_value != SQLITE_OK)
 	{
@@ -51,6 +53,15 @@ void sqlite_log_writer::init(const char* db_path)
 	}
 
 	ret_value = sqlite3_exec(db,
+		"CREATE VIEW IF NOT EXISTS 'chart_albums_global'"
+		" AS SELECT artist, album, count(*) AS play_count FROM playback_log"
+		" GROUP BY artist, album ORDER BY play_count DESC", NULL, NULL, &errorMessage);
+	if (ret_value != SQLITE_OK)
+	{
+		sqlite3_free(errorMessage);
+	}
+
+	ret_value = sqlite3_exec(db,
 		"CREATE VIEW IF NOT EXISTS 'chart_tracks_global'"
 		" AS SELECT artist, title, count(*) AS play_count FROM playback_log"
 		" GROUP BY artist, title ORDER BY play_count DESC", NULL, NULL, &errorMessage);
@@ -60,8 +71,17 @@ void sqlite_log_writer::init(const char* db_path)
 	}
 
 	ret_value = sqlite3_exec(db,
+		"CREATE VIEW IF NOT EXISTS 'chart_albumtracks_global'"
+		" AS SELECT artist, album, title, count(*) AS play_count FROM playback_log"
+		" GROUP BY artist, album, title ORDER BY play_count DESC", NULL, NULL, &errorMessage);
+	if (ret_value != SQLITE_OK)
+	{
+		sqlite3_free(errorMessage);
+	}
+
+	ret_value = sqlite3_exec(db,
 		"CREATE VIEW IF NOT EXISTS 'playback_history'"
-		" AS SELECT artist, title, datetime(playback_timestamp, 'localtime')"
+		" AS SELECT artist, date, album, title, datetime(playback_timestamp, 'localtime')"
 		" AS play_time FROM playback_log ORDER BY play_time DESC", NULL, NULL, &errorMessage);
 	if (ret_value != SQLITE_OK)
 	{
@@ -78,14 +98,15 @@ void sqlite_log_writer::term()
 	}
 }
 
-void sqlite_log_writer::add_record(const char* artist, const char* title)
+void sqlite_log_writer::add_record(const char* artist, const char* title,
+	const char* album, const char* date)
 {
 	if (db == NULL)
 	{
 		return;
 	}
 
-	pfc::string8 sql_command = "INSERT INTO playback_log (artist, title) VALUES('";
+	pfc::string8 sql_command = "INSERT INTO playback_log (artist, title, album, date) VALUES('";
 	std::string artist_str = artist;
 	boost::algorithm::replace_all(artist_str, "'", "''");
 	sql_command += artist_str.c_str();
@@ -93,6 +114,14 @@ void sqlite_log_writer::add_record(const char* artist, const char* title)
 	std::string title_str = title;
 	boost::algorithm::replace_all(title_str, "'", "''");
 	sql_command += title_str.c_str();
+	sql_command += "', '";
+	std::string album_str = album;
+	boost::algorithm::replace_all(album_str, "'", "''");
+	sql_command += album_str.c_str();
+	sql_command += "', '";
+	std::string date_str = date;
+	boost::algorithm::replace_all(date_str, "'", "''");
+	sql_command += date_str.c_str();
 	sql_command += "')";
 
 	char* errorMessage;

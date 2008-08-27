@@ -13,7 +13,8 @@ public:
 
 	void init(const char* db_path);
 	void term();
-	void add_record(const char* artist, const char* title);
+	void add_record(const char* artist, const char* title, const char* album,
+		const char* date);
 };
 
 #endif

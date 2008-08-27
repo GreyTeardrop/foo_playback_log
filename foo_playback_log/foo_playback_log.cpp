@@ -57,9 +57,15 @@ public:
 		{
 			const char* track_artist = track_info.meta_get("artist", 0);
 			const char* track_title = track_info.meta_get("title", 0);
+			const char* track_album = track_info.meta_get("album", 0);
+			if (track_album == NULL)
+				track_album = "";
+			const char* track_date = track_info.meta_get("date", 0);
+			if (track_date == NULL)
+				track_date = "";
 			if ((track_artist != NULL) && (track_title != NULL))
 			{
-				log_writer.add_record(track_artist, track_title);
+				log_writer.add_record(track_artist, track_title, track_album, track_date);
 			}
 		}
 	}
@@ -69,4 +75,4 @@ static initquit_factory_t<initquit_playback_log>
 	initquit_playback_log_instance;
 static playback_statistics_collector_factory_t<playback_log_collector>
 	playback_log_collector_instance;
-DECLARE_COMPONENT_VERSION("Playback log", "0.1.3", "Keeps history of played tracks in sqlite database.")
+DECLARE_COMPONENT_VERSION("Playback log", "0.2.0", "Keeps history of played tracks in sqlite database.")
