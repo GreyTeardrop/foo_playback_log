@@ -43,6 +43,7 @@ void sqlite_log_writer::init(const char* db_path)
 		throw e;
 	}
 
+	// Global charts
 	ret_value = sqlite3_exec(db,
 		"CREATE VIEW IF NOT EXISTS 'chart_artists_global'"
 		" AS SELECT artist, count(*) AS play_count FROM playback_log"
@@ -79,6 +80,130 @@ void sqlite_log_writer::init(const char* db_path)
 		sqlite3_free(errorMessage);
 	}
 
+	// Last day charts
+	ret_value = sqlite3_exec(db,
+		"CREATE VIEW IF NOT EXISTS 'chart_artists_day'"
+		" AS SELECT artist, count(*) AS play_count FROM playback_log"
+		" WHERE (playback_timestamp >= datetime('now','-1 day'))"
+		" GROUP BY artist ORDER BY play_count DESC", NULL, NULL, &errorMessage);
+	if (ret_value != SQLITE_OK)
+	{
+		sqlite3_free(errorMessage);
+	}
+
+	ret_value = sqlite3_exec(db,
+		"CREATE VIEW IF NOT EXISTS 'chart_albums_day'"
+		" AS SELECT artist, album, count(*) AS play_count FROM playback_log"
+		" WHERE (playback_timestamp >= datetime('now','-1 day'))"
+		" GROUP BY artist, album ORDER BY play_count DESC", NULL, NULL, &errorMessage);
+	if (ret_value != SQLITE_OK)
+	{
+		sqlite3_free(errorMessage);
+	}
+
+	ret_value = sqlite3_exec(db,
+		"CREATE VIEW IF NOT EXISTS 'chart_tracks_day'"
+		" AS SELECT artist, title, count(*) AS play_count FROM playback_log"
+		" WHERE (playback_timestamp >= datetime('now','-1 day'))"
+		" GROUP BY artist, title ORDER BY play_count DESC", NULL, NULL, &errorMessage);
+	if (ret_value != SQLITE_OK)
+	{
+		sqlite3_free(errorMessage);
+	}
+
+	ret_value = sqlite3_exec(db,
+		"CREATE VIEW IF NOT EXISTS 'chart_albumtracks_day'"
+		" AS SELECT artist, album, title, count(*) AS play_count FROM playback_log"
+		" WHERE (playback_timestamp >= datetime('now','-1 day'))"
+		" GROUP BY artist, album, title ORDER BY play_count DESC", NULL, NULL, &errorMessage);
+	if (ret_value != SQLITE_OK)
+	{
+		sqlite3_free(errorMessage);
+	}
+
+	// Last week charts
+	ret_value = sqlite3_exec(db,
+		"CREATE VIEW IF NOT EXISTS 'chart_artists_week'"
+		" AS SELECT artist, count(*) AS play_count FROM playback_log"
+		" WHERE (playback_timestamp >= datetime('now','-7 day'))"
+		" GROUP BY artist ORDER BY play_count DESC", NULL, NULL, &errorMessage);
+	if (ret_value != SQLITE_OK)
+	{
+		sqlite3_free(errorMessage);
+	}
+
+	ret_value = sqlite3_exec(db,
+		"CREATE VIEW IF NOT EXISTS 'chart_albums_week'"
+		" AS SELECT artist, album, count(*) AS play_count FROM playback_log"
+		" WHERE (playback_timestamp >= datetime('now','-7 day'))"
+		" GROUP BY artist, album ORDER BY play_count DESC", NULL, NULL, &errorMessage);
+	if (ret_value != SQLITE_OK)
+	{
+		sqlite3_free(errorMessage);
+	}
+
+	ret_value = sqlite3_exec(db,
+		"CREATE VIEW IF NOT EXISTS 'chart_tracks_week'"
+		" AS SELECT artist, title, count(*) AS play_count FROM playback_log"
+		" WHERE (playback_timestamp >= datetime('now','-7 day'))"
+		" GROUP BY artist, title ORDER BY play_count DESC", NULL, NULL, &errorMessage);
+	if (ret_value != SQLITE_OK)
+	{
+		sqlite3_free(errorMessage);
+	}
+
+	ret_value = sqlite3_exec(db,
+		"CREATE VIEW IF NOT EXISTS 'chart_albumtracks_week'"
+		" AS SELECT artist, album, title, count(*) AS play_count FROM playback_log"
+		" WHERE (playback_timestamp >= datetime('now','-7 day'))"
+		" GROUP BY artist, album, title ORDER BY play_count DESC", NULL, NULL, &errorMessage);
+	if (ret_value != SQLITE_OK)
+	{
+		sqlite3_free(errorMessage);
+	}
+
+	// Last month charts
+	ret_value = sqlite3_exec(db,
+		"CREATE VIEW IF NOT EXISTS 'chart_artists_month'"
+		" AS SELECT artist, count(*) AS play_count FROM playback_log"
+		" WHERE (playback_timestamp >= datetime('now','-1 month'))"
+		" GROUP BY artist ORDER BY play_count DESC", NULL, NULL, &errorMessage);
+	if (ret_value != SQLITE_OK)
+	{
+		sqlite3_free(errorMessage);
+	}
+
+	ret_value = sqlite3_exec(db,
+		"CREATE VIEW IF NOT EXISTS 'chart_albums_month'"
+		" AS SELECT artist, album, count(*) AS play_count FROM playback_log"
+		" WHERE (playback_timestamp >= datetime('now','-1 month'))"
+		" GROUP BY artist, album ORDER BY play_count DESC", NULL, NULL, &errorMessage);
+	if (ret_value != SQLITE_OK)
+	{
+		sqlite3_free(errorMessage);
+	}
+
+	ret_value = sqlite3_exec(db,
+		"CREATE VIEW IF NOT EXISTS 'chart_tracks_month'"
+		" AS SELECT artist, title, count(*) AS play_count FROM playback_log"
+		" WHERE (playback_timestamp >= datetime('now','-1 month'))"
+		" GROUP BY artist, title ORDER BY play_count DESC", NULL, NULL, &errorMessage);
+	if (ret_value != SQLITE_OK)
+	{
+		sqlite3_free(errorMessage);
+	}
+
+	ret_value = sqlite3_exec(db,
+		"CREATE VIEW IF NOT EXISTS 'chart_albumtracks_month'"
+		" AS SELECT artist, album, title, count(*) AS play_count FROM playback_log"
+		" WHERE (playback_timestamp >= datetime('now','-1 month'))"
+		" GROUP BY artist, album, title ORDER BY play_count DESC", NULL, NULL, &errorMessage);
+	if (ret_value != SQLITE_OK)
+	{
+		sqlite3_free(errorMessage);
+	}
+
+	// Playback history
 	ret_value = sqlite3_exec(db,
 		"CREATE VIEW IF NOT EXISTS 'playback_history'"
 		" AS SELECT artist, date, album, title, datetime(playback_timestamp, 'localtime')"

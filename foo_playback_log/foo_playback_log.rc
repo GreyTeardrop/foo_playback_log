@@ -53,8 +53,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,2,0,0
- PRODUCTVERSION 0,2,0,0
+ FILEVERSION 0,2,1,0
+ PRODUCTVERSION 0,2,1,0
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -70,12 +70,12 @@ BEGIN
         BLOCK "000904b0"
         BEGIN
             VALUE "FileDescription", "Keeps foobar2000 playback log in sqlite database"
-            VALUE "FileVersion", "0.2.0"
+            VALUE "FileVersion", "0.2.1"
             VALUE "InternalName", "foo_playback_log"
             VALUE "LegalCopyright", "(c) Grey Teardrop"
             VALUE "OriginalFilename", "foo_playback_log.dll"
             VALUE "ProductName", "Playback_log plugin for foobar2000 0.9.x"
-            VALUE "ProductVersion", "0.2.0"
+            VALUE "ProductVersion", "0.2.1"
         END
     END
     BLOCK "VarFileInfo"
