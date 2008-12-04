@@ -70,20 +70,28 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a><h3>EXPLAIN</h3><table cellpadding="10"><tr><td align="right" valign="top"><i><font color="#ff3434">sql-statement</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0">EXPLAIN </font></b><i><font color="#ff3434">sql-statement</font></i><b><font color="#2c2cf0"></font></b></td></tr></table>
+<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a><h3>EXPLAIN</h3><h4><a href="syntaxdiagrams.html#sql-stmt">sql-stmt:</a></h4><blockquote> <img src="images/syntax/sql-stmt.gif"></img> </blockquote>
 
-<p>The EXPLAIN command modifier is a non-standard extension.  The
-idea comes from a similar command found in PostgreSQL, but the operation
-is completely different.</p>
 
-<p>If the EXPLAIN keyword appears before any other SQLite SQL command
-then instead of actually executing the command, the SQLite library will
-report back the sequence of virtual machine instructions it would have
+<p>An SQL statement can be preceded by the keyword "EXPLAIN" or
+by the phrase "EXPLAIN QUERY PLAN".  Either modification causes the
+SQL statement to behave as a query and to return information about
+how the SQL statement would have operated if the EXPLAIN keyword or
+phrase had been omitted.</p>
+
+<p>When the EXPLAIN keyword appears by itself it causes the statement
+to behave as a query that returns the sequence of 
+<a href="opcode.html">virtual machine instructions</a> it would have
 used to execute the command had the EXPLAIN keyword not been present.
-For additional information about virtual machine instructions see
-the <a href="arch.html">architecture description</a> or the documentation
-on <a href="opcode.html">available opcodes</a> for the virtual machine.</p>
+When the EXPLAIN QUERY PLAN phrase appears, the statement returns
+high-level information about what indices would have been used.</p>
+
+<p>The output from EXPLAIN and EXPLAIN QUERY PLAN is intended for
+interactive analysis and troubleshooting only.  The details of the 
+output format are subject to change from one release of SQLite to the next.
+Applications should not use EXPLAIN or EXPLAIN QUERY PLAN since
+their behavior is undocumented, unspecified, and variable.</p>
 
 <hr><small><i>
-This page last modified 2008/07/18 18:34:10 UTC
+This page last modified 2008/10/10 23:40:04 UTC
 </i></small></div></body></html>

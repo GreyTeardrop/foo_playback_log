@@ -92,12 +92,122 @@ what property of SQLite is to be configured.  Subsequent arguments
 vary depending on the <a href="../c3ref/c_config_chunkalloc.html">configuration option</a>
 in the first argument.</p>
 
-<p>When a configuration option is set, sqlite3_config() returns SQLITE_OK.
+<p>When a configuration option is set, sqlite3_config() returns <a href="../c3ref/c_abort.html">SQLITE_OK</a>.
 If the option is unknown or SQLite is unable to set the option
-then this routine returns a non-zero <a href="../c3ref/c_abort.html">error code</a>.
+then this routine returns a non-zero <a href="../c3ref/c_abort.html">error code</a>.</p>
+
+<p><h3>Invariants:</h3>
+<table border="0" cellpadding="5" cellspacing="0">
+<tr><td valign="top">H14103</td> 
+<td valign="top">
+A successful invocation of <a href="../c3ref/config.html">sqlite3_config()</a> shall return
+<a href="../c3ref/c_abort.html">SQLITE_OK</a>.</td></tr>
+<tr><td valign="top">H14106</td> 
+<td valign="top">
+The <a href="../c3ref/config.html">sqlite3_config()</a> interface shall return <a href="../c3ref/c_abort.html">SQLITE_MISUSE</a>
+if it is invoked in between calls to <a href="../c3ref/initialize.html">sqlite3_initialize()</a> and
+<a href="../c3ref/initialize.html">sqlite3_shutdown()</a>.</td></tr>
+<tr><td valign="top">H14120</td> 
+<td valign="top">
+A successful call to <a href="../c3ref/config.html">sqlite3_config</a>(<a href="../c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_SINGLETHREAD</a>)
+shall set the default <a href="../threadsafe.html">threading mode</a> to Single-thread.</td></tr>
+<tr><td valign="top">H14123</td> 
+<td valign="top">
+A successful call to <a href="../c3ref/config.html">sqlite3_config</a>(<a href="../c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_MULTITHREAD</a>)
+shall set the default <a href="../threadsafe.html">threading mode</a> to Multi-thread.</td></tr>
+<tr><td valign="top">H14126</td> 
+<td valign="top">
+A successful call to <a href="../c3ref/config.html">sqlite3_config</a>(<a href="../c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_SERIALIZED</a>)
+shall set the default <a href="../threadsafe.html">threading mode</a> to Serialized.</td></tr>
+<tr><td valign="top">H14129</td> 
+<td valign="top">
+A successful call to <a href="../c3ref/config.html">sqlite3_config</a>(<a href="../c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_MUTEX</a>,X)
+where X is a pointer to an initialized <a href="../c3ref/mutex_methods.html">sqlite3_mutex_methods</a>
+object shall cause all subsequent mutex operations performed
+by SQLite to use the mutex methods that were present in X
+during the call to <a href="../c3ref/config.html">sqlite3_config()</a>.</td></tr>
+<tr><td valign="top">H14132</td> 
+<td valign="top">
+A successful call to <a href="../c3ref/config.html">sqlite3_config</a>(<a href="../c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_GETMUTEX</a>,X)
+where X is a pointer to an <a href="../c3ref/mutex_methods.html">sqlite3_mutex_methods</a> object
+shall overwrite the content of <a href="../c3ref/mutex_methods.html">sqlite3_mutex_methods</a> object
+with the mutex methods currently in use by SQLite.</td></tr>
+<tr><td valign="top">H14135</td> 
+<td valign="top">
+A successful call to <a href="../c3ref/config.html">sqlite3_config</a>(<a href="../c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_MALLOC</a>,M)
+where M is a pointer to an initialized <a href="../c3ref/mem_methods.html">sqlite3_mem_methods</a>
+object shall cause all subsequent memory allocation operations
+performed by SQLite to use the methods that were present in
+M during the call to <a href="../c3ref/config.html">sqlite3_config()</a>.</td></tr>
+<tr><td valign="top">H14138</td> 
+<td valign="top">
+A successful call to <a href="../c3ref/config.html">sqlite3_config</a>(<a href="../c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_GETMALLOC</a>,M)
+where M is a pointer to an <a href="../c3ref/mem_methods.html">sqlite3_mem_methods</a> object shall
+overwrite the content of <a href="../c3ref/mem_methods.html">sqlite3_mem_methods</a> object with
+the memory allocation methods currently in use by
+SQLite.</td></tr>
+<tr><td valign="top">H14141</td> 
+<td valign="top">
+A successful call to <a href="../c3ref/config.html">sqlite3_config</a>(<a href="../c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_MEMSTATUS</a>,1)
+shall enable the memory allocation status collection logic.</td></tr>
+<tr><td valign="top">H14144</td> 
+<td valign="top">
+A successful call to <a href="../c3ref/config.html">sqlite3_config</a>(<a href="../c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_MEMSTATUS</a>,0)
+shall disable the memory allocation status collection logic.</td></tr>
+<tr><td valign="top">H14147</td> 
+<td valign="top">
+The memory allocation status collection logic shall be
+enabled by default.</td></tr>
+<tr><td valign="top">H14150</td> 
+<td valign="top">
+A successful call to <a href="../c3ref/config.html">sqlite3_config</a>(<a href="../c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_SCRATCH</a>,S,Z,N)
+where Z and N are non-negative integers and
+S is a pointer to an aligned memory buffer not less than
+Z*N bytes in size shall cause S to be used by the
+<a href="../malloc.html#scratch">scratch memory allocator</a> for as many as N simulataneous
+allocations each of size Z.</td></tr>
+<tr><td valign="top">H14153</td> 
+<td valign="top">
+A successful call to <a href="../c3ref/config.html">sqlite3_config</a>(<a href="../c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_SCRATCH</a>,S,Z,N)
+where S is a NULL pointer shall disable the
+<a href="../malloc.html#scratch">scratch memory allocator</a>.</td></tr>
+<tr><td valign="top">H14156</td> 
+<td valign="top">
+A successful call to
+<a href="../c3ref/config.html">sqlite3_config</a>(<a href="../c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_PAGECACHE</a>,S,Z,N)
+where Z and N are non-negative integers and
+S is a pointer to an aligned memory buffer not less than
+Z*N bytes in size shall cause S to be used by the
+<a href="../malloc.html#pagecache">pagecache memory allocator</a> for as many as N simulataneous
+allocations each of size Z.</td></tr>
+<tr><td valign="top">H14159</td> 
+<td valign="top">
+A successful call to
+<a href="../c3ref/config.html">sqlite3_config</a>(<a href="../c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_PAGECACHE</a>,S,Z,N)
+where S is a NULL pointer shall disable the
+<a href="../malloc.html#pagecache">pagecache memory allocator</a>.</td></tr>
+<tr><td valign="top">H14162</td> 
+<td valign="top">
+A successful call to <a href="../c3ref/config.html">sqlite3_config</a>(<a href="../c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_HEAP</a>,H,Z,N)
+where Z and N are non-negative integers and
+H is a pointer to an aligned memory buffer not less than
+Z bytes in size shall enable the <a href="../malloc.html#memsys5">memsys5</a> memory allocator
+and cause it to use buffer S as its memory source and to use
+a minimum allocation size of N.</td></tr>
+<tr><td valign="top">H14165</td> 
+<td valign="top">
+A successful call to <a href="../c3ref/config.html">sqlite3_config</a>(<a href="../c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_HEAP</a>,H,Z,N)
+where H is a NULL pointer shall disable the
+<a href="../malloc.html#memsys5">memsys5</a> memory allocator.</td></tr>
+<tr><td valign="top">H14168</td> 
+<td valign="top">
+A successful call to <a href="../c3ref/config.html">sqlite3_config</a>(<a href="../c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_LOOKASIDE</a>,Z,N)
+shall cause the default <a href="../malloc.html#lookaside">lookaside memory allocator</a> configuration
+for new <a href="../c3ref/sqlite3.html">database connections</a> to be N slots of Z bytes each.</td></tr>
+</table>
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
   <a href="funclist.html">Functions</a>.</p><hr><small><i>
-This page last modified 2008/08/04 14:33:39 UTC
+This page last modified 2008/08/11 17:57:43 UTC
 </i></small></div></body></html>

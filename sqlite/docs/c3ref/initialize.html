@@ -90,24 +90,24 @@ are harmless no-ops.</p>
 sqlite3_os_init().  Similarly, sqlite3_shutdown()
 shall invoke sqlite3_os_end().</p>
 
-<p>The sqlite3_initialize() routine returns SQLITE_OK on success.
+<p>The sqlite3_initialize() routine returns <a href="../c3ref/c_abort.html">SQLITE_OK</a> on success.
 If for some reason, sqlite3_initialize() is unable to initialize
 the library (perhaps it is unable to allocate a needed resource such
-as a mutex) it returns an <a href="../c3ref/c_abort.html">error code</a> other than SQLITE_OK.</p>
+as a mutex) it returns an <a href="../c3ref/c_abort.html">error code</a> other than <a href="../c3ref/c_abort.html">SQLITE_OK</a>.</p>
 
 <p>The sqlite3_initialize() routine is called internally by many other
 SQLite interfaces so that an application usually does not need to
 invoke sqlite3_initialize() directly.  For example, <a href="../c3ref/open.html">sqlite3_open()</a>
 calls sqlite3_initialize() so the SQLite library will be automatically
 initialized when <a href="../c3ref/open.html">sqlite3_open()</a> is called if it has not be initialized
-already.  However, if SQLite is compiled with the SQLITE_OMIT_AUTOINIT
+already.  However, if SQLite is compiled with the <a href="../compile.html#omit_autoinit">SQLITE_OMIT_AUTOINIT</a>
 compile-time option, then the automatic calls to sqlite3_initialize()
 are omitted and the application must call sqlite3_initialize() directly
 prior to using any other SQLite interface.  For maximum portability,
 it is recommended that applications always invoke sqlite3_initialize()
 directly prior to using any other SQLite interface.  Future releases
 of SQLite may require this.  In other words, the behavior exhibited
-when SQLite is compiled with SQLITE_OMIT_AUTOINIT might become the
+when SQLite is compiled with <a href="../compile.html#omit_autoinit">SQLITE_OMIT_AUTOINIT</a> might become the
 default behavior in some future release of SQLite.</p>
 
 <p>The sqlite3_os_init() routine does operating-system specific
@@ -125,15 +125,15 @@ interface is called automatically by sqlite3_initialize() and
 sqlite3_os_end() is called by sqlite3_shutdown().  Appropriate
 implementations for sqlite3_os_init() and sqlite3_os_end()
 are built into SQLite when it is compiled for unix, windows, or os/2.
-When built for other platforms (using the SQLITE_OS_OTHER=1 compile-time
+When built for other platforms (using the <a href="../compile.html#os_other">SQLITE_OS_OTHER=1</a> compile-time
 option) the application must supply a suitable implementation for
 sqlite3_os_init() and sqlite3_os_end().  An application-supplied
 implementation of sqlite3_os_init() or sqlite3_os_end()
-must return SQLITE_OK on success and some other <a href="../c3ref/c_abort.html">error code</a> upon
+must return <a href="../c3ref/c_abort.html">SQLITE_OK</a> on success and some other <a href="../c3ref/c_abort.html">error code</a> upon
 failure.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
   <a href="funclist.html">Functions</a>.</p><hr><small><i>
-This page last modified 2008/08/04 14:33:39 UTC
+This page last modified 2008/08/11 17:57:43 UTC
 </i></small></div></body></html>

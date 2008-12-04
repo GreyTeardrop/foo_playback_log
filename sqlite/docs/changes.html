@@ -80,7 +80,37 @@ CVS at
 http://www.sqlite.org/cvstrac/timeline</a>.
 </p>
 
-<a name="version_3_6_1"></a>
+<a name="version_3_6_4"></a>
+<h3>2008 Oct 15 (3.6.4)</h3><p><ul>
+<li>Add option support for LIMIT and ORDER BY clauses on <a href="lang_delete.html">DELETE</a> and
+    <a href="lang_update.html">UPDATE</a> statements.  Only works if SQLite is compiled with
+    <a href="compile.html#enable_update_delete_limit">SQLITE_ENABLE_UPDATE_DELETE_LIMIT</a>.
+<li>Added the <a href="c3ref/stmt_status.html">sqlite3_stmt_status()</a> interface for performance monitoring.</li>
+<li>Add the <a href="lang_indexedby.html">INDEXED BY</a> clause.</li>
+<li>The LOCKING_STYLE extension is now enabled by default on Mac OS-X</li>
+<li>Added the TRUNCATE option to <a href="pragma.html#pragma_journal_mode">PRAGMA journal_mode</a></li>
+<li>Performance enhancements to tree balancing logic in the B-Tree layer.</li>
+<li>Added the
+  <a href="http://www.sqlite.org/cvstrac/fileview?f=sqlite/tool/genfkey.c">
+  source code</a> and
+  <a href="http://www.sqlite.org/cvstrac/fileview?f=sqlite/tool/genfkey.README">
+  documentation</a> for the <b>genfkey</b> program for automatically generating
+  triggers to enforce foreign key constraints.</li>
+<li>Added the <a href="compile.html#omit_truncate_optimization">SQLITE_OMIT_TRUNCATE_OPTIMIZATION</a> compile-time option.</li>
+<li>The <a href="lang.html">SQL language documentation</a> is converted to use 
+<a href="syntaxdiagrams.html">syntax diagrams</a> instead of BNF.</li>
+<li>Other minor bug fixes</li>
+</ul></p><a name="version_3_6_3"></a>
+<h3>2008 Sep 22 (3.6.3)</h3><p><ul>
+<li>Fix for a bug in the SELECT DISTINCT logic that was introduced by the
+    prior version.</li>
+<li>Other minor bug fixes</li>
+</ul></p><a name="version_3_6_2"></a>
+<h3>2008 Aug 30 (3.6.2)</h3><p><ul>
+<li>Split the pager subsystem into separate pager and pcache subsystems.</li>
+<li>Factor out indentifier resolution procedures into separate files.</li>
+<li>Bug fixes</li>
+</ul></p><a name="version_3_6_1"></a>
 <h3>2008 Aug 6 (3.6.1)</h3><p><ul>
 <li>Added the <a href="malloc.html#lookaside">lookaside memory allocator</a> for a speed improvement in excess
     of 15% on some workloads.  (Your mileage may vary.)</li>
@@ -1874,5 +1904,5 @@ files.</li>
 </ul></p>
 </dl>
 <hr><small><i>
-This page last modified 2008/08/05 18:20:45 UTC
+This page last modified 2008/10/10 23:50:56 UTC
 </i></small></div></body></html>

@@ -70,18 +70,8 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a><h3>CREATE TRIGGER</h3><table cellpadding="10"><tr><td align="right" valign="top"><i><font color="#ff3434">sql-statement</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0">CREATE </font></b>[<b><font color="#2c2cf0">TEMP </font></b><big>|</big><b><font color="#2c2cf0"> TEMPORARY</font></b>]<b><font color="#2c2cf0"> TRIGGER </font></b>[<b><font color="#2c2cf0">IF NOT EXISTS</font></b>]<b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">trigger-name</font></i><b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0"> BEFORE </font></b><big>|</big><b><font color="#2c2cf0"> AFTER </font></b>]<b><font color="#2c2cf0"><br>
-</font></b><i><font color="#ff3434">database-event</font></i><b><font color="#2c2cf0"> ON </font></b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">database-name</font></i><b><font color="#2c2cf0"> <big>.</big></font></b>]<b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">table-name</font></i><b><font color="#2c2cf0"><br>
-</font></b><i><font color="#ff3434">trigger-action</font></i><b><font color="#2c2cf0"></font></b></td></tr></table><table cellpadding="10"><tr><td align="right" valign="top"><i><font color="#ff3434">sql-statement</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0">CREATE </font></b>[<b><font color="#2c2cf0">TEMP </font></b><big>|</big><b><font color="#2c2cf0"> TEMPORARY</font></b>]<b><font color="#2c2cf0"> TRIGGER </font></b>[<b><font color="#2c2cf0">IF NOT EXISTS</font></b>]<b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">trigger-name</font></i><b><font color="#2c2cf0"> INSTEAD OF<br>
-</font></b><i><font color="#ff3434">database-event</font></i><b><font color="#2c2cf0"> ON </font></b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">database-name</font></i><b><font color="#2c2cf0"> <big>.</big></font></b>]<b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">view-name</font></i><b><font color="#2c2cf0"><br>
-</font></b><i><font color="#ff3434">trigger-action</font></i><b><font color="#2c2cf0"></font></b></td></tr></table><table cellpadding="10"><tr><td align="right" valign="top"><i><font color="#ff3434">database-event</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0">DELETE </font></b><big>|</big><b><font color="#2c2cf0"> <br>
-INSERT </font></b><big>|</big><b><font color="#2c2cf0"> <br>
-UPDATE </font></b><big>|</big><b><font color="#2c2cf0"> <br>
-UPDATE OF </font></b><i><font color="#ff3434">column-list</font></i><b><font color="#2c2cf0"></font></b></td></tr></table><table cellpadding="10"><tr><td align="right" valign="top"><i><font color="#ff3434">trigger-action</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0"></font></b>[<b><font color="#2c2cf0"> FOR EACH ROW </font></b>]<b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0"> WHEN </font></b><i><font color="#ff3434">expression</font></i><b><font color="#2c2cf0"> </font></b>]<b><font color="#2c2cf0"> <br>
-BEGIN <br>
-&nbsp;&nbsp;&nbsp;&nbsp;</font></b><i><font color="#ff3434">trigger-step</font></i><b><font color="#2c2cf0"> ; </font></b>[<b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">trigger-step</font></i><b><font color="#2c2cf0"> ; </font></b>]<b><font color="#2c2cf0"></font></b><big>*</big><b><font color="#2c2cf0"><br>
-END</font></b></td></tr></table><table cellpadding="10"><tr><td align="right" valign="top"><i><font color="#ff3434">trigger-step</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0"></font></b><i><font color="#ff3434">update-statement</font></i><b><font color="#2c2cf0"> </font></b><big>|</big><b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">insert-statement</font></i><b><font color="#2c2cf0"> </font></b><big>|</big><b><font color="#2c2cf0"> <br>
-</font></b><i><font color="#ff3434">delete-statement</font></i><b><font color="#2c2cf0"> </font></b><big>|</big><b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">select-statement</font></i><b><font color="#2c2cf0"></font></b></td></tr></table>
+<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a><h3>CREATE TRIGGER</h3><h4><a href="syntaxdiagrams.html#create-trigger-stmt">create-trigger-stmt:</a></h4><blockquote> <img src="images/syntax/create-trigger-stmt.gif"></img> </blockquote>
+
 
 <p>The CREATE TRIGGER statement is used to add triggers to the 
 database schema. Triggers are database operations (the <i>trigger-action</i>) 
@@ -187,10 +177,8 @@ UPDATE orders SET address = '1 Main St.' WHERE customer_name = 'Jack Jones';
 <p>A special SQL function RAISE() may be used within a trigger-program,
 with the following syntax</p> 
 
-<table cellpadding="10"><tr><td align="right" valign="top"><i><font color="#ff3434">raise-function</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0">RAISE <big>(</big> ABORT<big>,</big> </font></b><i><font color="#ff3434">error-message</font></i><b><font color="#2c2cf0"> <big>)</big> </font></b><big>|</big><b><font color="#2c2cf0"> <br>
-RAISE <big>(</big> FAIL<big>,</big> </font></b><i><font color="#ff3434">error-message</font></i><b><font color="#2c2cf0"> <big>)</big> </font></b><big>|</big><b><font color="#2c2cf0"> <br>
-RAISE <big>(</big> ROLLBACK<big>,</big> </font></b><i><font color="#ff3434">error-message</font></i><b><font color="#2c2cf0"> <big>)</big> </font></b><big>|</big><b><font color="#2c2cf0"> <br>
-RAISE <big>(</big> IGNORE <big>)</big></font></b></td></tr></table>
+<h4><a href="syntaxdiagrams.html#raise-function">raise-function:</a></h4><blockquote> <img src="images/syntax/raise-function.gif"></img> </blockquote>
+
 
 <p>When one of the first three forms is called during trigger-program
 execution, the specified <a href="lang_conflict.html">ON CONFLICT</a> processing is performed
@@ -210,5 +198,5 @@ resumes execution at the beginning of the next step.
 
 
 <hr><small><i>
-This page last modified 2008/07/18 18:34:10 UTC
+This page last modified 2008/10/10 23:40:04 UTC
 </i></small></div></body></html>

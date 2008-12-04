@@ -75,8 +75,8 @@ a:visited { color: #734559 }
 This function returns the number of database rows that were changed
 or inserted or deleted by the most recently completed SQL statement
 on the <a href="../c3ref/sqlite3.html">database connection</a> specified by the first parameter.
-Only changes that are directly specified by the INSERT, UPDATE,
-or DELETE statement are counted.  Auxiliary changes caused by
+Only changes that are directly specified by the <a href="../lang_insert.html">INSERT</a>, <a href="../lang_update.html">UPDATE</a>,
+or <a href="../lang_delete.html">DELETE</a> statement are counted.  Auxiliary changes caused by
 triggers are not counted. Use the <a href="../c3ref/total_changes.html">sqlite3_total_changes()</a> function
 to find the total number of changes including changes caused by triggers.</p>
 
@@ -110,13 +110,15 @@ However, the number returned does not include changes
 caused by subtriggers since those have their own context.</p>
 
 <p>SQLite implements the command "DELETE FROM table" without a WHERE clause
-by dropping and recreating the table.  (This is much faster than going
-through and deleting individual elements from the table.)  Because of this
+by dropping and recreating the table.  Doing so is much faster than going
+through and deleting individual elements from the table.  Because of this
 optimization, the deletions in "DELETE FROM table" are not row changes and
 will not be counted by the sqlite3_changes() or <a href="../c3ref/total_changes.html">sqlite3_total_changes()</a>
 functions, regardless of the number of elements that were originally
 in the table.  To get an accurate count of the number of rows deleted, use
-"DELETE FROM table WHERE 1" instead.</p>
+"DELETE FROM table WHERE 1" instead.  Or recompile using the
+<a href="../compile.html#omit_truncate_optimization">SQLITE_OMIT_TRUNCATE_OPTIMIZATION</a> compile-time option to disable the
+optimization on all queries.</p>
 
 <p><h3>Invariants:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
@@ -147,5 +149,5 @@ is unpredictable and not meaningful.</td></tr>
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
   <a href="funclist.html">Functions</a>.</p><hr><small><i>
-This page last modified 2008/08/04 14:33:39 UTC
+This page last modified 2008/08/11 17:57:43 UTC
 </i></small></div></body></html>

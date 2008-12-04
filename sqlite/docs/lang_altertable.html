@@ -70,7 +70,8 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a><h3>ALTER TABLE</h3><table cellpadding="10"><tr><td align="right" valign="top"><i><font color="#ff3434">sql-statement</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0">ALTER TABLE </font></b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">database-name</font></i><b><font color="#2c2cf0"> <big>.</big></font></b>]<b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">table-name</font></i><b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">alteration</font></i><b><font color="#2c2cf0"></font></b></td></tr><tr><td align="right" valign="top"><i><font color="#ff3434">alteration</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0">RENAME TO </font></b><i><font color="#ff3434">new-table-name</font></i><b><font color="#2c2cf0"></font></b></td></tr><tr><td align="right" valign="top"><i><font color="#ff3434">alteration</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0">ADD </font></b>[<b><font color="#2c2cf0">COLUMN</font></b>]<b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">column-def</font></i><b><font color="#2c2cf0"></font></b></td></tr></table>
+<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a><h3>ALTER TABLE</h3><h4><a href="syntaxdiagrams.html#alter-table-stmt">alter-table-stmt:</a></h4><blockquote> <img src="images/syntax/alter-table-stmt.gif"></img> </blockquote>
+
 
 <p>SQLite supports a limited subset of ALTER TABLE.
 The ALTER TABLE command in SQLite allows the user to rename a table
@@ -92,10 +93,11 @@ table name. If this is required, the triggers or view definitions must be
 dropped and recreated to use the new table name by hand.
 </p>
 
-<p>The ADD &#91;COLUMN&#93; syntax
+<p>The ADD COLUMN syntax
 is used to add a new column to an existing table.
 The new column is always appended to the end of the list of existing columns.
-<i>Column-def</i> may take any of the forms permissable in a <a href="lang_createtable.html">CREATE TABLE</a>
+The <a href="syntaxdiagrams.html#column-def">column-def</a> rule defines the characteristics of the new column.
+The new column may take any of the forms permissable in a <a href="lang_createtable.html">CREATE TABLE</a>
 statement, with the following restrictions:
 <ul>
 <li>The column may not have a PRIMARY KEY or UNIQUE constraint.</li>
@@ -114,5 +116,5 @@ on a table with 10 million rows as it does on a table with 1 row.
 be readable by SQLite version 3.1.3 and earlier.</p>
 
 <hr><small><i>
-This page last modified 2008/07/18 18:34:10 UTC
+This page last modified 2008/10/10 23:40:04 UTC
 </i></small></div></body></html>

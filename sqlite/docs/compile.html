@@ -122,6 +122,12 @@ with non-standard compilation options.
 
 <p>  The file format for a new database can be set at runtime using
   the <a href="pragma.html#pragma_legacy_file_format">PRAGMA legacy_file_format</a> command.
+</p></blockquote><a name="default_memstatus"></a>
+<p><b>SQLITE_DEFAULT_MEMSTATUS=<i>&lt;1 or 0&gt;</i></b></p><blockquote><p>
+  This macro is used to determine whether or not the features enabled and
+  disabled using the SQLITE_CONFIG_MEMSTATUS argument to <a href="c3ref/config.html">sqlite3_config()</a>
+  are available by default. The default value is 1 (<a href="c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_MEMSTATUS</a>
+  related features enabled).
 </p></blockquote><a name="default_page_size"></a>
 <p><b>SQLITE_DEFAULT_PAGE_SIZE=<i>&lt;bytes&gt;</i></b></p><blockquote><p>
   This macro is used to set the default page-size used when a
@@ -175,7 +181,20 @@ the available settings:</p>
 <a name="controlfeatures"></a>
 <h2>1.3 Options To Control Operating Characteristics</h2>
 
-<a name="secure_delete"></a>
+<a name="os_other"></a>
+<p><b>SQLITE_OS_OTHER=<i>&lt;0 or 1&gt;</i></b></p><blockquote><p>
+  The option causes SQLite to omit its built-in operating system interfaces
+  for unix, windows, and OS/2.  The resulting library will have no default
+  <a href="c3ref/vfs.html">operating system interface</a>.  Applications must use
+  <a href="c3ref/vfs_find.html">sqlite3_vfs_register()</a> to register an appropriate interface before
+  using SQLite.  Applications must also supply implementations for the
+  <a href="c3ref/initialize.html">sqlite3_os_init()</a> and <a href="c3ref/initialize.html">sqlite3_os_end()</a> interfaces.  The usual practice
+  is for the supplied <a href="c3ref/initialize.html">sqlite3_os_init()</a> to invoke <a href="c3ref/vfs_find.html">sqlite3_vfs_register()</a>.
+  SQLite will automatically invoke <a href="c3ref/initialize.html">sqlite3_os_init()</a> when it initializes.</p>
+
+<p>  This option is typically used when building SQLite for an embedded
+  platform with a custom operating system.
+</p></blockquote><a name="secure_delete"></a>
 <p><b>SQLITE_SECURE_DELETE</b></p><blockquote><p>
   This compile-time option causes SQLite to overwrite deleted
   information with zeros in addition to marking the space
@@ -186,20 +205,46 @@ the available settings:</p>
 <p>  This option does <u>not</u> cause deleted data is securely
   removed from the underlying storage media.
 </p></blockquote><a name="threadsafe"></a>
-<p><b>SQLITE_THREADSAFE=<i>&lt;0 or 1&gt;</i></b></p><blockquote><p>
+<p><b>SQLITE_THREADSAFE=<i>&lt;0 or 1 or 2&gt;</i></b></p><blockquote><p>
   This option controls whether or not code is included in SQLite to
   enable it to operate safely in a multithreaded environment.  The
   default is SQLITE_THREADSAFE=1 which is safe for use in a multithreaded
   environment.  When compiled with SQLITE_THREADSAFE=0 all mutexing code
-  is omitted and it is unsafe to use SQLite in a multithreaded program.</p>
+  is omitted and it is unsafe to use SQLite in a multithreaded program.
+  When compiled with SQLITE_THREADSAFE=2, SQLite can be used in a multithreaded
+  program so long as no two threads attempt to use the same
+  <a href="c3ref/sqlite3.html">database connection</a> at the same time.</p>
+
+<p>  To put it another way, SQLITE_THREADSAFE=1 sets the default
+  <a href="threadsafe.html">threading mode</a> to Serialized.  SQLITE_THREADSAFE=2 sets the default
+  <a href="threadsafe.html">threading mode</a> to Multi-threaded.  And SQLITE_THREADSAFE=0 sets the
+  <a href="threadsafe.html">threading mode</a> to Single-threaded.</p>
 
 <p>  The value of SQLITE_THREADSAFE can be determined at run-time
   using the <a href="c3ref/threadsafe.html">sqlite3_threadsafe()</a> interface.</p>
 
-<p>  When SQLite has been compiled with SQLITE_THREADSAFE=1 then mutexing
-  can be disabled at run-time using the <a href="c3ref/config.html">sqlite3_config()</a> interface together
-  with the <a href="c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_SINGLETHREAD</a>, <a href="c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_MULTITHREAD</a>, and
-  <a href="c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_SERIALIZED</a> verbs.
+<p>  When SQLite has been compiled with SQLITE_THREADSAFE=1 or
+  SQLITE_THREADSAFE=2 then the <a href="threadsafe.html">threading mode</a>
+  can be altered at run-time using the <a href="c3ref/config.html">sqlite3_config()</a> interface together
+  with one of these verbs:</p>
+
+<p>  <ul>
+  <li><a href="c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_SINGLETHREAD</a>
+  <li><a href="c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_MULTITHREAD</a>
+  <li><a href="c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_SERIALIZED</a>
+  </ul></p>
+
+<p>  The <a href="c3ref/c_open_create.html">SQLITE_OPEN_NOMUTEX</a> and
+  <a href="c3ref/c_open_create.html">SQLITE_OPEN_FULLMUTEX</a> flags to <a href="c3ref/open.html">sqlite3_open_v2()</a> can also be used
+  to adjust the <a href="threadsafe.html">threading mode</a> of individual <a href="c3ref/sqlite3.html">database connections</a>
+  at run-time.</p>
+
+<p>  Note that when SQLite is compiled with SQLITE_THREADSAFE=0, the code
+  to make SQLite threadsafe is omitted from the build.  When this occurs,
+  it is impossible to change the <a href="threadsafe.html">threading mode</a> at start-time or run-time.</p>
+
+<p>  See the <a href="threadsafe.html">threading mode</a> documentation for additional information
+  on aspects of using SQLite in a multithreaded environment.
 </p></blockquote><a name="temp_store"></a>
 <p><b>SQLITE_TEMP_STORE=<i>&lt;0 through 3&gt;</i></b></p><blockquote><p>
   This option controls whether temporary files are stored on disk or
@@ -271,9 +316,42 @@ the available settings:</p>
 </p></blockquote><a name="enable_locking_style"></a>
 <p><b>SQLITE_ENABLE_LOCKING_STYLE</b></p><blockquote><p>
   This option enables additional logic in the OS interface layer for
-  Mac OS X.  The additional logic attempts to determine the type of the
+  Mac OS X. The additional logic attempts to determine the type of the
   underlying filesystem and choose and alternative locking strategy
-  that works correctly for that filesystem type.
+  that works correctly for that filesystem type. Five locking strategies 
+  are available:</p>
+
+<p>  <ul>
+    <li> Posix locking style. This is the default locking style and the
+         style used by other (non OSX) unixes. Locks are obtained and 
+         released using the fcntl() system call.</p>
+
+<p>    <li> AFP locking style. This locking style is used for network file 
+         systems that use the AFP (Apple Filing Protocol) protocol. Locks
+         are obtained by calling the library function _AFPFSSetLock().</p>
+
+<p>    <li> Flock locking style. This is used for file-systems that do not
+         support posix locking style. Locks are obtained and released using
+         the flock() system call.</p>
+
+<p>    <li> Dot-file locking style. This locking style is used when neither
+         flock nor posix locking styles are supported by the file system.
+         Database locks are obtained by creating and entry in the file-system
+         at a well-known location relative to the database file (a "dot-file")
+         and relinquished by deleting the same file.</p>
+
+<p>    <li> No locking style. If none of the above can be supported, this 
+         locking style is used. No database locking mechanism is used. When
+         this system is used it is not safe for a single database to be
+         accessed by multiple clients.
+  </ul></p>
+
+<p>  Additionally, five extra VFS implementations are provided as well as the
+  default. By specifying one of the extra VFS implementations 
+  when calling <a href="c3ref/open.html">sqlite3_open_v2()</a>, an application may bypass the file-system
+  detection logic and explicitly select one of the above locking styles. The
+  five extra VFS implementations are called "unix-posix", "unix-afp",
+  "unix-flock", "unix-dotfile" and "unix-none".
 </p></blockquote><a name="enable_memory_management"></a>
 <p><b>SQLITE_ENABLE_MEMORY_MANAGEMENT</b></p><blockquote><p>
   This option adds extra logic to SQLite that allows it to release unused
@@ -308,6 +386,17 @@ the available settings:</p>
 <p><b>SQLITE_ENABLE_RTREE</b></p><blockquote><p>
   This option causes SQLite to include support for the
   <a href="rtree.html">R*Tree index extension</a>.
+</p></blockquote><a name="enable_update_delete_limit"></a>
+<p><b>SQLITE_ENABLE_UPDATE_DELETE_LIMIT</b></p><blockquote><p>
+  This option enables an optional ORDER BY and LIMIT clause on 
+  <a href="lang_update.html">UPDATE</a> and <a href="lang_delete.html">DELETE</a> statements.</p>
+
+<p>  <p>If this option is defined, then it must also be 
+  defined when using the 'lemon' tool to generate a parse.c
+  file. Because of this, this option may only be used when the library is built
+  from source, not from the <a href="amalgamation.html">amalgamation</a> or from the collection of
+  pre-packaged C files provided for non-UNIX like platforms on the website.
+  </p>
 </p></blockquote><a name="yytrackmaxstackdepth"></a>
 <p><b>YYTRACKMAXSTACKDEPTH</b></p><blockquote><p>
   This option causes the LALR(1) parser stack depth to be tracked
@@ -572,6 +661,21 @@ options may cause compile-time or run-time failures.</p>
 
 <p>  WARNING: If this macro is defined, it will not be possible to open a database
   for which the schema contains TRIGGER objects. 
+</p></blockquote><a name="omit_truncate_optimization"></a>
+<p><b>SQLITE_OMIT_TRUNCATE_OPTIMIZATION</b></p><blockquote><p>
+  A default build of SQLite, if a <a href="lang_delete.html">DELETE</a> statement has no WHERE clause
+  and operates on a table with no triggers, an optimization occurs that
+  causes the DELETE to occur by dropping and recreating the table.  
+  Dropping and recreating a table is usually much faster than deleting
+  the table content row by row.  This is the "truncate optimization".</p>
+
+<p>  The truncate optimization makes DELETE work faster, but it has the
+  disadvantage that the row change count (as returned by the
+  <a href="c3ref/changes.html">sqlite3_changes()</a> or <a href="c3ref/total_changes.html">sqlite3_total_changes()</a> interfaces or by
+  <a href="pragma.html#pragma_count_changes">PRAGMA count_changes</a>) is incorrect.  Some users find that this
+  disadvantage outweighs the speed increase.  Such users can recompile
+  SQLite with this compile-time parameter in order to omit the
+  truncate optimization.
 </p></blockquote><a name="omit_utf16"></a>
 <p><b>SQLITE_OMIT_UTF16</b></p><blockquote><p>
   This macro is used to omit support for UTF16 text encoding. When this is
@@ -598,6 +702,17 @@ options may cause compile-time or run-time failures.</p>
 <p><b>SQLITE_OMIT_VIRTUALTABLE</b></p><blockquote><p>
   This option omits support for the <a href="c3ref/vtab.html">Virtual Table</a>
   mechanism in SQLite.
+</p></blockquote><a name="omit_wsd"></a>
+<p><b>SQLITE_OMIT_WSD</b></p><blockquote><p>
+  This options builds a version of the SQLite library that contains no
+  Writable Static Data (WSD).  WSD is global variables and/or static
+  variables.  Some platforms do not support WSD, and this option is necessary
+  in order for SQLite to work those platforms.  </p>
+
+<p>  Unlike other OMIT options which make the SQLite library smaller,
+  this option actually increases the size of SQLite and makes it run
+  a little slower.  Only use this option if SQLite is being built for an
+  embedded target that does not support WSD.
 </p></blockquote><a name="omit_xfer_opt"></a>
 <p><b>SQLITE_OMIT_XFER_OPT</b></p><blockquote><p>
   This option omits support for optimizations that help statements
@@ -625,5 +740,5 @@ options may cause compile-time or run-time failures.</p>
   allocated memory.
 </p></blockquote>
 <hr><small><i>
-This page last modified 2008/07/31 15:22:56 UTC
+This page last modified 2008/10/10 23:34:02 UTC
 </i></small></div></body></html>

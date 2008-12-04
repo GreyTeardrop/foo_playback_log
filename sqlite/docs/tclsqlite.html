@@ -118,7 +118,7 @@ defined.</p>
 <p>
 <ul>
 
-<li><a href="#authorizer">authorizer</a></li><li><a href="#busy">busy</a></li><li><a href="#cache">cache</a></li><li><a href="#changes">changes</a></li><li><a href="#close">close</a></li><li><a href="#collate">collate</a></li><li><a href="#collation_needed">collation_needed</a></li><li><a href="#commit_hook">commit_hook</a></li><li><a href="#complete">complete</a></li><li><a href="#copy">copy</a></li><li><a href="#enable_load_extension">enable_load_extension</a></li><li><a href="#errorcode">errorcode</a></li><li><a href="#eval">eval</a></li><li><a href="#exists">exists</a></li><li><a href="#function">function</a></li><li><a href="#last_insert_rowid">last_insert_rowid</a></li><li><a href="#nullvalue">nullvalue</a></li><li><a href="#onecolumn">onecolumn</a></li><li><a href="#profile">profile</a></li><li><a href="#progress">progress</a></li><li><a href="#rollback_hook">rollback_hook</a></li><li><a href="#timeout">timeout</a></li><li><a href="#total_changes">total_changes</a></li><li><a href="#trace">trace</a></li><li><a href="#transaction">transaction</a></li><li><a href="#update_hook">update_hook</a></li><li><a href="#version">version</a></li>
+<li><a href="#authorizer">authorizer</a></li><li><a href="#busy">busy</a></li><li><a href="#cache">cache</a></li><li><a href="#changes">changes</a></li><li><a href="#close">close</a></li><li><a href="#collate">collate</a></li><li><a href="#collation_needed">collation_needed</a></li><li><a href="#commit_hook">commit_hook</a></li><li><a href="#complete">complete</a></li><li><a href="#copy">copy</a></li><li><a href="#enable_load_extension">enable_load_extension</a></li><li><a href="#errorcode">errorcode</a></li><li><a href="#eval">eval</a></li><li><a href="#exists">exists</a></li><li><a href="#function">function</a></li><li><a href="#last_insert_rowid">last_insert_rowid</a></li><li><a href="#nullvalue">nullvalue</a></li><li><a href="#onecolumn">onecolumn</a></li><li><a href="#profile">profile</a></li><li><a href="#progress">progress</a></li><li><a href="#rollback_hook">rollback_hook</a></li><li><a href="#status">status</a></li><li><a href="#timeout">timeout</a></li><li><a href="#total_changes">total_changes</a></li><li><a href="#trace">trace</a></li><li><a href="#transaction">transaction</a></li><li><a href="#update_hook">update_hook</a></li><li><a href="#version">version</a></li>
 </ul>
 </p>
 
@@ -632,6 +632,19 @@ rather than commit.</p>
 
 <p>This method registers a callback routine that is invoked just before
 SQLite tries to do a rollback.  The script argument is run without change.</p>
+<a name="status"></a>
+<h3>The "status" method</h3>
+
+<p>This method returns status information from the most recently evaluated
+SQL statement.  The status method takes a single argument which should be
+either "steps" or "sorts".  If the argument is "steps", then the method
+returns the number of full table scan steps that the previous SQL statement
+evaluated.  If the argument is "sorts", the method returns the number of
+sort operations.  This information can be used to detect queries that are
+not using indices to speed search or sorting.</p>
+
+<p>The status method is basically a wrapper on the
+<a href="c3ref/stmt_status.html">sqlite3_stmt_status()</a> C-language interface.</p>
 <a name="update_hook"></a>
 <h3>The "update_hook" method</h3>
 
@@ -681,5 +694,5 @@ keep a log of all SQL operations that an application performs.
 </p>
 
 <hr><small><i>
-This page last modified 2008/07/16 18:55:20 UTC
+This page last modified 2008/10/09 14:41:16 UTC
 </i></small></div></body></html>

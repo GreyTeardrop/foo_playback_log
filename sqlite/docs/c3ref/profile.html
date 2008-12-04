@@ -93,19 +93,20 @@ of how long that statement took to run.</p>
 <table border="0" cellpadding="5" cellspacing="0">
 <tr><td valign="top">H12281</td> 
 <td valign="top">
-The callback function registered by <a href="../c3ref/profile.html">sqlite3_trace()</a> is
+The callback function registered by <a href="../c3ref/profile.html">sqlite3_trace()</a>
+shall be invoked
 whenever an SQL statement first begins to execute and
 whenever a trigger subprogram first begins to run.</td></tr>
 <tr><td valign="top">H12282</td> 
 <td valign="top">
-Each call to <a href="../c3ref/profile.html">sqlite3_trace()</a> overrides the previously
+Each call to <a href="../c3ref/profile.html">sqlite3_trace()</a> shall override the previously
 registered trace callback.</td></tr>
 <tr><td valign="top">H12283</td> 
 <td valign="top">
-A NULL trace callback disables tracing.</td></tr>
+A NULL trace callback shall disable tracing.</td></tr>
 <tr><td valign="top">H12284</td> 
 <td valign="top">
-The first argument to the trace callback is a copy of
+The first argument to the trace callback shall be a copy of
 the pointer which was the 3rd argument to <a href="../c3ref/profile.html">sqlite3_trace()</a>.</td></tr>
 <tr><td valign="top">H12285</td> 
 <td valign="top">
@@ -138,5 +139,5 @@ run the SQL statement from start to finish.</td></tr>
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
   <a href="funclist.html">Functions</a>.</p><hr><small><i>
-This page last modified 2008/08/04 14:33:39 UTC
+This page last modified 2008/08/11 17:57:43 UTC
 </i></small></div></body></html>

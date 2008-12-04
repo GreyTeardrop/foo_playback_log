@@ -1,0 +1,1791 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>SQLite SQL Language Syntax Requirements</title>
+<style type="text/css">
+body {
+    margin: auto;
+    font-family: "Verdana" "sans-serif";
+    padding: 8px 1%;
+}
+
+a { color: #45735f }
+a:visited { color: #734559 }
+
+.logo { position:absolute; margin:3px; }
+.tagline {
+  float:right;
+  text-align:right;
+  font-style:italic;
+  width:240px;
+  margin:12px;
+  margin-top:58px;
+}
+
+.toolbar {
+  font-variant: small-caps;
+  text-align: center;
+  line-height: 1.6em;
+  margin: 0;
+  padding:1px 8px;
+}
+.toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
+.toolbar a:visited { color: white; }
+.toolbar a:hover { color: #80a796; background: white; }
+
+.content    { margin: 5%; }
+.content dt { font-weight:bold; }
+.content dd { margin-bottom: 25px; margin-left:20%; }
+.content ul { padding:0px; padding-left: 15px; margin:0px; }
+
+/* rounded corners */
+.se  { background: url(images/se.png) 100% 100% no-repeat #80a796}
+.sw  { background: url(images/sw.png) 0% 100% no-repeat }
+.ne  { background: url(images/ne.png) 100% 0% no-repeat }
+.nw  { background: url(images/nw.png) 0% 0% no-repeat }
+
+</style>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  
+</head>
+<body>
+<div><!-- container div to satisfy validator -->
+
+<a href="index.html">
+<img class="logo" src="images/SQLite.gif" alt="SQLite Logo"
+ border="0"></a>
+<div><!-- IE hack to prevent disappearing logo--></div>
+<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
+
+<table width=100% style="clear:both"><tr><td>
+  <div class="se"><div class="sw"><div class="ne"><div class="nw">
+  <div class="toolbar">
+    <a href="about.html">About</a>
+    <a href="sitemap.html">Sitemap</a>
+    <a href="docs.html">Documentation</a>
+    <a href="download.html">Download</a>
+    <a href="copyright.html">License</a>
+    <a href="news.html">News</a>
+    <a href="http://www.sqlite.org/cvstrac/index">Developers</a>
+    <a href="support.html">Support</a>
+  </div></div></div></div></div>
+</td></tr></table>
+  
+
+
+
+
+<h1>SQLite Language Syntax Requirements</h1>
+
+<p>These requirements make the distinction between "preparing" an
+SQL statement and "evaluating" or "invoking" an SQL statement.
+Preparation means that the SQL statement text is translated into
+an internal binary representation that is more suitable for processing.
+Evaluation or invocation means that the processing is actually carried out.
+Preparation of an SQL statement is usually accomplished by interfaces
+<a href="c3ref/prepare.html">sqlite3_prepare()</a>, <a href="c3ref/prepare.html">sqlite3_prepare16()</a>, or <a href="c3ref/prepare.html">sqlite3_prepare_v2()</a> and
+evaluation or invocation of an SQLite statement is accomplished by
+calling <a href="c3ref/step.html">sqlite3_step()</a>.  However, if a statement is initially
+prepared using <a href="c3ref/prepare.html">sqlite3_prepare_v2()</a> and a change to the database
+schema is detected during evaluation, then the preparation is redone
+automatically, by <a href="c3ref/step.html">sqlite3_step()</a>.  So even though it is reasonable
+to think about preparation as being a function of <a href="c3ref/prepare.html">sqlite3_prepare_v2()</a>
+and its companions and evaluation as being a function of
+<a href="c3ref/step.html">sqlite3_step()</a>, the reader should keep in mind that
+<a href="c3ref/step.html">sqlite3_step()</a> might also sometimes do preparations following
+schema changes.</p>
+
+<h2>1.0 General Requirements</h2>
+
+<h3>1.1 Parser operation</h3>
+
+<a name="H42000"></a>
+<p>
+  SQLite expects all statements to be terminated by a semicolon.
+  If a statement is submitted to SQLite that does not end in a
+  semicolon, then a semicolon is added automatically by the tokenizer.
+  (See <a href="tokenreq.html#H41040">H41040</a>.)
+</p><blockquote><b>H42000:</b>
+  The SQLite parser shall accept SQL statements consisting of an SQL command
+  followed by a semicolon.
+<blockquote><pre>
+sql_statement ::= cmd SEMI.
+</pre></blockquote></b></blockquote><a name="H42002"></a>
+<p>
+  Acceptance by the parser does not imply that the SQL statement
+  will be accepted by SQLite.  SQL statements may be rejected by other
+  parts of the SQLite library.  Acceptance by the parser is a necessary
+  but not a sufficient condition for the statement to work.
+</p><blockquote><b>H42002:</b>
+  The preparation of an SQL statement that is not accepted by
+  the SQLite parser shall fail with an error.
+</b></blockquote><a name="H42004"></a>
+<p>
+  SQLite ignores case when comparing ASCII characters in identifiers and
+  in type names.  (The rules for comparison of content are different.)
+  Case is considered for other unicode characters, however.
+  Hence, SQLite considers identifiers "A" and "a" to be equivalent but
+  "&Aring;" and "&aring;" are distinct.
+</p><blockquote><b>H42004:</b>
+  SQLite shall use the built-in NOCASE collating sequence when comparing
+  identifiers and datatype names within SQL statements during 
+  statement preparation.
+</b></blockquote><a name="H42008"></a>
+<p>
+  Many tokens are allowed to "fallback" to the ID token.  The SQL
+  language has many keywords.  The fallback token feature provides
+  robustness in the case where a seldom-used keyword is accidentally
+  used as the name of a table or column.
+</p><blockquote><b>H42008:</b>
+  A token received by the parser shall be converted into an ID token
+  if the original token value would have resulted in a syntax error,
+  a token value of ID will allow the parse to continue,
+  and if the original token value was one of:
+     ABORT
+     AFTER
+     ANALYZE
+     ASC
+     ATTACH
+     BEFORE
+     BEGIN
+     CASCADE
+     CAST
+     CONFLICT
+     CTIME_KW
+     DATABASE
+     DEFERRED
+     DESC
+     DETACH
+     EACH
+     END
+     EXCEPT
+     EXCLUSIVE
+     EXPLAIN
+     FAIL
+     FOR
+     IF
+     IGNORE
+     IMMEDIATE
+     INITIALLY
+     INSTEAD
+     INTERSECT
+     KEY
+     LIKE_KW
+     MATCH
+     OF
+     OFFSET
+     PLAN
+     PRAGMA
+     QUERY
+     RAISE
+     REINDEX
+     RENAME
+     REPLACE
+     RESTRICT
+     ROW
+     TEMP
+     TRIGGER
+     UNION
+     VACUUM
+     VIEW
+     VIRTUAL
+</b></blockquote><a name="H420012"></a>
+<p>
+  A second level of fallback allows any token to be converted into
+  the token ANY.  The ANY token is used to gather arbitrary delimited
+  token sequences, such as used as the arguments to the CREATE VIRTUAL
+  TABLE command.
+</p><blockquote><b>H420012:</b>
+  A token received by the parser shall be converted into an ANY token
+  if the original token value would have resulted in a syntax error
+  and if a token value of ANY will allow the parse to continue.
+</b></blockquote>
+
+<h3>1.2 Name Contexts</h3>
+
+<p>Expressions in SQL statements often contain identifiers that refer
+to columns in tables or views or to columns in the result set of a 
+SELECT statement.
+The process of determining which column an identifier refers to
+is called "name resolution".</p>
+
+<p>Names are resolved with the aid of a "name context".
+A name context is a set of tables and views and result set expressions
+to which an expression identifier can refer.  A single name context
+is a hierarchy of "name context layers".  Subqueries have their own
+name context layer (called the "inner layer") that is distinct from the
+name context layer (called the "outer layer") associated with the overall 
+statement.  In an SQL statement with multiple levels of tested subqueries,
+there can be multiple name context layers in the name context.  In
+other words, a complete name context is an ordered list of name
+context layers.</p>
+
+<p>Within a name context a "source" is a table or view containing columns
+that expression names can match against.  Every source has a "canonical
+name" which is the name of the table or view as it appears in the schema.
+A source might also have an "aliased name" resulting from an AS clause.
+The "source name" is the aliased name if it exists, otherwise the source
+name is the canonical name.</p>
+
+<p>Each name context layer has a "source set" and a "result set",
+either or both of which can be empty.  The source set is an ordered set
+of sources.  The result set is an ordered set of expressions with
+an optional alias on each expression.  Roughly speaking, a source set
+corresponds to the FROM clause of a SELECT statement and the result set
+corresponds to the list of expressions that form the result set of the
+SELECT statement.</p>
+
+<p>A "empty name context" is a name context comprised of a single
+name context layer in which both the source set and the result set are
+empty.</p>
+
+<h2>2.0 Transaction Control</h2>
+
+<h3>2.1 BEGIN</h3>
+
+<a name="H42010"></a>
+<blockquote><b>H42010:</b>
+  The SQLite parser shall accept BEGIN statements
+  that conform to the following syntax:
+<blockquote><pre>
+cmd ::= BEGIN transaction_type transaction_name.
+transaction_type ::= .
+transaction_type ::= DEFERRED.
+transaction_type ::= IMMEDIATE.
+transaction_type ::= EXCLUSIVE.
+transaction_name ::= .
+transaction_name ::= TRANSACTION.
+transaction_name ::= TRANSACTION name.
+</pre></blockquote></b></blockquote><a name="H42013"></a>
+<blockquote><b>H42013:</b>
+  The successful evaluation of a BEGIN statement shall
+  cause the <a href="c3ref/sqlite3.html">database connection</a> to exit autocommit mode.
+</b></blockquote><a name="H42016"></a>
+<blockquote><b>H42016:</b>
+  The evaluation of a BEGIN TRANSACTION statement shall fail with an error
+  if the <a href="c3ref/sqlite3.html">database connection</a> is not in autocommit mode at the
+  start of evaluation.
+</b></blockquote><a name="H42019"></a>
+<blockquote><b>H42019:</b>
+  If the <i>transaction_type</i> keyword is omitted from a
+  BEGIN TRANSACTION statement then the behavior shall be the same
+  as if the DEFERRED keyword were used.
+</b></blockquote><a name="H42022"></a>
+<blockquote><b>H42022:</b>
+  When the DEFERRED keyword appears in a BEGIN statement
+  the locking state of the underlying database files shall be
+  the same before and after the statement is evaluated.
+</b></blockquote><a name="H42025"></a>
+<blockquote><b>H42025:</b>
+  When the IMMEDIATE keyword appears in a BEGIN statement
+  then successful evaluation of the statement shall cause a RESERVED
+  lock to be obtained for all underlying database files.
+</b></blockquote><a name="H42028"></a>
+<blockquote><b>H42028:</b>
+  When the EXCLUSIVE keyword appears in a BEGIN statement
+  then successful evaluation of the statement shall cause a EXCLUSIVE 
+  lock to be obtained for all underlying database files.
+</b></blockquote>
+<p>The <i>transaction_name</i> clause of a BEGIN statement is
+provided for syntactic compatibility to other SQL database engines.
+The <i>transaction_name</i> clause is silently ignored.</p>
+
+<h3>2.2 COMMIT</h3>
+
+<a name="H42110"></a>
+<blockquote><b>H42110:</b>
+  SQLite shall accept the following COMMIT statement syntax:
+<blockquote><pre>
+cmd ::= COMMIT transaction_name.
+cmd ::= END transaction_name.
+</pre></blockquote></b></blockquote><a name="H42113"></a>
+<blockquote><b>H42113:</b>
+  The successful evaluation of COMMIT statement places the
+  <a href="c3ref/sqlite3.html">database connection</a> in autocommit mode.
+</b></blockquote><a name="H42116"></a>
+<blockquote><b>H42116:</b>
+  If a <a href="c3ref/sqlite3.html">database connection</a> is already in autocommit mode when
+  a COMMIT statement is evaluated, then the statement shall fail
+  with an error.
+</b></blockquote>
+<p>The <i>transaction_name</i> clause of a COMMIT statement is
+provided for syntactic compatibility to other SQL database engines.
+The <i>transaction_name</i> clause is silently ignored.</p>
+
+<p>The COMMIT and END statements are aliases for one another and
+accomplish exactly the same thing.  One is merely a different way
+of expression the other.</p>
+
+
+<h3>2.3 ROLLBACK</h3>
+
+<a name="H42210"></a>
+<blockquote><b>H42210:</b>
+  The SQLite parser shall accept ROLLBACK statements
+  that conform to the following syntax:
+<blockquote><pre>
+cmd ::= ROLLBACK transaction_name.
+</pre></blockquote></b></blockquote><a name="H42213"></a>
+<blockquote><b>H42213:</b>
+  The successful evaluation of ROLLBACK statement places the
+  <a href="c3ref/sqlite3.html">database connection</a> in autocommit mode.
+</b></blockquote><a name="H42216"></a>
+<blockquote><b>H42216:</b>
+  If a <a href="c3ref/sqlite3.html">database connection</a> is already in autocommit mode when
+  a ROLLBACK statement is invoked, then the statement invocation
+  shall fail with an error.
+</b></blockquote><a name="H42222"></a>
+<p>
+  A "pending statement" is a statement for which <a href="c3ref/step.html">sqlite3_step()</a>
+  has been called at least once without a subsequent call to
+  either <a href="c3ref/reset.html">sqlite3_reset()</a> or <a href="c3ref/finalize.html">sqlite3_finalize()</a>.
+</p><blockquote><b>H42222:</b>
+  Other pending statements on the same <a href="c3ref/sqlite3.html">database connection</a>
+  as a successfully evaluated ROLLBACK statement shall be aborted.
+</b></blockquote><a name="H42225"></a>
+<blockquote><b>H42225:</b>
+  The successful evaluation of a ROLLBACK statement causes the
+  current transaction on the <a href="c3ref/sqlite3.html">database connection</a> to roll back.
+</b></blockquote>
+<p>The <i>transaction_name</i> clause of a BEGIN statement is
+provided for syntactic compatibility to other SQL database engines.
+The <i>transaction_name</i> clause is silently ignored.</p>
+
+
+<h2>3.0 Data Definition Language (DDL)</h2>
+
+<h3>3.1 CREATE TABLE</h3>
+
+<a name="H42310"></a>
+<blockquote><b>H42310:</b>
+  The SQLite parser shall accept CREATE TABLE statements
+  that conform to the following syntax:
+<blockquote><pre>
+cmd ::= CREATE temp TABLE ifnotexists fullname table_definition.
+temp ::= .
+temp ::= TEMP.
+ifnotexists ::= .
+ifnotexists ::= IF NOT EXISTS.
+</pre></blockquote></b></blockquote>
+<p>
+  The <i>fullname</i> non-terminal symbol of the SQLite grammar specifies
+  an SQL object contained within a particular database file.  A
+  specific database might be stated explicitly:
+
+      &lt;<i>fullname ::= databasename DOT objectname.</i>&gt;
+
+  or the database might be implied:
+
+      &lt;<i>fullname ::= objectname.</i>&gt;.
+
+  An unspecified <i>databasename</i> has a default value that
+  depends on context and which is specified by requirements.
+</p>
+<a name="H42313"></a>
+<blockquote><b>H42313:</b>
+  When the TEMP keyword appears in a CREATE TABLE statement and the
+  <i>databasename</i> exists and is something other than "temp", then
+  the preparation of the CREATE TABLE statement shall fail with an error.
+</b></blockquote><a name="H42316"></a>
+<blockquote><b>H42316:</b>
+  When the TEMP keyword appears in a CREATE TABLE statement the behavior
+  shall be as if the <i>databasename</i> where "temp".
+</b></blockquote><a name="H42319"></a>
+<blockquote><b>H42319:</b>
+  The successful evaluation of a CREATE TABLE statement shall cause
+  a new SQL table whose name is given by the <i>objectname</i> to be
+  created in the schema of the database whose name is given by the
+  <i>databasename</i>.
+</b></blockquote><a name="H42322"></a>
+<blockquote><b>H42322:</b>
+  If a CREATE TABLE statement specifies no <i>databasename</i> and omits
+  the TEMP keyword then the behavior shall be as if a <i>databasename</i>
+  of "main" where used.
+</b></blockquote><a name="H42325"></a>
+<blockquote><b>H42325:</b>
+  The preparation of a CREATE TABLE statement shall fail with an 
+  error if the IF NOT EXISTS clause is omitted and the <i>objectname</i>
+  is the same as the name of a table or view
+  in the same database.
+</b></blockquote><a name="H42328"></a>
+<blockquote><b>H42328:</b>
+  The evaluation of a CREATE TABLE statement shall be a silent no-op if the
+  IF NOT EXISTS clause is present and the <i>objectname</i>
+  is the same as the name of a table or view
+  in the same database.
+</b></blockquote><a name="H42331"></a>
+<blockquote><b>H42331:</b>
+  The preparation of a CREATE TABLE statement shall fail with an error if the
+  the <i>objectname</i> is the same as the name of an index
+  in any database attached to the same <a href="c3ref/sqlite3.html">database connection</a>.
+</b></blockquote><a name="H42334"></a>
+<blockquote><b>H42334:</b>
+  The preparation of a CREATE TABLE statement shall fail with an error if the
+  the <i>databasename</i> references a database that is not
+  attached to the same <a href="c3ref/sqlite3.html">database connection</a>.
+</b></blockquote>
+
+<h4>3.1.1 CREATE TABLE column definitions</h4>
+
+<a name="D1"></a>
+
+<p>
+  There are two varieties of CREATE TABLE statements.  The most common form
+  specifies the names of all columns in the table together with datatype
+  and constraint information.  This first form is called a
+  "ordinary CREATE TABLE statement".  The second form of CREATE TABLE
+  constructs a new table from the result set of a SELECT statement.
+  The second form is called a "CREATE TABLE AS statement".
+</p>
+
+<a name="H42410"></a>
+<p>
+  In an ordinary CREATE TABLE statement, the <i>table_definition</i>
+  consists of a list of column definitions optionally followed by a 
+  list of table constraints.
+</p><blockquote><b>H42410:</b>
+  The SQLite parser shall accept the following syntax for the 
+  <i>table_definition</i> section of a CREATE TABLE statement:
+<blockquote><pre>
+table_definition ::= LP columnlist constraint_opt RP.
+columnlist ::= column.
+columnlist ::= columnlist COMMON column.
+constraint_opt ::= .
+constraint_opt ::= COMMA constraint_list.
+</pre></blockquote></b></blockquote><a name="H42413"></a>
+<p>
+  A column definition within an ordinary CREATE TABLE statement always
+  has a column name.  It might also include a datatype for the
+  column and zero or more contraints on the column.  But both the
+  datatype and the constraints are options.  Other SQL database
+  engines also have optional constraints but they usually make the
+  datatype required.
+</p><blockquote><b>H42413:</b>
+  The SQLite parser shall accept the following syntax
+  for the <i>column</i> component of a <i>table_definition</i>.
+<blockquote><pre>
+column ::= name column_type column_constraint_list.
+column_type ::= .
+column_type ::= typename.
+column_type ::= typename LP signed_int RP.
+column_type ::= typename LP signed_int COMMA signed_int RP.
+typename ::= identifier.
+typename ::= typename identifier.
+signed_int ::= INTEGER.
+signed_int ::= MINUS INTEGER.
+signed_int ::= PLUS INTEGER.
+</pre></blockquote></b></blockquote><a name="H42416"></a>
+<blockquote><b>H42416:</b>
+  The preparation of an <a href="syntax.html#D1">ordinary CREATE TABLE statement</a> shall fail 
+  with an error if it specifies two or more columns with the same name.
+</b></blockquote><a name="H42419"></a>
+<blockquote><b>H42419:</b>
+  The datatype affinity of each column in a table generate by an
+  <a href="syntax.html#D1">ordinary CREATE TABLE statement</a>
+  shall be determined from the <i>column_type</i>
+  text using the following 5-step algorithm:
+  <ol>
+  <li><p> If the <i>column_type</i> contains the string "INT"
+          then the affinity is INTEGER.</p></li>
+
+  <li><p> Else if the <i>column_type</i> contains one of the strings
+         "CHAR", "CLOB", or "TEXT" then the affinity is TEXT. </p></li>
+
+  <li><p> Else if the <i>column_type</i> contains the string "BLOB" 
+          or is omitted then the affinity is NONE. </p></li>
+
+  <li><p> Else if the <i>column_type</i> constains one of the strings
+          "REAL", "FLOA", or "DOUB" then the affinity
+          is REAL. </p></li>
+
+  <li><p> Otherwise the affinity is NUMERIC. </p></li>
+  </ol>
+</b></blockquote><a name="H42450"></a>
+<blockquote><b>H42450:</b>
+  The SQLite parser shall accept the following syntax for the list of column
+  constraints and modifiers that follows a column definition in 
+  an <a href="syntax.html#D1">ordinary CREATE TABLE statement</a>.
+<blockquote><pre>
+column_constraint_list ::= .
+column_constraint_list ::= column_constraint_list named_column_constraint.
+named_column_constraint ::= CONSTRAINT name column_constraint.
+named_column_constraint ::= column_constraint.
+column_constraint ::= DEFAULT term.
+column_constraint ::= DEFAULT identifier.
+column_constraint ::= DEFAULT PLUS term.
+column_constraint ::= DEFAULT MINUS term.
+column_constraint ::= DEFAULT LP expr RP.
+column_constraint ::= NULL conflict.
+column_constraint ::= NOT NULL conflict.
+column_constraint ::= PRIMARY KEY sortorder conflict autoincr.
+column_constraint ::= UNIQUE conflict.
+column_constraint ::= CHECK LP expr RP.
+column_constraint ::= COLLATE identifier.
+column_constraint ::= foreign_key_constraint.
+column_constraint ::= deferrable_constraint.
+autoincr ::= .
+autoincr ::= AUTOINCR.
+indexlist_opt ::= .
+indexlist_opt ::= LP indexlist RP.
+conflict ::= .
+conflict ::= ON CONFLICT IGNORE.
+conflict ::= ON CONFLICT REPLACE.
+conflict ::= ON CONFLICT ABORT.
+conflict ::= ON CONFLICT FAIL.
+conflict ::= ON CONFLICT ROLLBACK.
+</pre></blockquote></b></blockquote><a name="H42453"></a>
+<blockquote><b>H42453:</b>
+  When a column as a DEFAULT constraint, the default value for the
+  column shall be the value specified by that constraint.
+</b></blockquote><a name="H42456"></a>
+<blockquote><b>H42456:</b>
+  If a column has no DEFAULT constraint then the default value for
+  that column shall be NULL.
+</b></blockquote><a name="H42459"></a>
+<p>
+  Every column a table has a "null-conflict resolution behavior"
+  which is one of NONE, IGNORE, REPLACE, FAIL, ABORT, or ROLLBACK.</p>
+
+  <p>The default null-conflict resolution behavior is NONE, which means
+  NULLs are allowed in the column.  This can be made explicit by
+  specifying the NULL constraint.  But the use of the NULL constraint
+  is merely a comment for human readers.  SQLite silently ignores the
+  NULL constraint and its ON CONFLICT clause.  SQLite only cares
+  about NOT NULL constraints since only NOT NULL constraints make
+  a behaviorial difference.
+</p><blockquote><b>H42459:</b>
+  If a column has no NOT NULL constraint then the NULL conflict
+  resolution behavior for the column shall be NONE.
+</b></blockquote><a name="H42462"></a>
+<blockquote><b>H42462:</b>
+  If a column has a NOT NULL constraint and that constrait lacks
+  an ON CONFLICT clause
+  then the null-conflict resolution behavior for the column shall
+  be ABORT.
+</b></blockquote><a name="H42465"></a>
+<blockquote><b>H42465:</b>
+  If a column has a NOT NULL constraint and that constraint
+  has an ON CONFLICT clause
+  then the null-conflict resolution behavior for the column shall
+  be the behavior specified by the ON CONFLICT clause.
+</b></blockquote><a name="H42467"></a>
+<blockquote><b>H42467:</b>
+  A column without a COLLATE constraint shall have a default
+  collating sequence of BINARY.
+</b></blockquote><a name="H42468"></a>
+<blockquote><b>H42468:</b>
+  A column with a COLLATE constraint shall have a default
+  collating sequence as specified by the COLLATE constraint.
+</b></blockquote><a name="H42470"></a>
+<p>
+  The rowid is the underlying key used for storing each row of a 
+  table in the B-Tree that implements that table.  Every table has
+  a rowid column which is either implicit or explicit.  There can
+  be up to four names for the rowid within the same table.  All
+  can be used interchangeably.
+</p><blockquote><b>H42470:</b>
+  If the datatype of a single-column PRIMARY KEY is
+  exactly "INTEGER" then the name of that column shall be
+  an alias for the table rowid.
+</b></blockquote><a name="H42472"></a>
+<blockquote><b>H42472:</b>
+  If a table contains no column named "ROWID" then "ROWID" shall be
+  an alias for the table rowid.
+</b></blockquote><a name="H42474"></a>
+<blockquote><b>H42474:</b>
+  If a table contains no column named "OID" then "OID" shall be
+  an alias for the table rowid.
+</b></blockquote><a name="H42476"></a>
+<blockquote><b>H42476:</b>
+  If a table contains no column named "_ROWID_" then "_ROWID_" shall be
+  an alias for the table rowid.
+</b></blockquote><a name="H42478"></a>
+<p>
+  The AUTOINCREMENT keyword is ignored except when it appears on an explicit
+  rowid column.
+</p><blockquote><b>H42478:</b>
+  A table shall have an autoincrementing rowid if and only if
+  the PRIMARY KEY for the table is an alias for the rowid and
+  the PRIMARY KEY declaration uses the AUTOINCR keyword.
+</b></blockquote><a name="H42480"></a>
+<blockquote><b>H42480:</b>
+  Successful evaluation of a CREATE TABLE statement shall create
+  an index for every UNIQUE constraint where the created index has
+  a conflict resolution algorithm as specified by the ON CONFLICT
+  clause of the UNIQUE constraint or a conflict resolution algorithm
+  of ABORT if there is no ON CONFLICT clause on the constraint.
+</b></blockquote><a name="H42510"></a>
+<blockquote><b>H42510:</b>
+  The SQLite parser shall accept the following syntax for the list of table
+  contraints that occurs at the end of an <a href="syntax.html#D1">ordinary CREATE TABLE statement</a>.
+<blockquote><pre>
+constraint_list ::= constraint.
+constraint_list ::= constraint_list constraint.
+constraint_list ::= constraint_list COMMA constraint.
+constraint ::= CHECK LP expr RP conflict.
+constraint ::= CONSTRAINT name.
+constraint ::= FOREIGN KEY LP columnlist RP foreign_key_constraint defer_opt.
+constraint ::= PRIMARY KEY LP indexlist autoinc RP conflict.
+constraint ::= UNIQUE LP indexlist RP conflict.
+</pre></blockquote></b></blockquote><a name="H42513"></a>
+<blockquote><b>H42513:</b>
+  The preparation of a CREATE TABLE statement that contains more
+  than one PRIMARY KEY constraint shall fail with an error.
+</b></blockquote><a name="H42516"></a>
+<blockquote><b>H42516:</b>
+  The preparation of a CREATE TABLE statement that contains a
+  CHECK constraint that uses a subquery shall fail with an error.
+</b></blockquote><a name="H42517"></a>
+<blockquote><b>H42517:</b>
+  The preparation of a CREATE TABLE statement that contains a
+  CHECK constraint that uses a parameter shall fail with an error.
+</b></blockquote><a name="H42518"></a>
+<blockquote><b>H42518:</b>
+  Name resolution of the <i>expr</i> with each CHECK constraint of
+  a CREATE TABLE statement shall be carried out using a name context
+  with an empty result set and a source set holding
+  single source element that is the
+  table being created.
+</b></blockquote><a name="H42521"></a>
+<blockquote><b>H42521:</b>
+  The preparation of a CREATE TABLE statement that contains a
+  DEFAULT constraint with an non-constant expression
+  shall fail with an error.
+</b></blockquote><a name="H42536"></a>
+<p>
+  Except for the special case of INTEGER PRIMARY KEY, a
+  PRIMARY KEY is just an alias for UNIQUE.
+</p><blockquote><b>H42536:</b>
+  A PRIMARY KEY constraint that does not result in a rowid alias
+  shall have the same effect as a UNIQUE constraint.
+</b></blockquote><a name="H42539"></a>
+<blockquote><b>H42539:</b>
+  Preparation of a CREATE TABLE statement shall fail with an
+  error if the <i>indexlist</i> of either a table PRIMARY KEY
+  or a table UNIQUE constraint references a column that is not
+  a column in the table.
+</b></blockquote><a name="H42570"></a>
+<p>
+  Foreign key constraints are parsed for compatibility with other
+  database engines but are not enforced by SQLite.
+</p><blockquote><b>H42570:</b>
+  The SQLite parser shall accept the following syntax for a foreign
+  key constraint as either a separate constraint or as part of a 
+  column constraint in an <a href="syntax.html#D1">ordinary CREATE TABLE statement</a>.
+<blockquote><pre>
+foreign_key_constraint ::= REFERENCES name indexlist_opt fkarglist.
+defer_opt ::= .
+defer_opt ::= deferrable_constraint.
+deferrable_constraint ::= NOT DEFERRABLE initially_deferred_clause.
+deferrable_constraint ::= DEFERRABLE initially_deferred_clause.
+fkarglist ::= .
+fkarglist ::= fkarglist fkarg.
+fkarg ::= MATCH name.
+fkarg ::= ON DELETE fkaction.
+fkarg ::= ON UPDATE fkaction.
+fkarg ::= ON INSERT fkaction.
+fkaction ::= SET NULL.
+fkaction ::= SET DEFAULT.
+fkaction ::= CASCADE.
+fkaction ::= RESTRICT.
+initially_deferred_clause ::= .
+initially_deferred_clause ::= INITIALLY DEFERRED.
+initially_deferred_clause ::= INITIALLY IMMEDIATE.
+</pre></blockquote></b></blockquote>
+
+<h4>3.1.2 CREATE TABLE AS</h4>
+
+<a name="H42610"></a>
+<p>
+  The CREATE TABLE AS statement generates a new table to hold the
+  result set of a SELECT statement.
+</p><blockquote><b>H42610:</b>
+  The SQLite parser shall accept the following syntax for creating new
+  database tables from the result set of SELECT statements.
+<blockquote><pre>
+table_definition ::= AS select.
+</pre></blockquote></b></blockquote><a name="H42613"></a>
+<p>
+  The names of the columns in the generated table are taken from the
+  column names of the SELECT statement.  All other attributes of the
+  generated table are the default attributes for a column.  Hence, the
+  table generated by a CREATE TABLE AS as the same behavior as an
+  ordinary CREATE TABLE where the <i>table_definition</i> consists of
+  a comma-separated list of column names with no datatypes or constraints
+  of any kind.
+</p><blockquote><b>H42613:</b>
+  The table generated by a CREATE TABLE AS statement shall have the
+  same number of columns as the result set of the SELECT.
+</b></blockquote><a name="H42616"></a>
+<blockquote><b>H42616:</b>
+  The names of the columns in a table generated by a CREATE TABLE AS
+  statement shall have base names which are the names of the columns
+  in the result set of the SELECT statement
+</b></blockquote><a name="H42617"></a>
+<blockquote><b>H42617:</b>
+  Each column name in a table generated by a CREATE TABLE AS
+  statement shall have an arbitrary suffix appended to its basename
+  if and only if such a suffix is necessary to make the name
+  distinct from all preceding column names in the table.
+</b></blockquote><a name="H42619"></a>
+<blockquote><b>H42619:</b>
+  All columns in a table generated by a CREATE TABLE AS statement
+  shall have a default value of NULL.
+</b></blockquote><a name="H42622"></a>
+<blockquote><b>H42622:</b>
+  All columns in a table generated by a CREATE TABLE AS statement
+  shall have a NULL conflict resolution behavior of NONE.
+</b></blockquote><a name="H42625"></a>
+<blockquote><b>H42625:</b>
+  All columns in a table generated by a CREATE TABLE AS statement
+  shall have an affinity of NONE.
+</b></blockquote><a name="H42628"></a>
+<blockquote><b>H42628:</b>
+  All columns in a table generated by a CREATE TABLE AS statement
+  shall have a default collating sequence of BINARY.
+</b></blockquote>
+
+
+<h3>3.2 DROP TABLE</h3>
+
+<a name="H42700"></a>
+<blockquote><b>H42700:</b>
+  The SQLite parser shall accept DROP TABLE statements
+  that conform to the following syntax.
+<blockquote><pre>
+cmd ::= DROP TABLE ifexists fullname.
+ifexists ::= .
+ifexists ::= IF EXISTS.
+</pre></blockquote></b></blockquote><a name="H42710"></a>
+<blockquote><b>H42710:</b>
+  The preparation of a DROP TABLE statement shall fail with an
+  error if the statement lacks an IF EXISTS clause and the
+  <i>fullname</i> does not reference a existing table.
+</b></blockquote><a name="H42713"></a>
+<blockquote><b>H42713:</b>
+  The evaluation of a DROP TABLE statement shall be a silent no-op
+  if the the statement has an IF EXISTS clause and the
+  <i>fullname</i> does not reference a existing table.
+</b></blockquote><a name="H42716"></a>
+<blockquote><b>H42716:</b>
+  The successful evaluation of a DROP TABLE statement shall cause
+  the table identified by <i>fullname</i> to be removed from its
+  database and discarded.
+</b></blockquote><a name="H42719"></a>
+<blockquote><b>H42719:</b>
+  The successful evaluation of a DROP TABLE statement shall cause
+  all indices attached to the table identified by <i>fullname</i>
+  to be removed from their database and discarded.
+</b></blockquote><a name="H42721"></a>
+<blockquote><b>H42721:</b>
+  The successful evaluation of a DROP TABLE statement shall cause
+  all triggers attached to the table identified by <i>fullname</i>
+  to be removed from their database and discarded.
+</b></blockquote><a name="H42724"></a>
+<blockquote><b>H42724:</b>
+  The preparation of a DROP TABLE statement shall fail with an
+  error if <i>fullname</i> is a system table.
+</b></blockquote>
+
+<h3>3.3 CREATE INDEX</h3>
+
+<a name="H42800"></a>
+<blockquote><b>H42800:</b>
+  The SQLite parser shall accept CREATE INDEX statements that 
+  conform to the following syntax:
+<blockquote><pre>
+cmd ::= CREATE unique INDEX ifnotexists fullname ON tablename LP indexlist RP.
+tablename ::= name.
+indexlist ::= indexlist COMMA columnname collate sortorder.
+indexlist ::= columnname collate sortorder.
+columnname ::= name.
+collate ::= .
+collate ::= COLLATE identifier.
+sortorder ::= .
+sortorder ::= ASC.
+sortorder ::= DESC.
+</pre></blockquote></b></blockquote><a name="H42803"></a>
+<blockquote><b>H42803:</b>
+  The target database of a CREATE INDEX statement shall be the 
+  <i>databasename</i> specified in the <i>fullname</i> term of the
+  statement if the <i>databasename</i> exists.
+</b></blockquote><a name="H42806"></a>
+<blockquote><b>H42806:</b>
+  If the <i>fullname</i> term of a CREATE INDEX statement does not
+  specify a <i>databasename</i> and the <i>tablename</i> references a table 
+  that is in the "temp" database, then the target database for the statement
+  shall be "temp".
+</b></blockquote><a name="H42809"></a>
+<blockquote><b>H42809:</b>
+  If the <i>fullname</i> term of a CREATE INDEX statement does not
+  specify a <i>databasename</i> and the <i>tablename</i> references a table
+  that is not in the "temp" database, then the target database for the
+  statement shall be "main".
+</b></blockquote><a name="H42812"></a>
+<blockquote><b>H42812:</b>
+  The preparation of a CREATE INDEX statement shall fail with an error if the
+  <i>databasename</i> of the <i>fullname</i> exists and references a database 
+  that is not attached to the same <a href="c3ref/sqlite3.html">database connection</a>.
+</b></blockquote><a name="H42815"></a>
+<blockquote><b>H42815:</b>
+  The preparation of a CREATE INDEX statement shall fail with an error if the
+  <i>tablename</i> does not reference an ordinary table in the
+  database of the statement.
+</b></blockquote><a name="H42818"></a>
+<blockquote><b>H42818:</b>
+  A successful evaluation of a CREATE INDEX statement shall create a 
+  new index called <i>objectname</i>
+  in the database of the statement and attached to the
+  table identified by <i>tablename</i> in that same database.
+</b></blockquote><a name="H42821"></a>
+<blockquote><b>H42821:</b>
+  An index generated by a CREATE INDEX statement that omits the
+  UNIQUE keyword shall have a conflict resolution behavior
+  of NONE.
+</b></blockquote><a name="H42824"></a>
+<blockquote><b>H42824:</b>
+  An index generated by a CREATE INDEX statement that includes the
+  UNIQUE keyword shall have a conflict resolution behavior
+  of ABORT.
+</b></blockquote><a name="H42830"></a>
+<blockquote><b>H42830:</b>
+  The preparation of a CREATE INDEX statement shall fail with an error if any
+  <i>columnname</i> value within the <i>indexlist</i> is not the
+  name of one of the columns of the <i>tablename</i> table.
+</b></blockquote><a name="H42833"></a>
+<p>
+  The following rules regarding default collating sequences and
+  sort order for indices applies both to indices created by CREATE INDEX
+  statements
+  and also by UNIQUE or PRIMARY KEY constraints on the table definition.
+</p><blockquote><b>H42833:</b>
+  The collating sequence for each column of an index shall be the
+  collating sequence specified in the <i>indexlist</i>.
+</b></blockquote><a name="H42836"></a>
+<blockquote><b>H42836:</b>
+  If an index column does not specify a collating sequence then
+  the collating sequence shall be
+  the default collating sequence of the corresponding table column.
+</b></blockquote><a name="H42839"></a>
+<blockquote><b>H42839:</b>
+  The sort order for an index column shall be descending if and only
+  if the DESC keyword is used in the <i>indexlist</i> entry for that
+  term.
+</b></blockquote><a name="H42842"></a>
+<blockquote><b>H42842:</b>
+  The preparation of a CREATE INDEX statement shall fail with an error
+  if the <i>tablename</i> refers to a system table.
+</b></blockquote>
+
+<h3>3.4 DROP INDEX</h3>
+
+<a name="H42900"></a>
+<blockquote><b>H42900:</b>
+  The SQLite parser shall accept DROP INDEX statements 
+  that conform to the following syntax:
+<blockquote><pre>
+cmd ::= DROP INDEX ifexists fullname.
+</pre></blockquote></b></blockquote><a name="H42910"></a>
+<blockquote><b>H42910:</b>
+  The preparation of a DROP INDEX statement shall fail with an
+  error if the statement lacks an IF EXISTS clause and the
+  <i>fullname</i> does not reference a existing index.
+</b></blockquote><a name="H42913"></a>
+<blockquote><b>H42913:</b>
+  The evaluation of a DROP INDEX statement shall be a silent no-op
+  if the the statement has an IF EXISTS clause and the
+  <i>fullname</i> does not reference a existing index.
+</b></blockquote><a name="H42916"></a>
+<blockquote><b>H42916:</b>
+  The successful evaluation of a DROP INDEX statement shall cause
+  the index identified by <i>fullname</i> to be removed from its
+  database and discarded.
+</b></blockquote>
+
+<h3>3.5 CREATE VIEW</h3>
+
+<a name="H43100"></a>
+<blockquote><b>H43100:</b>
+  The SQLite parser shall accept CREATE VIEW statements 
+  that conform to the following syntax:
+<blockquote><pre>
+cmd ::= CREATE temp VIEW ifnotexists fullname AS select.
+</pre></blockquote></b></blockquote><a name="H43113"></a>
+<blockquote><b>H43113:</b>
+  When the TEMP keyword appears in a CREATE VIEW statement and the
+  <i>databasename</i> exists and is something other than "temp", then
+  the preparation of the CREATE VIEW statement shall fail with an error.
+</b></blockquote><a name="H43116"></a>
+<blockquote><b>H43116:</b>
+  When the TEMP keyword appears in a CREATE VIEW statement the behavior
+  shall be as if the <i>databasename</i> where "temp".
+</b></blockquote><a name="H43119"></a>
+<blockquote><b>H43119:</b>
+  The successful evaluation of a CREATE VIEW statement shall cause
+  a new view whose name is given by the <i>objectname</i> and is located
+  in the schema of the database whose name is given by the
+  <i>databasename</i>.
+</b></blockquote><a name="H43122"></a>
+<blockquote><b>H43122:</b>
+  If a CREATE VIEW statement specifies no <i>databasename</i> and omits
+  the TEMP keyword then the behavior shall be as if a <i>databasename</i>
+  of "main" where used.
+</b></blockquote><a name="H43125"></a>
+<blockquote><b>H43125:</b>
+  The preparation of a CREATE VIEW statement shall fail with an 
+  error if the IF NOT EXISTS clause is omitted and the <i>objectname</i>
+  is the same as the name of a table or view
+  in the same database.
+</b></blockquote><a name="H43128"></a>
+<blockquote><b>H43128:</b>
+  The evaluation of a CREATE VIEW statement shall be a silent no-op if the
+  IF NOT EXISTS clause is present and the <i>objectname</i>
+  is the same as the name of a table or view
+  in the same database.
+</b></blockquote><a name="H43131"></a>
+<blockquote><b>H43131:</b>
+  The preparation of a CREATE VIEW statement shall fail with an error if the
+  the <i>objectname</i> is the same as the name of an index
+  in any database attached to the same <a href="c3ref/sqlite3.html">database connection</a>.
+</b></blockquote><a name="H43234"></a>
+<blockquote><b>H43234:</b>
+  The preparation of a CREATE VIEW statement shall fail with an error if the
+  the <i>databasename</i> references a database that is not
+  attached to the same <a href="c3ref/sqlite3.html">database connection</a>.
+</b></blockquote><a name="H43237"></a>
+<blockquote><b>H43237:</b>
+  The view generated by a CREATE VIEW statement shall have the
+  same number of columns as the result set of the SELECT.
+</b></blockquote><a name="H43241"></a>
+<blockquote><b>H43241:</b>
+  The names of the columns in a view generated by a CREATE VIEW
+  statement shall have base names which are the names of the columns
+  in the result set of the SELECT statement
+</b></blockquote><a name="H43244"></a>
+<blockquote><b>H43244:</b>
+  Each column name in a table generated by a CREATE VIEW
+  statement shall have an arbitrary suffix appended to its basename
+  if and only if such a suffix is necessary to make the name
+  distinct from all preceding column names in the view.
+</b></blockquote>
+
+<h3>3.6 DROP VIEW</h3>
+
+<a name="H43200"></a>
+<blockquote><b>H43200:</b>
+  The SQLite parser shall accept DROP VIEW statements
+  that conform to the following syntax:
+<blockquote><pre>
+cmd ::= DROP VIEW ifexists fullname.
+</pre></blockquote></b></blockquote><a name="H43204"></a>
+<blockquote><b>H43204:</b>
+  The preparation of a DROP VIEW statement shall fail with an
+  error if the statement lacks an IF EXISTS clause and the
+  <i>fullname</i> does not reference a existing view.
+</b></blockquote><a name="H43207"></a>
+<blockquote><b>H43207:</b>
+  The evaluation of a DROP VIEW statement shall be a silent no-op
+  if the the statement has an IF EXISTS clause and the
+  <i>fullname</i> does not reference a existing view.
+</b></blockquote><a name="H43211"></a>
+<blockquote><b>H43211:</b>
+  The successful evaluation of a DROP VIEW statement shall cause
+  the view identified by <i>fullname</i> to be removed from its
+  database and discarded.
+</b></blockquote><a name="H43214"></a>
+<blockquote><b>H43214:</b>
+  The successful evaluation of a DROP VIEW statement shall cause
+  all triggers attached to the view identified by <i>fullname</i>
+  to be removed from their database and discarded.
+</b></blockquote>
+
+<h3>3.7 CREATE TRIGGER</h3>
+
+<a name="H43300"></a>
+<blockquote><b>H43300:</b>
+  The SQLite parser shall accept CREATE TRIGGER statements
+  that conform to the following syntax:
+<blockquote><pre>
+cmd ::= CREATE temp TRIGGER ifnotexists fullname trigger trigger_body.
+trigger ::= trigger_time trigger_event foreach_clause when_clause.
+trigger_body ::= BEGIN trigger_cmd_list END.
+trigger_cmd_list ::= trigger_cmd_list trigger_cmd SEMI.
+trigger_cmd_list ::= trigger_cmd_list.
+trigger_cmd ::= DELETE FROM tablename where.
+trigger_cmd ::= update_cmd tablename SET setlist where.
+trigger_cmd ::= insert_cmd INTO tablename columnlist_opt VALUES LP exprlist RP.
+trigger_cmd ::= insert_cmd INTO tablename columnlist_opt select.
+trigger_cmd ::= select.
+trigger_event ::= DELETE ON trigger_target.
+trigger_event ::= INSERT ON trigger_target.
+trigger_event ::= UPDATE OF columnlist ON trigger_target.
+trigger_event ::= UPDATE ON trigger_target.
+trigger_target ::= fullname.
+trigger_time ::= AFTER.
+trigger_time ::= BEFORE.
+trigger_time ::= INSTEAD OF.
+trigger_time ::=.
+foreach_clause ::= FOR EACH ROW.
+foreach_clause ::=.
+when_clause ::= WHEN expr.
+when_clause ::=.
+</pre></blockquote></b></blockquote><a name="H43303"></a>
+<blockquote><b>H43303:</b>
+  When the TEMP keyword appears in a CREATE TRIGGER statement and the
+  <i>databasename</i> of the <i>fullname</i> exists
+  then the preparation of the statement
+  shall fail with an error.
+</b></blockquote><a name="H43306"></a>
+<blockquote><b>H43306:</b>
+  When the TEMP keyword appears in a CREATE TRIGGER statement 
+  the target database of the trigger shall be "temp".
+</b></blockquote><a name="H43309"></a>
+<blockquote><b>H43309:</b>
+  When the TEMP keyword is omitted in a CREATE TRIGGER statement and the
+  <i>databasename</i> of the <i>fullname</i> is
+  omitted then the target database of the trigger shall be "main".
+</b></blockquote><a name="H43312"></a>
+<blockquote><b>H43312:</b>
+  When the <i>databasename</i> of <i>fullname</i> in a CREATE TRIGGER
+  statement exists, then the target database shall be the database
+  named by <i>databasename</i>.
+</b></blockquote><a name="H43315"></a>
+<blockquote><b>H43315:</b>
+  If a CREATE TRIGGER does not specify a <i>trigger_time</i> then
+  the <i>trigger_time</i> shall be BEFORE.
+</b></blockquote><a name="H43318"></a>
+<p>
+  An INSTEAD OF trigger may be used only on views.  Other kinds of triggers
+  may be used on tables only.
+</p><blockquote><b>H43318:</b>
+  The preparation of a CREATE TRIGGER statement shall fail with an error
+  the <i>trigger_time</i> is INSTEAD OF and <i>trigger_target</i> is not
+  the name of view in the target database.
+</b></blockquote><a name="H43321"></a>
+<blockquote><b>H43321:</b>
+  The preparation of a CREATE TRIGGER statement shall fail with an error
+  the <i>trigger_time</i> is not INSTEAD OF and <i>trigger_target</i> is not
+  the name of an ordinary table in the target database.
+</b></blockquote><a name="H43324"></a>
+<blockquote><b>H43324:</b>
+  The preparation of a CREATE TRIGGER statement shall fail with an error
+  if the <i>trigger_target</i> is a system table.
+</b></blockquote>
+
+
+<h3>3.8 DROP TRIGGER</h3>
+
+<a name="H43500"></a>
+<blockquote><b>H43500:</b>
+  The SQLite parser shall accept DROP TRIGGER statements
+  that conform to the following syntax:
+<blockquote><pre>
+cmd ::= DROP TRIGGER ifexists fullname.
+</pre></blockquote></b></blockquote><a name="H43504"></a>
+<blockquote><b>H43504:</b>
+  The preparation of a DROP TRIGGER statement shall fail with an
+  error if the statement lacks an IF EXISTS clause and the
+  <i>fullname</i> does not reference a existing trigger.
+</b></blockquote><a name="H43507"></a>
+<blockquote><b>H43507:</b>
+  The evaluation of a DROP TRIGGER statement shall be a silent no-op
+  if the the statement has an IF EXISTS clause and the
+  <i>fullname</i> does not reference a existing trigger.
+</b></blockquote><a name="H43511"></a>
+<blockquote><b>H43511:</b>
+  The successful evaluation of a DROP TRIGGER statement shall cause
+  the trigger identified by <i>fullname</i> to be removed from its
+  database and discarded.
+</b></blockquote><a name="H43514"></a>
+<blockquote><b>H43514:</b>
+  The successful evaluation of a DROP TRIGGER statement shall cause
+  all triggers attached to the trigger identified by <i>fullname</i>
+  to be removed from their database and discarded.
+</b></blockquote>
+
+<h3>3.9 CREATE VIRTUAL TABLE</h3>
+
+<a name="H43600"></a>
+<blockquote><b>H43600:</b>
+  The SQLite parser shall accept CREATE VIRTUAL TABLE statements
+  that conform to the following syntax.
+<blockquote><pre>
+cmd ::= CREATE VIRTUAL TABLE fullname USING name vtab_arg_list.
+vtab_arg_list ::= .
+vtab_arg_list ::= LP vtab_arg_token RP.
+vtab_arg_token ::= ANY.
+vtab_arg_token ::= LP anylist RP.
+anylist ::= .
+anylist ::= anylist ANY.
+</pre></blockquote></b></blockquote>
+
+<h3>3.10 ALTER TABLE</h3>
+<h4>3.11 ALTER TABLE RENAME</h4>
+
+<a name="H43700"></a>
+<blockquote><b>H43700:</b>
+  The SQLite parser shall accept ALTER TABLE RENAME statements
+  that conform to the following syntax:
+<blockquote><pre>
+cmd ::= ALTER TABLE fullname RENAME TO name.
+</pre></blockquote></b></blockquote>
+
+<h4>3.12 ALTER TABLE ADD COLUMN</h4>
+
+<a name="H43750"></a>
+<blockquote><b>H43750:</b>
+  The SQLite parser shall accept ALTER TABLE ADD COLUMN statements
+  that conform to the following syntax:
+<blockquote><pre>
+cmd ::= ALTER TABLE fullname ADD column_keyword column.
+column_keyword ::= .
+column_keyword ::= COLUMNKW.
+</pre></blockquote></b></blockquote>
+
+<h2>4.0 Data Manipulation Language (DML)</h2>
+
+<h3>4.1 INSERT</h3>
+<a name="H43810"></a>
+<blockquote><b>H43810:</b>
+  The SQLite parser shall accept INSERT statements that
+  conform to the following syntax:
+<blockquote><pre>
+cmd ::= insert_cmd INTO fullname columnlist_opt insert_content.
+insert_cmd ::= INSERT.
+insert_cmd ::= REPLACE.
+insert_cmd ::= INSERT OR REPLACE.
+insert_cmd ::= INSERT OR IGNORE.
+insert_cmd ::= INSERT OR ABORT.
+insert_cmd ::= INSERT OR FAIL.
+insert_cmd ::= INSERT OR ROLLBACK.
+columnlist_opt ::= .
+columnlist_opt ::= LP columnlist RP.
+columnlist ::= columnname.
+columnlist ::= columnlist COMMA columnname.
+</pre></blockquote></b></blockquote><a name="H43813"></a>
+<blockquote><b>H43813:</b>
+  The preparation of an INSERT statement shall fail with an error
+  if the <i>instcolist</i> contains a reference to a column which
+  is not a column in the table identified by <i>fullname</i> and is
+  not one of the special column named "ROWID", "OID", or "_ROWID_".
+</b></blockquote><a name="H43816"></a>
+<blockquote><b>H43816:</b>
+  The preparation of an INSERT statement shall fail with an error
+  if <i>fullname</i> does not identify either a view with an
+  INSTEAD OF INSERT trigger or a table.
+</b></blockquote><a name="H43819"></a>
+<blockquote><b>H43819:</b>
+  The preparation of an INSERT statement shall fail with an error
+  if the <i>objectname</i> of the <i>fullname</i> is "sqlite_master"
+  or "sqlite_temp_master" and the database connection is not in
+  writeable schema mode.
+</b></blockquote><a name="H43821"></a>
+<blockquote><b>H43821:</b>
+  When the form of an INSERT statement is simply "INSERT" then the
+  default null- and uniqueness-conflict resolution algorithms shall
+  be used.
+</b></blockquote><a name="H43824"></a>
+<blockquote><b>H43824:</b>
+  When the form of an INSERT statement is simply "REPLACE" then the
+  null- and uniqueness-conflict resolution algorithms shall all
+  change to REPLACE.
+</b></blockquote><a name="H43827"></a>
+<blockquote><b>H43827:</b>
+  When the form of an INSERT statement is "INSERT OR <i>algorithm</i>" 
+  then the null- and uniqueness-conflict resolution algorithms shall all
+  change to <i>algorithm</i>.
+</b></blockquote><a name="H43831"></a>
+<blockquote><b>H43831:</b>
+  Name resolution in the <i>insert_content</i> term of an INSERT statement
+  shall be carried out using a name context
+  with an empty result set and a source set holding
+  single source element that is the <i>fullname</i> table.
+</b></blockquote>
+
+<h4>4.1.1 INSERT VALUE</h4>
+<a name="H43840"></a>
+<blockquote><b>H43840:</b>
+  The SQLite parser shall accept INSERT VALUE statements that
+  conform to the following syntax:
+<blockquote><pre>
+insert_content ::= VALUES LP exprlist RP.
+</pre></blockquote></b></blockquote><a name="H43843"></a>
+<blockquote><b>H43843:</b>
+  The preparation of an INSERT VALUE statement shall fail with an
+  error if the <i>columnlist</i> element exists and the number of 
+  entries in the <i>instcollist</i> is different
+  from the number of entries in the <i>exprlist</i>.
+</b></blockquote><a name="H43846"></a>
+<blockquote><b>H43846:</b>
+  The preparation of an INSERT VALUE statement shall fail with an
+  error if the <i>columnlist</i> element does not exists and the number of 
+  entries in the <i>exprlist</i> is different
+  from the number of columns in the table or view identified by
+  <i>fullname</i>.
+</b></blockquote>
+
+<h4>4.1.2 INSERT SELECT</h4>
+syntaxreq {H43870} {} {} {
+  The SQLite parser shall accept INSERT SELECT statements that
+  conform to the following syntax:
+} {
+  insert_contents ::= select.
+}
+syntaxreq {H43873} {} {} {
+  The preparation of an INSERT SELECT statement shall fail with an
+  error if the <i>columnlist</i> element exists and the number of 
+  entries in the <i>instcollist</i> is different
+  from the number of columns in the result set of <i>select</i>.
+}
+syntaxreq {H43876} {} {} {
+  The preparation of an INSERT SELECT statement shall fail with an
+  error if the <i>columnlist</i> element does not exists and the number of 
+  columns in the result set of the <i>select</i> is different
+  from the number of columns in the table or view identified by
+  <i>fullname</i>.
+}
+
+<h4>4.1.3 INSERT DEFAULT</h4>
+<a name="H43890"></a>
+<blockquote><b>H43890:</b>
+  The SQLite parser shall accept INSERT DEFAULT statements that
+  conform to the following syntax:
+<blockquote><pre>
+insert_contents ::= DEFAULT VALUES.
+</pre></blockquote></b></blockquote>
+
+<h3>4.2 DELETE</h3>
+
+<a name="H43900"></a>
+<blockquote><b>H43900:</b>
+  The SQLite parser shall accept DELETE statements that
+  conform to the following syntax:
+<blockquote><pre>
+cmd ::= DELETE FROM fullname where.
+where ::= .
+where ::= WHERE expr.
+</pre></blockquote></b></blockquote><a name="H43904"></a>
+<blockquote><b>H43904:</b>
+  The preparation of a DELETE statement shall fail with an error if
+  the <i>fullname</i> element does not identify a view with an
+  INSTEAD OF DELETE trigger or a table.
+</b></blockquote><a name="H43907"></a>
+<blockquote><b>H43907:</b>
+  The preparation of a DELETE statement shall fail with an error if
+  the <i>objectname</i> of the <i>fullname</i> element is "sqlite_master"
+  or "sqlite_temp_master" and the database connection is not in
+  writeable_schema mode.
+</b></blockquote><a name="H43911"></a>
+<blockquote><b>H43911:</b>
+  Name resolution in the <i>where</i> term of a DELETE statement
+  shall be carried out using a name context
+  with an empty result set and a source set holding
+  single source element that is the <i>fullname</i> table.
+</b></blockquote>
+
+<h3>4.3 UPDATE</h3>
+
+<a name="H44100"></a>
+<blockquote><b>H44100:</b>
+  The SQLite parser shall accept UPDATE statements that
+  conform to the following syntax:
+<blockquote><pre>
+cmd ::= update_cmd fullname SET setlist where.
+update_cmd ::= UPDATE.
+update_cmd ::= UPDATE OR IGNORE.
+update_cmd ::= UPDATE OR REPLACE.
+update_cmd ::= UPDATE OR ABORT.
+update_cmd ::= UPDATE OR FAIL.
+update_cmd ::= UPDATE OR ROLLBACK.
+setlist ::= setting.
+setlist ::= setlist COMMA setting.
+setting ::= columnname EQ expr.
+</pre></blockquote></b></blockquote><a name="H44113"></a>
+<blockquote><b>H44113:</b>
+  The preparation of an UPDATE statement shall fail with an error
+  if any <i>columnname</i>
+  is not a column in the table identified by <i>fullname</i> and is
+  not one of the special columns named "ROWID", "OID", or "_ROWID_".
+</b></blockquote><a name="H44116"></a>
+<blockquote><b>H44116:</b>
+  The preparation of an UPDATE statement shall fail with an error
+  if <i>fullname</i> does not identify either a view with an
+  INSTEAD OF UPDATE trigger that covers all <i>columnname</i>s or a table.
+</b></blockquote><a name="H44119"></a>
+<blockquote><b>H44119:</b>
+  The preparation of an UPDATE statement shall fail with an error
+  if the <i>objectname</i> of the <i>fullname</i> is "sqlite_master"
+  or "sqlite_temp_master" and the database connection is not in
+  writeable schema mode.
+</b></blockquote><a name="H44121"></a>
+<blockquote><b>H44121:</b>
+  When the form of an UPDATE statement is simply "UPDATE" then the
+  default null- and uniqueness-conflict resolution algorithms shall
+  be used.
+</b></blockquote><a name="H44127"></a>
+<blockquote><b>H44127:</b>
+  When the form of an UPDATE statement is "UPDATE OR <i>algorithm</i>" 
+  then the null- and uniqueness-conflict resolution algorithms shall all
+  change to <i>algorithm</i>.
+</b></blockquote><a name="H44131"></a>
+<blockquote><b>H44131:</b>
+  Name resolution in the <i>where</i> term of a DELETE statement
+  shall be carried out using a name context
+  with an empty result set and a source set holding
+  single source element that is the <i>fullname</i> table.
+</b></blockquote>
+
+<h3>4.4 SELECT</h3>
+
+<a name="H45000"></a>
+<blockquote><b>H45000:</b>
+  The SQLite parser shall accept SELECT statements that
+  conform to the following syntax:
+<blockquote><pre>
+cmd ::= select.
+select ::= query.
+select ::= select UNION query.
+select ::= select UNION ALL query.
+select ::= select EXCEPT query.
+select ::= select INTERSECT query.
+query ::= SELECT distinct resultset from where groupby having orderby limit.
+distinct ::= .
+distinct ::= DISTINCT.
+groupby ::= .
+groupby ::= GROUP BY exprlist.
+having ::= .
+having ::= HAVING expr.
+orderby ::= .
+orderby ::= ORDER BY exprlist.
+limit ::=.
+limit ::= LIMIT expr.
+limit ::= LIMIT expr COMMA expr.
+limit ::= LIMIT expr OFFSET expr.
+resultset ::= result.
+resultset ::= resultset COMMA result.
+result ::= STAR.
+result ::= tablename DOT STAR.
+result ::= expr as.
+from ::= .
+from ::= FROM sourceset.
+sourceset ::= source.
+sourceset ::= sourceset joinop source.
+source ::= fullname as on using.
+source ::= LP select RP as on using.
+as ::= .
+as ::= AS name.
+as ::= identifier.
+on ::= .
+on ::= ON expr.
+using ::= .
+using ::= USING LP columnlist RP.
+joinop ::= COMMA.
+joinop ::= JOIN.
+joinop ::= JOIN_KW JOIN.
+joinop ::= JOIN_KW JOIN_KW JOIN.
+joinop ::= JOIN_KW JOIN_KW JOIN_KW JOIN.
+</pre></blockquote></b></blockquote><a name="H45003"></a>
+<p>
+  A sequence of <i>query</i> terms connected by UNION, UNION ALL, EXCEPT,
+  and/or INTERSECT operators is called a "compound query" and the individual
+  <i>query</i> terms are call "terms of the compound query".
+</p><blockquote><b>H45003:</b>
+  The preparation of a statement containing a <i>select</i>
+  shall fail with an error if the <i>select</i> contains
+  two terms of the same compound query having a different number of columns
+  in their result sets.
+</b></blockquote><a name="H45006"></a>
+<blockquote><b>H45006:</b>
+  The preparation of a statement containing a <i>select</i>
+  shall fail with an error if the <i>select</i> contains a compound query that
+  has an ORDER BY, GROUP BY, HAVING, or LIMIT clause on any term of than
+  the right-most.
+</b></blockquote><a name="H45009"></a>
+<blockquote><b>H45009:</b>
+  The preparation of a statement containing a <i>select</i>
+  shall fail with an error if the <i>select</i> contains a compound query with
+  an ORDER BY or GROUP BY clause with a term that is not either
+  a token-by-token duplicate of the result columns of one of the
+  compound query terms, or the "AS" name of one of the compound
+  query terms, or a compile-time integer between 1 and N where N is
+  the number of columns in each compound query term.
+</b></blockquote><a name="H45012"></a>
+<blockquote><b>H45012:</b>
+  The preparation of a statement containing a <i>select</i>
+  shall fail with an error if the <i>select</i> contains a join with two
+  or more of the following properties:
+  <ol>
+  <li> The NATURAL keyword in the <i>joinop</i> </li>
+  <li> An ON clause </li>
+  <li> A USING clause</li>
+  </ol>
+</b></blockquote><a name="H45015"></a>
+<blockquote><b>H45015:</b>
+  The preparation of a statement containing a <i>select</i>
+  shall fail with an error if the <i>select</i> contains a <i>joinop</i>
+  that uses the keywords RIGHT or FULL.
+</b></blockquote><a name="H45018"></a>
+<blockquote><b>H45018:</b>
+  The preparation of a statement containing a <i>select</i>
+  shall fail with an error if the <i>select</i> contains a <i>joinop</i>
+  that uses either of the keywords OUTER or LEFT
+  together with either INNER or CROSS.
+</b></blockquote><a name="H45021"></a>
+<blockquote><b>H45021:</b>
+  The preparation of a statement containing a <i>select</i>
+  shall fail with an error if the <i>select</i> contains a <i>using</i>
+  that names columns that are not found in both the table to the
+  immediate right of the join and in the result set of all tables
+  to the left of the join.
+</b></blockquote><a name="H45024"></a>
+<blockquote><b>H45024:</b>
+  The preparation of a statement containing a <i>select</i>
+  shall fail with an error if the <i>fullname</i> of a <i>source</i>
+  does not refer to an existing table or view.
+</b></blockquote><a name="H45027"></a>
+<blockquote><b>H45027:</b>
+  The preparation of a statement containing a <i>limit</i>
+  shall fail with an error if any <i>expr</i> within the <i>limit</i>
+  does not evaluate to a compile-time integer.
+</b></blockquote>
+
+<h4>4.4.1 Name resolution with SELECT statements</h4>
+
+<a name="H45103"></a>
+<blockquote><b>H45103:</b>
+  Name resolution of a top-level SELECT statement shall use an
+  empty name context.
+</b></blockquote><a name="H45106"></a>
+<blockquote><b>H45106:</b>
+  Name context of a <i>query</i> term shall be
+  constructed by adding a new inner name context layer
+  to the name context of the construct containing the <i>query</i>
+  term.
+</b></blockquote><a name="H45109"></a>
+<blockquote><b>H45109:</b>
+  Name resolution of the <i>resultset</i> of a <i>query</i> shall
+  use the name context of the <i>query</i> with an empty result
+  set and the source set
+  configured to the <i>from</i> clause of the query.
+</b></blockquote><a name="H45112"></a>
+<blockquote><b>H45112:</b>
+  Name resolution of all child terms of a <i>query</i> other than
+  <i>resultset</i> child shall use the name context of the <i>query</i>
+  with the result set configured to be the <i>resultset</i> clause of the
+  <i>query</i> and with the source set configured to be the
+  <i>from</i> clause of the query.
+</b></blockquote>
+
+<h2>5.0 Other Language Elements</h2>
+
+<h3>5.1 VACUUM</h3>
+
+<a name="H44200"></a>
+<blockquote><b>H44200:</b>
+  The SQLite parser shall accept VACUUM statements that
+  conform to the following syntax:
+<blockquote><pre>
+cmd ::= VACUUM.
+cmd ::= VACUUM name.
+</pre></blockquote></b></blockquote>
+
+<h3>5.2 ANALYZE</h3>
+
+<a name="H44300"></a>
+<blockquote><b>H44300:</b>
+  The SQLite parser shall accept ANALYZE statements
+  that conform to the following syntax:
+<blockquote><pre>
+cmd ::= ANALYZE.
+cmd ::= ANALYZE fullname.
+</pre></blockquote></b></blockquote><a name="H44303"></a>
+<blockquote><b>H44303:</b>
+  The preparation of an ANALYZE statement
+  shall fail with an error if
+  the <i>fullname</i> is included and does not evaluate to
+  either an individual table name or the name of a database.
+</b></blockquote>
+
+<h3>5.3 REINDEX</h3>
+
+<a name="H44400"></a>
+<blockquote><b>H44400:</b>
+  The SQLite parser shall accept REINDEX statements
+  that conform to the following syntax:
+<blockquote><pre>
+cmd ::= REINDEX.
+cmd ::= REINDEX fullname.
+</pre></blockquote></b></blockquote><a name="H44403"></a>
+<blockquote><b>H44403:</b>
+  The preparation of an ANALYZE statement
+  shall fail with an error if
+  the <i>fullname</i> is included and does not evaluate to
+  either an individual table name or the name of a database
+  or the name of a collating sequence.	
+</b></blockquote>
+
+<h3>5.4 PRAGMA</h3>
+
+<a name="H46000"></a>
+<blockquote><b>H46000:</b>
+  The SQLite parser shall accept PRAGMA statements
+  that conform to the following syntax:
+<blockquote><pre>
+cmd ::= PRAGMA fullname EQ DELETE.
+cmd ::= PRAGMA fullname EQ ON.
+cmd ::= PRAGMA fullname EQ name.
+cmd ::= PRAGMA fullname EQ expr.
+cmd ::= PRAGMA fullname LP name RP.
+cmd ::= PRAGMA fullname LP expr RP.
+cmd ::= PRAGMA fullname.
+</pre></blockquote></b></blockquote><a name="H46003"></a>
+<p>
+  The <i>objectname</i> of the <i>fullname</i> of a PRAGMA is called
+  the PRAGMA verb.
+</p><blockquote><b>H46003:</b>
+  The evaluation of a PRAGMA statement with an unknown verb shall
+  be a silent no-op.
+</b></blockquote>
+
+<h3>5.5 ATTACH</h3>
+
+<a name="H44500"></a>
+<p>
+  The SQLite parser shall accept ATTACH statements
+  that conform to the following syntax:
+</p><blockquote><b>H44500:</b>
+  cmd ::= ATTACH database_kw expr AS expr.
+  database_kw ::= .
+  database_kw ::= DATABASE.
+</b></blockquote><a name="H44503"></a>
+<blockquote><b>H44503:</b>
+  The <i>expr</i> terms of an ATTACH statement that are
+  identifiers shall be interpreted as string literals.
+</b></blockquote><a name="H44506"></a>
+<blockquote><b>H44506:</b>
+  The preparation of an ATTACH statement shall fail with an error
+  if either <i>expr</i> is not a constant expression.
+</b></blockquote><a name="H44509"></a>
+<blockquote><b>H44509:</b>
+  The preparation of an ATTACH statement shall fail with an error
+  if the second <i>expr</i> evaluates to the name of a database
+  that is already attached to the database connection.
+</b></blockquote>
+
+<h3>5.6 DETACH</h3>
+
+<a name="H44600"></a>
+<blockquote><b>H44600:</b>
+  The SQLite parser shall accept DETACH statements
+  that conform to the following syntax:
+<blockquote><pre>
+cmd ::= DETACH database_kw expr.
+</pre></blockquote></b></blockquote><a name="H44603"></a>
+<blockquote><b>H44603:</b>
+  The <i>expr</i> term of an DETACH statement that is an
+  identifier shall be interpreted as string literals.
+</b></blockquote><a name="H44606"></a>
+<blockquote><b>H44606:</b>
+  The preparation of an DETACH statement shall fail with an error
+  if the <i>expr</i> is not a constant expression.
+</b></blockquote><a name="H44609"></a>
+<blockquote><b>H44609:</b>
+  The preparation of an DETACH statement shall fail with an error
+  if the <i>expr</i> does not evaluate to the 
+  name of an attached database other than "temp" or "main".
+</b></blockquote>
+
+<h3>5.7 EXPLAIN</h3>
+
+<a name="H44700"></a>
+<blockquote><b>H44700:</b>
+  The SQLite parser shall accept the EXPLAIN keyword as a prefix
+  to other valid SQL statements, as shown by the following syntax:
+<blockquote><pre>
+sql_statement ::= EXPLAIN cmd SEMI.
+</pre></blockquote></b></blockquote>
+
+<h3>5.8 EXPLAIN QUERY PLAN</h3>
+
+<a name="H44800"></a>
+<blockquote><b>H44800:</b>
+  The SQLite parser shall accept EXPLAIN QUERY PLAY as a prefix
+  to other valid SQL statements, as shown by the following syntax:
+<blockquote><pre>
+sql_statement ::= EXPLAIN QUERY PLAN cmd SEMI.
+</pre></blockquote></b></blockquote>
+
+<h2>6.0 Common Language Subelements</h2>
+
+<h3>6.1 Expressions</h3>
+
+<a name="H47000"></a>
+<blockquote><b>H47000:</b>
+  The SQLite parser shall accept expressions that
+  conform to the following syntax:
+<blockquote><pre>
+expr ::= BITNOT expr.
+expr ::= CASE case_operand case_exprlist case_else END.
+expr ::= CAST LP expr AS typetoken RP.
+expr ::= EXISTS LP select RP.
+expr ::= function_name LP STAR RP.
+expr ::= function_name LP distinct exprlist RP.
+expr ::= LP expr RP.
+expr ::= LP select RP.
+expr ::= MINUS expr.
+expr ::= NOT expr.
+expr ::= PLUS expr.
+expr ::= RAISE LP IGNORE RP.
+expr ::= RAISE LP ABORT COMMA name RP.
+expr ::= RAISE LP FAIL COMMA name RP.
+expr ::= RAISE LP ROLLBACK COMMA name RP.
+expr ::= VARIABLE.
+expr ::= expr AND expr.
+expr ::= expr BITAND expr.
+expr ::= expr BITOR expr.
+expr ::= expr LSHIFT expr.
+expr ::= expr RSHIFT expr.
+expr ::= expr COLLATE ids.
+expr ::= expr CONCAT expr.
+expr ::= expr EQ expr.
+expr ::= expr NE expr.
+expr ::= expr IS NOT NULL.
+expr ::= expr IS NULL.
+expr ::= expr ISNULL
+expr ::= expr NOTNULL.
+expr ::= expr LT expr.
+expr ::= expr GT expr.
+expr ::= expr GE expr.
+expr ::= expr LE expr.
+expr ::= expr NOT NULL.
+expr ::= expr OR expr.
+expr ::= expr PLUS expr.
+expr ::= expr MINUS expr.
+expr ::= expr STAR expr.
+expr ::= expr SLASH expr.
+expr ::= expr REM expr.
+expr ::= expr BETWEEN expr AND expr.
+expr ::= expr NOT BETWEEN expr AND expr.
+expr ::= expr IN LP exprlist RP.
+expr ::= expr IN LP select RP.
+expr ::= expr IN fullname.
+expr ::= expr NOT IN LP exprlist RP.
+expr ::= expr NOT IN LP select RP.
+expr ::= expr NOT IN fullname.
+expr ::= expr LIKE_KW expr escape.
+expr ::= expr MATCH expr escape.
+expr ::= expr NOT LIKE_KW expr escape.
+expr ::= expr NOT MATCH expr escape.
+expr ::= rtvalue.
+expr ::= term.
+term ::= CTIME_KW.
+term ::= INTEGER.
+term ::= FLOAT
+term ::= BLOB.
+term ::= NULL.
+term ::= STRING.
+exprlist ::= expr.
+exprlist ::= exprlist COMMA expr.
+case_else ::= ELSE expr.
+case_else ::= .
+case_exprlist ::= WHEN expr THEN expr.
+case_exprlist ::= case_exprlist WHEN expr THEN expr.
+case_operand ::= expr.
+case_operand ::= .
+function_name ::= ID.
+escape ::= .
+escape ::= ESCAPE expr.
+</pre></blockquote></b></blockquote><a name="H47003"></a>
+<blockquote><b>H47003:</b>
+  The unary PLUS, unary MINUS, and BITNOT operators shall have
+  precedence over the COLLATE operator.
+</b></blockquote><a name="H47006"></a>
+<blockquote><b>H47006:</b>
+  The COLLATE operator shall have precedence over the CONCAT
+  operator.
+</b></blockquote><a name="H47009"></a>
+<blockquote><b>H47009:</b>
+  The CONCAT operator shall have precedence over the STAR, SLASH,
+  and REM operators.
+</b></blockquote><a name="H47012"></a>
+<blockquote><b>H47012:</b>
+  The STAR, SLASH, and REM operator shall have equal precedence.
+</b></blockquote><a name="H47015"></a>
+<blockquote><b>H47015:</b>
+  The STAR, SLASH, and REM operators shall have precedence over the
+  binary PLUS and binary MINUS operators.
+</b></blockquote><a name="H47018"></a>
+<blockquote><b>H47018:</b>
+  The binary PLUS and binary MINUS operators shall have equal precedence.
+</b></blockquote><a name="H47021"></a>
+<blockquote><b>H47021:</b>
+  The binary PLUS and binary MINUS operators shall have precedence
+  over the BITAND, BITOR, LSHIFT, and RSHIFT operators.
+</b></blockquote><a name="H47024"></a>
+<blockquote><b>H47024:</b>
+  The BITAND, BITOR, LSHIFT, and RSHIFT operators shall have equal
+  precendence.
+</b></blockquote><a name="H47027"></a>
+<blockquote><b>H47027:</b>
+  The BITAND, BITOR, LSHIFT, and RSHIFT operators shall have precedence
+  over the ESCAPE operator.
+</b></blockquote><a name="H47029"></a>
+<blockquote><b>H47029:</b>
+  The ESCAPE operator shall have precedence over
+  the GT, LE, LT, and GE operators.
+</b></blockquote><a name="H47033"></a>
+<blockquote><b>H47033:</b>
+  The GT, LE, LT, and GE operators shall have equal precedence.
+</b></blockquote><a name="H47036"></a>
+<blockquote><b>H47036:</b>
+  The GT, LE, LT, and GE operators shall have precedence over
+  the IS, MATCH, LIKE_KW, BETWEEN, IN, ISNULL, NOTNULL, NE, and EQ
+  operators shall have equal precedence.
+</b></blockquote><a name="H47039"></a>
+<blockquote><b>H47039:</b>
+  The IS, MATCH, LIKE_KW, BETWEEN, IN, ISNULL, NOTNULL, NE, and EQ
+  operators shall have equal precedence.
+</b></blockquote><a name="H47042"></a>
+<blockquote><b>H47042:</b>
+  The IS, MATCH, LIKE_KW, BETWEEN, IN, ISNULL, NOTNULL, NE, and EQ
+  operators shall have precedence over the unary NOT operator.
+</b></blockquote><a name="H47045"></a>
+<blockquote><b>H47045:</b>
+  The unary NOT operator shall have precedence over the AND operator.
+</b></blockquote><a name="H47048"></a>
+<blockquote><b>H47048:</b>
+  The AND operator shall have precedence over the OR operator.
+</b></blockquote><a name="H47051"></a>
+<blockquote><b>H47051:</b>
+  Operators of equal precedence shall group from right to left.
+</b></blockquote>
+
+<h3>6.2 Symbolic Names</h3>
+
+<a name="H49100"></a>
+<blockquote><b>H49100:</b>
+  The SQLite parser shall accept names, fullnames, and identifiers
+  that conform to the following syntax:
+<blockquote><pre>
+name ::= ID.
+name ::= JOIN_KW.
+name ::= STRING.
+fullname ::= objectname.
+fullname ::= databasename DOT objectname.
+objectname ::= name.
+databasename ::= name.
+columnname ::= name.
+identifier ::= ID.
+identifier ::= STRING.
+</pre></blockquote></b></blockquote><a name="H49103"></a>
+<blockquote><b>H49103:</b>
+  The SQLite parser shall accept <i>rtvalue</i> elements of an
+  <i>expr</i> that conform to the following syntax:
+<blockquote><pre>
+rtvalue ::= databasename DOT tablename DOT columnname.
+rtvalue ::= tablename DOT columnname.
+rtvalue ::= ID.
+rtvalue ::= JOIN_KW.
+</pre></blockquote></b></blockquote>
+<hr><small><i>
+This page last modified 2008/08/13 22:29:43 UTC
+</i></small></div></body></html>

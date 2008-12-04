@@ -70,26 +70,11 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a><h3>expression</h3><table cellpadding="10"><tr><td align="right" valign="top"><i><font color="#ff3434">expr</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0"></font></b><i><font color="#ff3434">expr</font></i><b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">binary-op</font></i><b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">expr</font></i><b><font color="#2c2cf0"> </font></b><big>|</big><b><font color="#2c2cf0"><br>
-</font></b><i><font color="#ff3434">expr</font></i><b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0">NOT</font></b>]<b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">like-op</font></i><b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">expr</font></i><b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0">ESCAPE </font></b><i><font color="#ff3434">expr</font></i><b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"> </font></b><big>|</big><b><font color="#2c2cf0"><br>
-</font></b><i><font color="#ff3434">unary-op</font></i><b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">expr</font></i><b><font color="#2c2cf0"> </font></b><big>|</big><b><font color="#2c2cf0"><br>
-<big>(</big> </font></b><i><font color="#ff3434">expr</font></i><b><font color="#2c2cf0"> <big>)</big> </font></b><big>|</big><b><font color="#2c2cf0"><br>
-</font></b><i><font color="#ff3434">column-name</font></i><b><font color="#2c2cf0"> </font></b><big>|</big><b><font color="#2c2cf0"><br>
-</font></b><i><font color="#ff3434">table-name</font></i><b><font color="#2c2cf0"> <big>.</big> </font></b><i><font color="#ff3434">column-name</font></i><b><font color="#2c2cf0"> </font></b><big>|</big><b><font color="#2c2cf0"><br>
-</font></b><i><font color="#ff3434">database-name</font></i><b><font color="#2c2cf0"> <big>.</big> </font></b><i><font color="#ff3434">table-name</font></i><b><font color="#2c2cf0"> <big>.</big> </font></b><i><font color="#ff3434">column-name</font></i><b><font color="#2c2cf0"> </font></b><big>|</big><b><font color="#2c2cf0"><br>
-</font></b><i><font color="#ff3434">literal-value</font></i><b><font color="#2c2cf0"> </font></b><big>|</big><b><font color="#2c2cf0"><br>
-</font></b><i><font color="#ff3434">parameter</font></i><b><font color="#2c2cf0"> </font></b><big>|</big><b><font color="#2c2cf0"><br>
-</font></b><i><font color="#ff3434">function-name</font></i><b><font color="#2c2cf0"> <big>(</big> </font></b><i><font color="#ff3434">expr-list</font></i><b><font color="#2c2cf0"> </font></b><big>|</big><b><font color="#2c2cf0"> <big>*</big> <big>)</big> </font></b><big>|</big><b><font color="#2c2cf0"><br>
-</font></b><i><font color="#ff3434">expr</font></i><b><font color="#2c2cf0"> ISNULL </font></b><big>|</big><b><font color="#2c2cf0"><br>
-</font></b><i><font color="#ff3434">expr</font></i><b><font color="#2c2cf0"> NOTNULL </font></b><big>|</big><b><font color="#2c2cf0"><br>
-</font></b><i><font color="#ff3434">expr</font></i><b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0">NOT</font></b>]<b><font color="#2c2cf0"> BETWEEN </font></b><i><font color="#ff3434">expr</font></i><b><font color="#2c2cf0"> AND </font></b><i><font color="#ff3434">expr</font></i><b><font color="#2c2cf0"> </font></b><big>|</big><b><font color="#2c2cf0"><br>
-</font></b><i><font color="#ff3434">expr</font></i><b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0">NOT</font></b>]<b><font color="#2c2cf0"> IN <big>(</big> </font></b><i><font color="#ff3434">value-list</font></i><b><font color="#2c2cf0"> <big>)</big> </font></b><big>|</big><b><font color="#2c2cf0"><br>
-</font></b><i><font color="#ff3434">expr</font></i><b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0">NOT</font></b>]<b><font color="#2c2cf0"> IN <big>(</big> </font></b><i><font color="#ff3434">select-statement</font></i><b><font color="#2c2cf0"> <big>)</big> </font></b><big>|</big><b><font color="#2c2cf0"><br>
-</font></b><i><font color="#ff3434">expr</font></i><b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0">NOT</font></b>]<b><font color="#2c2cf0"> IN </font></b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">database-name</font></i><b><font color="#2c2cf0"> <big>.</big></font></b>]<b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">table-name</font></i><b><font color="#2c2cf0"> </font></b><big>|</big><b><font color="#2c2cf0"><br>
-</font></b>[<b><font color="#2c2cf0">EXISTS</font></b>]<b><font color="#2c2cf0"> <big>(</big> </font></b><i><font color="#ff3434">select-statement</font></i><b><font color="#2c2cf0"> <big>)</big> </font></b><big>|</big><b><font color="#2c2cf0"><br>
-CASE </font></b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">expr</font></i><b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"> </font></b>(<b><font color="#2c2cf0"> WHEN </font></b><i><font color="#ff3434">expr</font></i><b><font color="#2c2cf0"> THEN </font></b><i><font color="#ff3434">expr</font></i><b><font color="#2c2cf0"> </font></b>)+<b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0">ELSE </font></b><i><font color="#ff3434">expr</font></i><b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"> END </font></b><big>|</big><b><font color="#2c2cf0"><br>
-CAST <big>(</big> </font></b><i><font color="#ff3434">expr</font></i><b><font color="#2c2cf0"> AS </font></b><i><font color="#ff3434">type</font></i><b><font color="#2c2cf0"> <big>)</big> </font></b><big>|</big><b><font color="#2c2cf0"><br>
-</font></b><i><font color="#ff3434">expr</font></i><b><font color="#2c2cf0"> COLLATE </font></b><i><font color="#ff3434">collation-name</font></i><b><font color="#2c2cf0"></font></b></td></tr><tr><td align="right" valign="top"><i><font color="#ff3434">like-op</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0">LIKE </font></b><big>|</big><b><font color="#2c2cf0"> GLOB </font></b><big>|</big><b><font color="#2c2cf0"> REGEXP </font></b><big>|</big><b><font color="#2c2cf0"> MATCH</font></b></td></tr></table>
+<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a><h3>expression</h3><h4><a href="syntaxdiagrams.html#expr">expr:</a></h4><blockquote> <img src="images/syntax/expr.gif"></img> </blockquote>
+<h4><a href="syntaxdiagrams.html#literal-value">literal-value:</a></h4><blockquote> <img src="images/syntax/literal-value.gif"></img> </blockquote>
+<h4><a href="syntaxdiagrams.html#signed-number">signed-number:</a></h4><blockquote> <img src="images/syntax/signed-number.gif"></img> </blockquote>
+<h4><a href="syntaxdiagrams.html#raise-function">raise-function:</a></h4><blockquote> <img src="images/syntax/raise-function.gif"></img> </blockquote>
+
 
 <p>This section is different from the others.  Most other sections of
 this document talks about a particular SQL command.  This section does
@@ -231,7 +216,8 @@ to include literal percent or underscore characters. The escape
 character followed by a percent symbol, underscore or itself matches a
 literal percent symbol, underscore or escape character in the string,
 respectively. The infix LIKE operator is implemented by calling the
-user function <a href="#likeFunc"> like(<i>X</i>,<i>Y</i>)</a>.</p>
+application-defined SQL functions <a href="lang_corefunc.html#like">like(<i>Y</i>,<i>X</i>)</a> or
+<a href="lang_corefunc.html#like">like(<i>Y</i>,<i>X</i>,<i>Z</i>)</a></a>.</p>
 
 The LIKE operator is not case sensitive and will match upper case
 characters on one side against lower case characters on the other.  
@@ -256,7 +242,7 @@ file globbing syntax for its wildcards.  Also, GLOB is case
 sensitive, unlike LIKE.  Both GLOB and LIKE may be preceded by
 the NOT keyword to invert the sense of the test.  The infix GLOB 
 operator is implemented by calling the function
-<a href="lang_expr.html#glob">glob(<i>X</i>,<i>Y</i>)</a> and can be modified by overriding
+<a href="lang_corefunc.html#glob">glob(<i>Y</i>,<i>X</i>)</a> and can be modified by overriding
 that function.</p>
 
 <a name="regexp"></a>
@@ -330,5 +316,5 @@ may only be used in a SELECT statement.  Aggregate functions compute
 their result across all rows of the result set.</p>
 
 <hr><small><i>
-This page last modified 2008/07/18 18:34:10 UTC
+This page last modified 2008/10/10 23:40:04 UTC
 </i></small></div></body></html>

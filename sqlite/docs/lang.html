@@ -80,7 +80,8 @@ while at the same time
 adding a few features of its own.  This document attempts to
 describe precisely what parts of the SQL language SQLite does
 and does not support.  A list of <a href="lang_keywords.html">keywords</a> is 
-also provided.</p>
+also provided.  The SQL language syntax is described by
+<a href="syntaxdiagrams.html">syntax diagrams</a>.</p>
 
 <p>In all of the syntax diagrams that follow, literal text is shown in
 bold blue.  Non-terminal symbols are shown in italic red.  Operators
@@ -96,9 +97,15 @@ the grammar file "parse.y".</p>
 <table width="100%" cellpadding="5" border="0">
 <tr><td valign="top"><ul>
 
-<li><a href="lang_aggfunc.html">aggregate functions</a></li><li><a href="lang_altertable.html">ALTER TABLE</a></li><li><a href="lang_analyze.html">ANALYZE</a></li><li><a href="lang_attach.html">ATTACH DATABASE</a></li><li><a href="lang_transaction.html">BEGIN TRANSACTION</a></li><li><a href="lang_comment.html">comment</a></li><li><a href="lang_transaction.html">COMMIT TRANSACTION</a></li><li><a href="lang_corefunc.html">core functions</a></li><li><a href="lang_createindex.html">CREATE INDEX</a></li><li><a href="lang_createtable.html">CREATE TABLE</a></li><li><a href="lang_createtrigger.html">CREATE TRIGGER</a></li></ul></td><td valign="top"><ul><li><a href="lang_createview.html">CREATE VIEW</a></li><li><a href="lang_createvtab.html">CREATE VIRTUAL TABLE</a></li><li><a href="lang_datefunc.html">date and time functions</a></li><li><a href="lang_delete.html">DELETE</a></li><li><a href="lang_detach.html">DETACH DATABASE</a></li><li><a href="lang_dropindex.html">DROP INDEX</a></li><li><a href="lang_droptable.html">DROP TABLE</a></li><li><a href="lang_droptrigger.html">DROP TRIGGER</a></li><li><a href="lang_dropview.html">DROP VIEW</a></li><li><a href="lang_transaction.html">END TRANSACTION</a></li><li><a href="lang_explain.html">EXPLAIN</a></li></ul></td><td valign="top"><ul><li><a href="lang_expr.html">expression</a></li><li><a href="lang_insert.html">INSERT</a></li><li><a href="lang_keywords.html">keywords</a></li><li><a href="lang_conflict.html">ON CONFLICT clause</a></li><li><a href="pragma.html">PRAGMA</a></li><li><a href="lang_reindex.html">REINDEX</a></li><li><a href="lang_replace.html">REPLACE</a></li><li><a href="lang_transaction.html">ROLLBACK TRANSACTION</a></li><li><a href="lang_select.html">SELECT</a></li><li><a href="lang_update.html">UPDATE</a></li><li><a href="lang_vacuum.html">VACUUM</a></li>
+<li><a href="lang_aggfunc.html">aggregate functions</a></li><li><a href="lang_altertable.html">ALTER TABLE</a></li><li><a href="lang_analyze.html">ANALYZE</a></li><li><a href="lang_attach.html">ATTACH DATABASE</a></li><li><a href="lang_transaction.html">BEGIN TRANSACTION</a></li><li><a href="lang_comment.html">comment</a></li><li><a href="lang_transaction.html">COMMIT TRANSACTION</a></li><li><a href="lang_corefunc.html">core functions</a></li><li><a href="lang_createindex.html">CREATE INDEX</a></li><li><a href="lang_createtable.html">CREATE TABLE</a></li><li><a href="lang_createtrigger.html">CREATE TRIGGER</a></li><li><a href="lang_createview.html">CREATE VIEW</a></li></ul></td><td valign="top"><ul><li><a href="lang_createvtab.html">CREATE VIRTUAL TABLE</a></li><li><a href="lang_datefunc.html">date and time functions</a></li><li><a href="lang_delete.html">DELETE</a></li><li><a href="lang_detach.html">DETACH DATABASE</a></li><li><a href="lang_dropindex.html">DROP INDEX</a></li><li><a href="lang_droptable.html">DROP TABLE</a></li><li><a href="lang_droptrigger.html">DROP TRIGGER</a></li><li><a href="lang_dropview.html">DROP VIEW</a></li><li><a href="lang_transaction.html">END TRANSACTION</a></li><li><a href="lang_explain.html">EXPLAIN</a></li><li><a href="lang_expr.html">expression</a></li><li><a href="lang_indexedby.html">INDEXED BY</a></li></ul></td><td valign="top"><ul><li><a href="lang_insert.html">INSERT</a></li><li><a href="lang_keywords.html">keywords</a></li><li><a href="lang_conflict.html">ON CONFLICT clause</a></li><li><a href="pragma.html">PRAGMA</a></li><li><a href="lang_reindex.html">REINDEX</a></li><li><a href="lang_replace.html">REPLACE</a></li><li><a href="lang_transaction.html">ROLLBACK TRANSACTION</a></li><li><a href="lang_select.html">SELECT</a></li><li><a href="lang_update.html">UPDATE</a></li><li><a href="lang_vacuum.html">VACUUM</a></li>
 </ul></td></tr></table>
 
+<p>The general outline of all SQL statements understood by
+SQLite is as follows:</p>
+
+<h4><a href="syntaxdiagrams.html#sql-stmt">sql-stmt:</a></h4><blockquote> <img src="images/syntax/sql-stmt.gif"></img> </blockquote>
+
+
 <hr><small><i>
-This page last modified 2008/07/18 18:34:10 UTC
+This page last modified 2008/10/10 23:40:04 UTC
 </i></small></div></body></html>

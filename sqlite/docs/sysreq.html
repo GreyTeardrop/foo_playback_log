@@ -87,7 +87,7 @@ term, since SQLite is always a sub-component of a larger system.</p>
 
 <p>This document is targeted primarily at developers who are
 working within a waterfall development model that uses detailed
-requirements using the modal auxiliary verb "shall".  
+requirements written with the modal auxiliary verb "shall".  
 However, this document is also useful as a general-purpose high-level 
 description of SQLite for developers who are not working under
 different development paradigms.</p>
@@ -98,16 +98,17 @@ different development paradigms.</p>
 <p>
   SQLite is an SQL database engine.  And the fundamental task of
   every SQL database engine it to translate the abstract SQL statements
-  readily understood by humans, into sequences of I/O operations readily
-  understood by computer hardware.
+  readily understood by humans into sequences of I/O operations readily
+  understood by computer hardware.  This requirement expresses the
+  essense of SQLite.
 </p><blockquote><b>S10000:</b>
   The SQLite library shall translate high-level SQL statements into
   low-level I/O calls to persistent storage.
-</b></blockquote<a name="S10100"></a>
+</b></blockquote><a name="S10100"></a>
 <p>
   SQL is one of the worlds most widely known programming languages,
   but it is also one of the most ill-defined.  There are various SQL
-  standards documents available.  But the SQL standards documents are 
+  standards documents available.  However the SQL standards documents are 
   obtuse to the point of being incomprehensible.  And the standards 
   allow for so much "implementation defined" behavior that there exist
   two SQL database engines understand exactly the same language.</p>
@@ -128,20 +129,20 @@ different development paradigms.</p>
 </p><blockquote><b>S10100:</b>
   The SQLite library shall accepts a well-defined dialect of SQL
   that conforms to published SQL standards.
-</b></blockquote<a name="S10110"></a>
+</b></blockquote><a name="S10110"></a>
 <p>
   SQLite is able to hold content in various datatypes and sizes.
 </p><blockquote><b>S10110:</b>
   The SQLite library shall support BLOB, CLOB, integer, and floating-point
   datatypes.
-</b></blockquote<a name="S10120"></a>
+</b></blockquote><a name="S10120"></a>
 <p>
   SQLite handles NULLs in accordance with SQL
   standards and in a manner that is compatible with SQL standards.
 </p><blockquote><b>S10120:</b>
   The SQLite library shall implement the standard SQL interpretation
   of NULL values.
-</b></blockquote<a name="S10200"></a>
+</b></blockquote><a name="S10200"></a>
 <p>
   Most other database
   engines implement a client/server model in which a small client library
@@ -152,7 +153,7 @@ different development paradigms.</p>
 </p><blockquote><b>S10200:</b>  
   The SQLite library shall communicate directly with database files
   in persistent storage.
-</b></blockquote<a name="S10300"></a>
+</b></blockquote><a name="S10300"></a>
 <p>
   In the database world, "ACID" is an acronym for Atomic, Consistent,
   Isolated, and Durable.  Atomic means that a change to the database
@@ -166,7 +167,7 @@ different development paradigms.</p>
   software crash or power failure.
 </p><blockquote><b>S10300:</b>
   The SQLite library shall implement ACID transactions.
-</b></blockquote<a name="S10500"></a>
+</b></blockquote><a name="S10500"></a>
 <p>
   An operating system crash or an unexpected power loss can
   sometimes damage
@@ -183,7 +184,7 @@ different development paradigms.</p>
   The SQLite library shall implement transactions that are robust
   across application crashes, operating-system crashes, and power
   failures.
-</b></blockquote<a name="S10600"></a>
+</b></blockquote><a name="S10600"></a>
 <p>
   Many applications benefit from being about to access multiple
   database file using the same database connection, so that 
@@ -193,14 +194,14 @@ different development paradigms.</p>
 </p><blockquote><b>S10600:</b>  
   The SQLite library shall support simultaneous access to multiple
   database files on the same database connection.
-</b></blockquote<a name="S10700"></a>
+</b></blockquote><a name="S10700"></a>
 <p>
   A database is of little practical use if one is unable to obtain
   information from the database.  Hence:
 </p><blockquote><b>S10700:</b>
   The SQLite library shall provide interfaces that allow the application
   to obtain the status and results of SQL operations.
-</b></blockquote
+</b></blockquote>
 <h2>2.0 SQLite is designed to be extensible by the application</h2>
 <a name="S20000"></a>
 <p>
@@ -212,7 +213,7 @@ different development paradigms.</p>
   application-defined functions and behaviors.
 </p><blockquote><b>S20000:</b>
   The SQLite library shall be extensible and configurable.
-</b></blockquote<a name="S20100"></a>
+</b></blockquote><a name="S20100"></a>
 <p>
   SQLite works on common workstations and in embedded systems.
   Sometimes these devices, particularly embedded systems,
@@ -222,19 +223,19 @@ different development paradigms.</p>
 </p><blockquote><b>S20100:</b>
   The SQLite library shall provide interfaces that permit the application
   to override interfaces to the platform on which the application is running.
-</b></blockquote<a name="S20110"></a>
+</b></blockquote><a name="S20110"></a>
 <blockquote><b>S20110:</b>
   The SQLite library shall provide interfaces that permit the application
   to override the interfaces used to read and write persistent storage.
-</b></blockquote<a name="S20120"></a>
+</b></blockquote><a name="S20120"></a>
 <blockquote><b>S20120:</b>
   The SQLite library shall provide interfaces that permit the application
   to override the interfaces used for memory allocation.
-</b></blockquote<a name="S20130"></a>
+</b></blockquote><a name="S20130"></a>
 <blockquote><b>S20130:</b>
   The SQLite library shall provide interfaces that permit the application
   to override the interfaces used for controlling mutexes.
-</b></blockquote<a name="S20200"></a>
+</b></blockquote><a name="S20200"></a>
 <p>
   Most SQL database engines support a rich set of SQL functions.
   SQLite, in contrast, supports only a select few SQL functions.
@@ -243,7 +244,7 @@ different development paradigms.</p>
 </p><blockquote><b>S20200:</b>
   The SQLite library shall provide interfaces that permit the application
   to create new SQL functions.
-</b></blockquote<a name="S20300"></a>
+</b></blockquote><a name="S20300"></a>
 <p>
   By default, SQLite only understands ASCII text.  The tables needed
   to do proper comparisons and case folding
@@ -259,7 +260,7 @@ different development paradigms.</p>
 </p><blockquote><b>S20300:</b>
   The SQLite library shall provide interfaces that permit the application
   to create new text collating sequences.
-</b></blockquote<a name="S20400"></a>
+</b></blockquote><a name="S20400"></a>
 <p>
   A virtual table is an SQL object that appears to be an ordinary
   SQL table for the purposes of INSERT, UPDATE, DELETE, and SELECT statements.
@@ -270,7 +271,7 @@ different development paradigms.</p>
 </p><blockquote><b>S20400:</b>
   The SQLite library shall provide interfaces that permit the application
   to create new classes of virtual SQL tables.
-</b></blockquote<a name="S20500"></a>
+</b></blockquote><a name="S20500"></a>
 <p>
   Some applications choose to package extensions in separate
   shared library files and load those extensions at run-time on
@@ -281,7 +282,7 @@ different development paradigms.</p>
 </p><blockquote><b>S20500:</b>
   The SQLite library shall provide interfaces that permit the application
   to load extensions at run-time using shared libraries.
-</b></blockquote<a name="S20600"></a>
+</b></blockquote><a name="S20600"></a>
 <p>
   SQLite has finite limits.  For example, there is a maximum size BLOB
   or CLOB that SQLite will store, a maximum size to a database file,
@@ -298,7 +299,7 @@ different development paradigms.</p>
 </p><blockquote><b>S20600:</b>
   The SQLite library shall provide interfaces that permit the application
   to dynamically query and modify size limits.
-</b></blockquote
+</b></blockquote>
 <h2>3.0 SQLite is lightweight and leak-free</h2>
 <a name="S30000"></a>
 <p>
@@ -311,7 +312,7 @@ different development paradigms.</p>
 </p><blockquote><b>S30000:</b>
   The SQLite library shall be safe for use in long-running,
   low-resource, high-reliability applications.
-</b></blockquote<a name="S30100"></a>
+</b></blockquote><a name="S30100"></a>
 <p>
   A "Proper shutdown" means that all resources that the application
   has allocated from SQLite have been released by the application.
@@ -320,7 +321,7 @@ different development paradigms.</p>
 </p><blockquote><b>S30100:</b>
   The SQLite library shall release all system resources it holds
   when it is properly shutdown.
-</b></blockquote<a name="S30200"></a>
+</b></blockquote><a name="S30200"></a>
 <p>
   Safety-critical systems typically disallow the use of malloc() and
   free() because one never knows when they might fail due to memory
@@ -350,7 +351,7 @@ different development paradigms.</p>
   The SQLite library shall be configurable so that it is guaranteed
   to never fail a memory allocation as long as the application does
   not request resources in excess of reasonable and published limits.
-</b></blockquote<a name="S30210"></a>
+</b></blockquote><a name="S30210"></a>
 <p>
   To help insure that an
   application never fails a memory allocation call, SQLite provides
@@ -367,7 +368,7 @@ different development paradigms.</p>
   The SQLite library shall be provide instrumentation that can alert
   the application when its resource usages nears or exceeds the limits
   of the memory breakdown guarantee.
-</b></blockquote<a name="S30220"></a>
+</b></blockquote><a name="S30220"></a>
 <p>
   When SQLite comes under memory pressure, it can be configured to
   recycle memory from one use to another, thus helping to reduce the
@@ -380,7 +381,7 @@ different development paradigms.</p>
 </p><blockquote><b>S30220:</b>
   The SQLite library shall be provide facilities to automatically
   recycle memory when usage nears preset limits.
-</b></blockquote<a name="S30230"></a>
+</b></blockquote><a name="S30230"></a>
 <p>
   SQLite provides the ability to read and write megabyte
   or gigabyte blobs and text strings without having to allocate
@@ -393,7 +394,7 @@ different development paradigms.</p>
 </p><blockquote><b>S30230:</b>
   The SQLite library shall be permit BLOB and CLOB objects to be
   read and written incrementally using small memory buffers.
-</b></blockquote<a name="S30300"></a>
+</b></blockquote><a name="S30300"></a>
 <p>
   Memory allocation problems do not cause SQLite to fail
   catastrophically.
@@ -407,7 +408,7 @@ different development paradigms.</p>
   When a memory allocation fails, SQLite shall either silently make
   due without the requested memory or else it shall report the error
   back to the application.
-</b></blockquote<a name="S30400"></a>
+</b></blockquote><a name="S30400"></a>
 <p>
   SQLite responses sanely to disk I/O errors.  If it is unable
   to work around the problem, SQLite might have to report the error
@@ -418,7 +419,7 @@ different development paradigms.</p>
   When a I/O operation fails, SQLite shall either silently 
   recover or else it shall report the error
   back to the application.
-</b></blockquote<a name="S30500"></a>
+</b></blockquote><a name="S30500"></a>
 <p>
   SQLite is able to cleanly abort an operation in progress and
   afterwards continue functioning normally without any memory or
@@ -432,7 +433,7 @@ different development paradigms.</p>
 </p><blockquote><b>S30500:</b>
   SQLite shall provide the capability to monitor
   the progress and interrupt the evaluation of a long-running query.
-</b></blockquote<a name="S30600"></a>
+</b></blockquote><a name="S30600"></a>
 <p>
   When information is deleted from an SQLite database, the default
   action is for SQLite to mark the space as unused and then to reuse
@@ -442,12 +443,12 @@ different development paradigms.</p>
 </p><blockquote><b>S30600:</b>
   All unused portions of a well-formed SQLite database file shall
   be available for reuse.
-</b></blockquote<a name="S30700"></a>
+</b></blockquote><a name="S30700"></a>
 <blockquote><b>S30700:</b>
   SQLite shall provide the capability to incrementally decrease the
   size of the persistent storage file as information is removed from
   the database.
-</b></blockquote<a name="S30800"></a>
+</b></blockquote><a name="S30800"></a>
 <p>
   In consumer-grade software, it is often acceptable to run tests
   on an instrumented version of the code.  But for high-reliability
@@ -459,14 +460,14 @@ different development paradigms.</p>
 </p><blockquote><b>S30800:</b>
   SQLite shall provide the interfaces that support testing and
   validation of the library code in an as-delivered configuration.
-</b></blockquote<a name="S30900"></a>
+</b></blockquote><a name="S30900"></a>
 <p>
   On resource-constrained devices, it is desirable to get double-duty
   out of resources where possible.
 </p><blockquote><b>S30900:</b>
   SQLite shall provide the ability for separate database connections
   within the same process to share resources.
-</b></blockquote
+</b></blockquote>
 <h2>4.0 SQLite is safe to use in multi-thread and multi-process
 applications.</h2>
 <a name="S40000"></a>
@@ -477,7 +478,7 @@ applications.</h2>
   The SQLite library shall be safe for use in applications that
   make concurrent access to the underlying database from different
   threads and/or processes.
-</b></blockquote<a name="S40100"></a>
+</b></blockquote><a name="S40100"></a>
 <p>
   The developers of SQLite believe that "thread-safe" is a
   self contradiction.  No application that includes multiple threads
@@ -488,14 +489,14 @@ applications.</h2>
 </p><blockquote><b>S40100:</b>
   The SQLite library shall be configurable to operate correctly in
   a multi-threaded application.
-</b></blockquote<a name="S40200"></a>
+</b></blockquote><a name="S40200"></a>
 <p>
   Multiple database connections can be created and operated
   independently within the same thread or process.
 </p><blockquote><b>S40200:</b>
   The SQLite library shall support multiple independent database
   connections per thread and per process.
-</b></blockquote<a name="S40300"></a>
+</b></blockquote><a name="S40300"></a>
 <p>
   SQLite uses both internal mutexes and external file locking to 
   ensure that two or more threads or processes working
@@ -503,11 +504,11 @@ applications.</h2>
 </p><blockquote><b>S40300:</b>
   The SQLite library shall automatically control access to common
   databases from different connections in different threads or processes.
-</b></blockquote<a name="S40400"></a>
+</b></blockquote><a name="S40400"></a>
 <blockquote><b>S40400:</b>
   The SQLite library shall notify the application if an operation can
   not be completed due to concurrent access constraints.
-</b></blockquote<a name="S40410"></a>
+</b></blockquote><a name="S40410"></a>
 <p>
   If an SQL statement cannot be completed because another process is
   holding a lock on the database, then the application needs to be able
@@ -516,7 +517,7 @@ applications.</h2>
   The SQLite library shall provide interfaces to assist the application
   in responding appropriately when an operation can
   not be completed due to concurrent access constraints.
-</b></blockquote
+</b></blockquote>
 <h2>5.0 SQLite is cross-platform</h2>
 <a name="S50000"></a>
 <p>
@@ -529,29 +530,29 @@ applications.</h2>
   instruction sets.
 </p><blockquote><b>S50000:</b>
   The SQLite library shall be cross-platform.
-</b></blockquote<a name="S50100"></a>
+</b></blockquote><a name="S50100"></a>
 <p>
   C has been called the "universal assembly language".
   Nearly all computer systems accept code written in C.
   Thus, to help make SQLite cross-platform:
 </p><blockquote><b>S50100:</b>
   The SQLite library shall be implemented in ANSI-C.
-</b></blockquote<a name="S50200"></a>
+</b></blockquote><a name="S50200"></a>
 <p>
   SQLite stores text data as unicode.  Three separate unicode 
   representations are allowed:
 </p><blockquote><b>S50200:</b>
   The SQLite library shall support text encoded as UTF-8,
   UTF-16le, or UTF-16be.
-</b></blockquote<a name="S50300"></a>
+</b></blockquote><a name="S50300"></a>
 <p>
   An SQLite database file can be freely moved between machine
   with different operating systems, different processors,
   different size integers, and different byte orders.  The same
   database file should work on any machine.
 </p><blockquote><b>S50300:</b>
-  SQLite database files shall by processor and byte-order independent.
-</b></blockquote
+  SQLite database files shall be processor and byte-order independent.
+</b></blockquote>
 <h2>6.0 Introspection</h2>
 <a name="S60000"></a>
 <p>
@@ -562,7 +563,7 @@ applications.</h2>
 </p><blockquote><b>S60000:</b>
   The SQLite library shall provide introspection capabilities to the
   application.
-</b></blockquote<a name="S60100"></a>
+</b></blockquote><a name="S60100"></a>
 <p>
   Some applications are designed to work with different versions
   of SQLite which may or may not enable selected features.  For example,
@@ -575,7 +576,7 @@ applications.</h2>
   The SQLite library shall provide interfaces that an application can
   use to discover fixed, compile-time characteristics of the 
   SQLite library.
-</b></blockquote<a name="S60200"></a>
+</b></blockquote><a name="S60200"></a>
 <p>
   In addition to the compile-time characteristics, SQLite allows
   the run-time settings of the library and of the underlying
@@ -584,20 +585,20 @@ applications.</h2>
   The SQLite library shall provide interfaces that an application can
   use to find run-time performance characteristics and status of the
   SQLite library.
-</b></blockquote<a name="S60300"></a>
+</b></blockquote><a name="S60300"></a>
 <blockquote><b>S60300:</b>
   The SQLite library shall provide interfaces that permit an application
   to query the schema of a database.
-</b></blockquote<a name="S60400"></a>
+</b></blockquote><a name="S60400"></a>
 <blockquote><b>S60400:</b>
   The SQLite library shall provide interfaces that allow an application
   to monitor sequence of queries and progress of submitted to SQLite.
-</b></blockquote<a name="S60500"></a>
+</b></blockquote><a name="S60500"></a>
 <blockquote><b>S60500:</b>
   The SQLite library shall provide interfaces that allow an application
   to discover the algorithms that SQLite has chosen to implement specific
   SQL statements.
-</b></blockquote<a name="S60600"></a>
+</b></blockquote><a name="S60600"></a>
 <p>
   SQLite objects are often related.  For example, every prepared
   statement is associated with a database connection.  And every
@@ -607,7 +608,7 @@ applications.</h2>
 </p><blockquote><b>S60600:</b>
   The SQLite library shall provide interfaces that allow an application
   to discover relationships between SQLite objects.
-</b></blockquote
+</b></blockquote>
 <h2>7.0 Features to promote safe and robust application coding practices</h2>
 <a name="S70000"></a>
 <p>
@@ -637,14 +638,14 @@ applications.</h2>
   The SQLite library shall provide interfaces that promote the safe
   construction and processing of SQL statements and data from
   untrusted sources.
-</b></blockquote<a name="S70100"></a>
+</b></blockquote><a name="S70100"></a>
 <p>
   Some applications (for example
   <a href="http://www.cvstrac.org/">CVSTrac</a> and
   <a href="http://www.fossil-scm.org/">Fossil</a>) will run SELECT
   statements entered by anonymous users on the internet.  Such 
   applications want to be able to guarantee that a hostile users does
-  not access restricted tables (such as the password column of the user
+  not access restricted tables (such as the PASSWORD column of the USER
   table) or modify the database in any way.  SQLite supports the ability
   to analyze an arbitrary SQL statement to insure that it does not
   perform undesired operations.
@@ -652,7 +653,7 @@ applications.</h2>
   The SQLite library shall provide the application means by which the
   application can test and enforce compliance with database access
   policies for any particular SQL statement.
-</b></blockquote<a name="S70200"></a>
+</b></blockquote><a name="S70200"></a>
 <p>
   <p>Applications such as the command-line interface (CLI) for SQLite
   will prompt the user to enter SQL statements and will evaluate those
@@ -665,7 +666,7 @@ applications.</h2>
 </p><blockquote><b>S70200:</b>
   The SQLite library shall provide interfaces that test to see if an
   SQL statement being received incrementally is complete.
-</b></blockquote<a name="S70300"></a>
+</b></blockquote><a name="S70300"></a>
 <p>
   The concept of a "prepared statement" allows an SQL statement to be
   parsed and compiled once and then reused many times.  This is a performance
@@ -676,8 +677,49 @@ applications.</h2>
 </p><blockquote><b>S70300:</b>
   The SQLite library shall support prepared statement objects with
   late parameter binding
-</b></blockquote
-<h2>8.0 Summary Of System Requirements</h2>
+</b></blockquote>
+<h2>8.0 Ductile Failure</h2>
+
+<a name="S80000"></a>
+<p>
+  A common characteristic of digital systems (as opposed to analog
+  systems) is that digital systems tend to be brittle.  In other words,
+  digital systems tend to work perfectly with no sign of stress until 
+  they fail utterly and completely.  The behavior is like a
+  physical object that holds its shape as external
+  loads increase, until it shatters without warning.</p>
+  
+  <p>In most circumstances, ductile failure is preferred over brittle
+  failure.  A ductile device begins showing signs of
+  trouble well in advance of failure.  Physical objects bend and/or crack,
+  providing operators with warnings of overload and an opportunity
+  to take corrective action, while continuing to function for as long
+  as possible.</p>
+  
+  <p>Digital systems have a reputation for being brittle, yet brittleness
+  is not an intrinsic property of digital systems.  Digital systems can
+  be designed to continuing functioning outside their design parameters
+  while providing operators with warning of possible trouble.  But there
+  most be focused effort on the part of the designers to make digital
+  systems ductile.  With analog systems, the ductileness tends to be
+  inherent in the medium, but with digital systems ductileness needs
+  to be explicitly added.
+</p><blockquote><b>S80000:</b>
+  SQLite shall exhibit ductile failure characteristics
+</b></blockquote><a name="S80100"></a>
+<p>
+  SQLite strives to deal gracefully with anomalous behavior by
+  the application or by its own internal subsystems.  Yet graceful
+  handling of out-of-band inputs is of no value if the anomaly goes
+  unreported.  The problems must be visible to the
+  application so that warnings and alarms can be propagated to operators.
+  The useful aspect of ductile failure is that it gives advance warning.
+  Ductile behavior is of no use to anyone if nobody can see the part
+  bending.
+</p><blockquote><b>S80100:</b>
+  SQLite shall make anomalies visible to the application
+</b></blockquote>
+<h2>9.0 Summary Of System Requirements</h2>
 
 <p>The foregoing contained both system requirements and explanatory
 text interspersed.  The following is a reproduction of the system
@@ -685,7 +727,7 @@ requirements without the explanatory text, as a convenient reference.
 The top-level system requirements are shown first, followed by lower-level
 system requirements that provide additional detail.</p>
 
-<h3>8.1 Top-level System Requirements</h3>
+<h3>9.1 Top-level System Requirements</h3>
 
 <blockquote><b>S10000:</b>
   The SQLite library shall translate high-level SQL statements into
@@ -708,9 +750,11 @@ system requirements that provide additional detail.</p>
   The SQLite library shall provide interfaces that promote the safe
   construction and processing of SQL statements and data from
   untrusted sources.
+</blockquote><blockquote><b>S80000:</b>
+  SQLite shall exhibit ductile failure characteristics
 </blockquote>
 
-<h3>8.2 Derived System Requirements</h3>
+<h3>9.2 Derived System Requirements</h3>
 
 <blockquote><b>S10100:</b>
   The SQLite library shall accepts a well-defined dialect of SQL
@@ -826,7 +870,7 @@ system requirements that provide additional detail.</p>
   The SQLite library shall support text encoded as UTF-8,
   UTF-16le, or UTF-16be.
 </blockquote><blockquote><b>S50300:</b>
-  SQLite database files shall by processor and byte-order independent.
+  SQLite database files shall be processor and byte-order independent.
 </blockquote><blockquote><b>S60100:</b>
   The SQLite library shall provide interfaces that an application can
   use to discover fixed, compile-time characteristics of the 
@@ -858,7 +902,9 @@ system requirements that provide additional detail.</p>
 </blockquote><blockquote><b>S70300:</b>
   The SQLite library shall support prepared statement objects with
   late parameter binding
+</blockquote><blockquote><b>S80100:</b>
+  SQLite shall make anomalies visible to the application
 </blockquote>
 <hr><small><i>
-This page last modified 2008/07/23 15:16:37 UTC
+This page last modified 2008/10/10 18:46:12 UTC
 </i></small></div></body></html>

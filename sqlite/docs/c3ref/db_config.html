@@ -85,10 +85,47 @@ configuration verb - an integer code that indicates what
 aspect of the <a href="../c3ref/sqlite3.html">database connection</a> is being configured.
 The only choice for this value is <a href="../c3ref/c_dbconfig_lookaside.html">SQLITE_DBCONFIG_LOOKASIDE</a>.
 New verbs are likely to be added in future releases of SQLite.
-Additional arguments depend on the verb.
+Additional arguments depend on the verb.</p>
+
+<p><h3>Invariants:</h3>
+<table border="0" cellpadding="5" cellspacing="0">
+<tr><td valign="top">H14203</td> 
+<td valign="top">
+A call to <a href="../c3ref/db_config.html">sqlite3_db_config(D,V,...)</a> shall return <a href="../c3ref/c_abort.html">SQLITE_OK</a>
+if and only if the call is successful.</td></tr>
+<tr><td valign="top">H14206</td> 
+<td valign="top">
+If one or more slots of the <a href="../malloc.html#lookaside">lookaside memory allocator</a> for
+<a href="../c3ref/sqlite3.html">database connection</a> D are in use, then a call to
+<a href="../c3ref/db_config.html">sqlite3_db_config</a>(D,<a href="../c3ref/c_dbconfig_lookaside.html">SQLITE_DBCONFIG_LOOKASIDE</a>,...) shall
+fail with an <a href="../c3ref/c_abort.html">SQLITE_BUSY</a> return code.</td></tr>
+<tr><td valign="top">H14209</td> 
+<td valign="top">
+A successful call to
+<a href="../c3ref/db_config.html">sqlite3_db_config</a>(D,<a href="../c3ref/c_dbconfig_lookaside.html">SQLITE_DBCONFIG_LOOKASIDE</a>,B,Z,N) where
+D is an open <a href="../c3ref/sqlite3.html">database connection</a> and Z and N are positive
+integers and B is an aligned buffer at least Z*N bytes in size
+shall cause the <a href="../malloc.html#lookaside">lookaside memory allocator</a> for D to use buffer B
+with N slots of Z bytes each.</td></tr>
+<tr><td valign="top">H14212</td> 
+<td valign="top">
+A successful call to
+<a href="../c3ref/db_config.html">sqlite3_db_config</a>(D,<a href="../c3ref/c_dbconfig_lookaside.html">SQLITE_DBCONFIG_LOOKASIDE</a>,B,Z,N) where
+D is an open <a href="../c3ref/sqlite3.html">database connection</a> and Z and N are positive
+integers and B is NULL pointer shall cause the
+<a href="../malloc.html#lookaside">lookaside memory allocator</a> for D to a obtain Z*N byte buffer
+from the primary memory allocator and use that buffer
+with N lookaside slots of Z bytes each.</td></tr>
+<tr><td valign="top">H14215</td> 
+<td valign="top">
+A successful call to
+<a href="../c3ref/db_config.html">sqlite3_db_config</a>(D,<a href="../c3ref/c_dbconfig_lookaside.html">SQLITE_DBCONFIG_LOOKASIDE</a>,B,Z,N) where
+D is an open <a href="../c3ref/sqlite3.html">database connection</a> and Z and N are zero shall
+disable the <a href="../malloc.html#lookaside">lookaside memory allocator</a> for D.</td></tr>
+</table>
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
   <a href="funclist.html">Functions</a>.</p><hr><small><i>
-This page last modified 2008/08/04 14:33:39 UTC
+This page last modified 2008/08/11 17:57:43 UTC
 </i></small></div></body></html>

@@ -70,24 +70,31 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a><h3>comment</h3><table cellpadding="10"><tr><td align="right" valign="top"><i><font color="#ff3434">comment</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0"></font></b><i><font color="#ff3434">SQL-comment</font></i><b><font color="#2c2cf0"> </font></b><big>|</big><b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">C-comment</font></i><b><font color="#2c2cf0"></font></b></td></tr><tr><td align="right" valign="top"><i><font color="#ff3434">SQL-comment</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0">-- </font></b><i><font color="#ff3434">single-line</font></i><b><font color="#2c2cf0"></font></b></td></tr><tr><td align="right" valign="top"><i><font color="#ff3434">C-comment</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0">/<big>*</big> </font></b><i><font color="#ff3434">multiple-lines</font></i><b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0"><big>*</big>/</font></b>]<b><font color="#2c2cf0"></font></b></td></tr></table>
+<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a><h3>comment</h3><h4><a href="syntaxdiagrams.html#comment-syntax">comment-syntax:</a></h4><blockquote> <img src="images/syntax/comment-syntax.gif"></img> </blockquote>
 
-<p> Comments aren't SQL commands, but can occur in SQL queries. They are 
+
+<p>Comments aren't SQL commands, but can occur within the text of
+SQL queries passed to <a href="c3ref/prepare.html">sqlite3_prepare_v2()</a> and related interfaces..
+Comments are 
 treated as whitespace by the parser.  They can begin anywhere whitespace 
 can be found, including inside expressions that span multiple lines.
 </p>
 
-<p> SQL comments only extend to the end of the current line.</p>
+<p> SQL comments begin with two consecutive "-" characters (ASCII 0x2d)
+and extend up to and including the next newline character (ASCII 0x0a)
+or until the end of input, whichever comes first.</p>
 
-<p> C comments can span any number of lines.  If there is no terminating
-delimiter, they extend to the end of the input.  This is not treated as
-an error.  A new SQL statement can begin on a line after a multiline
-comment ends.  C comments can be embedded anywhere whitespace can occur,
-including inside expressions, and in the middle of other SQL statements.
-C comments do not nest.  SQL comments inside a C comment will be ignored.
+<p> C comments can span any number of lines.  C-style comments begin
+with "/*" and extend up to and including the next "*/" character pair
+or until the end of input, whichever comes first.  C-style comments
+can span multiple lines. </p>
+
+<p> Comments can appear anywhere whitespace can occur,
+including inside expressions and in the middle of other SQL statements.
+Comments do not nest.
 </p>
 
 
 <hr><small><i>
-This page last modified 2008/07/18 18:34:10 UTC
+This page last modified 2008/10/10 23:40:04 UTC
 </i></small></div></body></html>

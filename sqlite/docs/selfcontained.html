@@ -99,7 +99,7 @@ library.   The only required C library functions called are:
 </ul>
 
 <p>
-SQLite can be configured at compile-time to use a static
+SQLite can be configured at start-time to use a static
 buffer in place of calling malloc for the memory it needs.
 The date and time SQL functions provided by SQLite require
 some additional C library support, but those functions can
@@ -115,6 +115,14 @@ alternative VFS for embedded devices.
 </p>
 
 <p>
+For safe operation in multi-threaded environments, SQLite requires
+the use of mutexes.  Appropriate mutex libraries are liked automatically
+for win32 and unix platforms.  For other systems, mutex primitives
+can be added at start-time.  Mutexes are only required if SQLite is
+used by more than one thread at a time.
+</p>
+
+<p>
 The SQLite source code is available as an
 "amalgamation" - a single large C source code file.
 Projects that want to include SQLite can do so simply
@@ -126,5 +134,5 @@ code.  SQLite does not link against any external libraries
 not require any special build support.
 </p>
 <hr><small><i>
-This page last modified 2008/03/03 13:41:48 UTC
+This page last modified 2008/10/09 15:26:13 UTC
 </i></small></div></body></html>

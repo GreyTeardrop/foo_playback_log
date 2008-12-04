@@ -84,6 +84,7 @@ a:visited { color: #734559 }
 #define SQLITE_IOERR_NOMEM             (SQLITE_IOERR | (12&lt;&lt;8))
 #define SQLITE_IOERR_ACCESS            (SQLITE_IOERR | (13&lt;&lt;8))
 #define SQLITE_IOERR_CHECKRESERVEDLOCK (SQLITE_IOERR | (14&lt;&lt;8))
+#define SQLITE_IOERR_LOCK              (SQLITE_IOERR | (15&lt;&lt;8))
 </pre></blockquote><p>
 In its default configuration, SQLite API routines return one of 26 integer
 <a href="../c3ref/c_abort.html">result codes</a>.  However, experience has shown that many of
@@ -125,5 +126,5 @@ its least significant 8 bits.</td></tr>
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
   <a href="funclist.html">Functions</a>.</p><hr><small><i>
-This page last modified 2008/08/04 14:33:39 UTC
+This page last modified 2008/08/11 17:57:43 UTC
 </i></small></div></body></html>

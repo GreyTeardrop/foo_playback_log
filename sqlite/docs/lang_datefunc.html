@@ -207,7 +207,14 @@ The available modifiers are as follows.</p>
 
 <p>The first six modifiers (1 through 6) 
 simply add the specified amount of time to the date 
-specified by the preceding timestring.</p>
+specified by the preceding timestring.
+Note that "&plusmn;NNN months" works by rendering the original date into
+the YYYY-MM-DD format, adding the &plusmn;NNN to the MM month value, then
+normalizing the result.  Thus, for example, the data 2001-03-31 modified
+by '+1 month' initially yields 2001-04-31, but April only has 30 days
+so the date is normalized to 2001-05-01.  A similar effect occurs when
+the original date is February 29 of a leapyear and the modifier is
+&plusmn;N years where N is not a multiple of four.</p>
 
 <p>The "start of" modifiers (7 through 9) shift the date backwards 
 to the beginning of the current month, year or day.</p>
@@ -314,5 +321,5 @@ Gregorian calendar</a> system.  It is also assumed that every
 day is exactly 86400 seconds in duration.</p>
 
 <hr><small><i>
-This page last modified 2008/07/18 18:34:10 UTC
+This page last modified 2008/10/10 23:40:04 UTC
 </i></small></div></body></html>

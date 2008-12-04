@@ -239,10 +239,9 @@ current implementation has a default value of 1000.
 <p>
 The SQLITE_MAX_FUNCTION_ARG parameter determines the maximum number
 of parameters that can be passed to an SQL function.  The default value
-of this limit is 100.  We know of no 
-technical reason why SQLite would not work with functions that have 
-millions of parameters.  However, we suspect that anybody who tries
-to invoke a function with millions of parameters is really
+of this limit is 100.  SQLite should work with functions that have 
+thousands of parameters.  However, we suspect that anybody who tries
+to invoke a function with more than a few parameters is really
 trying to find security exploits in systems that use SQLite, 
 not do useful work, 
 and so for that reason we have set this parameter relatively low.
@@ -359,5 +358,5 @@ limit at run-time.
 </li></ol>
 </li>
 <hr><small><i>
-This page last modified 2008/06/26 02:29:38 UTC
+This page last modified 2008/10/07 19:51:37 UTC
 </i></small></div></body></html>

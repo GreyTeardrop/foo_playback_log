@@ -70,9 +70,9 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a><h3>UPDATE</h3><table cellpadding="10"><tr><td align="right" valign="top"><i><font color="#ff3434">sql-statement</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0">UPDATE </font></b>[<b><font color="#2c2cf0"> OR </font></b><i><font color="#ff3434">conflict-algorithm</font></i><b><font color="#2c2cf0"> </font></b>]<b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">database-name</font></i><b><font color="#2c2cf0"> <big>.</big></font></b>]<b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">table-name</font></i><b><font color="#2c2cf0"><br>
-SET </font></b><i><font color="#ff3434">assignment</font></i><b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0"><big>,</big> </font></b><i><font color="#ff3434">assignment</font></i><b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"></font></b><big>*</big><b><font color="#2c2cf0"><br>
-</font></b>[<b><font color="#2c2cf0">WHERE </font></b><i><font color="#ff3434">expr</font></i><b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"></font></b></td></tr><tr><td align="right" valign="top"><i><font color="#ff3434">assignment</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0"></font></b><i><font color="#ff3434">column-name</font></i><b><font color="#2c2cf0"> <big>=</big> </font></b><i><font color="#ff3434">expr</font></i><b><font color="#2c2cf0"></font></b></td></tr></table>
+<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a><h3>UPDATE</h3><h4><a href="syntaxdiagrams.html#update-stmt">update-stmt:</a></h4><blockquote> <img src="images/syntax/update-stmt.gif"></img> </blockquote>
+<h4><a href="syntaxdiagrams.html#qualified-table-name">qualified-table-name:</a></h4><blockquote> <img src="images/syntax/qualified-table-name.gif"></img> </blockquote>
+
 
 <p>The UPDATE statement is used to change the value of columns in 
 selected rows of a table.  Each assignment in an UPDATE specifies
@@ -86,7 +86,19 @@ constraint conflict resolution algorithm to use during this one command.
 See the section titled
 <a href="lang_conflict.html">ON CONFLICT</a> for additional information.</p>
 
+<p>If SQLite is built with the <a href="compile.html#enable_update_delete_limit">SQLITE_ENABLE_UPDATE_DELETE_LIMIT</a>
+compile-time option then the syntax of the UPDATE statement is extended
+with optional ORDER BY and LIMIT clauses as follows:</p>
+
+<h4><a href="syntaxdiagrams.html#update-stmt-limited">update-stmt-limited:</a></h4><blockquote> <img src="images/syntax/update-stmt-limited.gif"></img> </blockquote>
+
+
+<p>The optional LIMIT clause can be used to limit the number of
+rows modifed, and thereby limit the size of the transaction.
+The ORDER BY clause is used only to determine which rows fall
+within the LIMIT.  The order in which rows are modified is arbitrary
+and is not determined by the ORDER BY clause.</p>
 
 <hr><small><i>
-This page last modified 2008/07/18 18:34:10 UTC
+This page last modified 2008/10/10 23:40:04 UTC
 </i></small></div></body></html>

@@ -88,6 +88,14 @@ then the commit is converted into a rollback.</p>
 <p>If another function was previously registered, its
 pArg value is returned.  Otherwise NULL is returned.</p>
 
+<p>The callback implementation must not do anything that will modify
+the database connection that invoked the callback.  Any actions
+to modify the database connection must be deferred until after the
+completion of the <a href="../c3ref/step.html">sqlite3_step()</a> call that triggered the commit
+or rollback hook in the first place.
+Note that <a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a> and <a href="../c3ref/step.html">sqlite3_step()</a> both modify their
+database connections for the meaning of "modify" in this paragraph.</p>
+
 <p>Registering a NULL function disables the callback.</p>
 
 <p>For the purposes of this API, a transaction is said to have been
@@ -149,5 +157,5 @@ is invoked when a transaction rolls back.</td></tr>
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
   <a href="funclist.html">Functions</a>.</p><hr><small><i>
-This page last modified 2008/08/04 14:33:39 UTC
+This page last modified 2008/08/11 17:57:43 UTC
 </i></small></div></body></html>

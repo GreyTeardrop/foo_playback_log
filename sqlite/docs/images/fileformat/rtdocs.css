@@ -61,4 +61,7 @@
   cite a       { color: inherit; text-decoration: none }
   :link:hover,:visited:hover { background: wheat }
 
-  img {display:block}
+  img {
+    display:block;
+    page-break-inside: avoid;
+  }

@@ -109,7 +109,7 @@ passing it to <a href="../c3ref/close.html">sqlite3_close()</a> when it is no lo
 except that it accepts two additional parameters for additional control
 over the new database connection.  The flags parameter can take one of
 the following three values, optionally combined with the
-<a href="../c3ref/c_open_create.html">SQLITE_OPEN_NOMUTEX</a> flag:</p>
+<a href="../c3ref/c_open_create.html">SQLITE_OPEN_NOMUTEX</a> or <a href="../c3ref/c_open_create.html">SQLITE_OPEN_FULLMUTEX</a> flags:</p>
 
 <p><dl>
 <dt><a href="../c3ref/c_open_create.html">SQLITE_OPEN_READONLY</a></dt>
@@ -129,16 +129,15 @@ sqlite3_open() and sqlite3_open16().</dd>
 
 <p>If the 3rd parameter to sqlite3_open_v2() is not one of the
 combinations shown above or one of the combinations shown above combined
-with the <a href="../c3ref/c_open_create.html">SQLITE_OPEN_NOMUTEX</a> flag, then the behavior is undefined.</p>
+with the <a href="../c3ref/c_open_create.html">SQLITE_OPEN_NOMUTEX</a> or <a href="../c3ref/c_open_create.html">SQLITE_OPEN_FULLMUTEX</a> flags,
+then the behavior is undefined.</p>
 
-<p>If the <a href="../c3ref/c_open_create.html">SQLITE_OPEN_NOMUTEX</a> flag is set, then mutexes on the
-opened <a href="../c3ref/sqlite3.html">database connection</a> are disabled and the appliation must
-insure that access to the <a href="../c3ref/sqlite3.html">database connection</a> and its associated
-<a href="../c3ref/stmt.html">prepared statements</a> is serialized.  The <a href="../c3ref/c_open_create.html">SQLITE_OPEN_NOMUTEX</a> flag
-is the default behavior is SQLite is configured using the
-<a href="../c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_MULTITHREAD</a> or <a href="../c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_SINGLETHREAD</a> options
-to <a href="../c3ref/config.html">sqlite3_config()</a>.  The <a href="../c3ref/c_open_create.html">SQLITE_OPEN_NOMUTEX</a> flag only makes a
-difference when SQLite is in its default <a href="../c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_SERIALIZED</a> mode.</p>
+<p>If the <a href="../c3ref/c_open_create.html">SQLITE_OPEN_NOMUTEX</a> flag is set, then the database connection
+opens in the multi-thread <a href="../threadsafe.html">threading mode</a> as long as the single-thread
+mode has not been set at compile-time or start-time.  If the
+<a href="../c3ref/c_open_create.html">SQLITE_OPEN_FULLMUTEX</a> flag is set then the database connection opens
+in the serialized <a href="../threadsafe.html">threading mode</a> unless single-thread was
+previously selected at compile-time or start-time.</p>
 
 <p>If the filename is ":memory:", then a private, temporary in-memory database
 is created for the connection.  This in-memory database will vanish when
@@ -212,12 +211,12 @@ reading and writing if possible, or for reading only if the
 file is write protected by the operating system.</td></tr>
 <tr><td valign="top">H12713</td> 
 <td valign="top">
-If the G parameter to <a href="../c3ref/open.html">sqlite3_open(v2(F,D,G,V)</a> omits the
+If the G parameter to <a href="../c3ref/open.html">sqlite3_open_v2(F,D,G,V)</a> omits the
 bit value <a href="../c3ref/c_open_create.html">SQLITE_OPEN_CREATE</a> and the database does not
 previously exist, an error is returned.</td></tr>
 <tr><td valign="top">H12714</td> 
 <td valign="top">
-If the G parameter to <a href="../c3ref/open.html">sqlite3_open(v2(F,D,G,V)</a> contains the
+If the G parameter to <a href="../c3ref/open.html">sqlite3_open_v2(F,D,G,V)</a> contains the
 bit value <a href="../c3ref/c_open_create.html">SQLITE_OPEN_CREATE</a> and the database does not
 previously exist, then an attempt is made to create and
 initialize the database.</td></tr>
@@ -250,5 +249,5 @@ processed by the <a href="../c3ref/vfs.html">xFullPathname</a> method of the VFS
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
   <a href="funclist.html">Functions</a>.</p><hr><small><i>
-This page last modified 2008/08/04 14:33:39 UTC
+This page last modified 2008/08/11 17:57:43 UTC
 </i></small></div></body></html>

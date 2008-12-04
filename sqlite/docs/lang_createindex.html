@@ -70,8 +70,9 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a><h3>CREATE INDEX</h3><table cellpadding="10"><tr><td align="right" valign="top"><i><font color="#ff3434">sql-statement</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0">CREATE </font></b>[<b><font color="#2c2cf0">UNIQUE</font></b>]<b><font color="#2c2cf0"> INDEX </font></b>[<b><font color="#2c2cf0">IF NOT EXISTS</font></b>]<b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">database-name</font></i><b><font color="#2c2cf0"> <big>.</big></font></b>]<b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">index-name</font></i><b><font color="#2c2cf0"> <br>
-ON </font></b><i><font color="#ff3434">table-name</font></i><b><font color="#2c2cf0"> <big>(</big> </font></b><i><font color="#ff3434">column-name</font></i><b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0"><big>,</big> </font></b><i><font color="#ff3434">column-name</font></i><b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"></font></b><big>*</big><b><font color="#2c2cf0"> <big>)</big></font></b></td></tr><tr><td align="right" valign="top"><i><font color="#ff3434">column-name</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0"></font></b><i><font color="#ff3434">name</font></i><b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0"> COLLATE </font></b><i><font color="#ff3434">collation-name</font></i><b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0"> ASC </font></b><big>|</big><b><font color="#2c2cf0"> DESC </font></b>]<b><font color="#2c2cf0"></font></b></td></tr></table>
+<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a><h3>CREATE INDEX</h3><h4><a href="syntaxdiagrams.html#create-index-stmt">create-index-stmt:</a></h4><blockquote> <img src="images/syntax/create-index-stmt.gif"></img> </blockquote>
+<h4><a href="syntaxdiagrams.html#indexed-column">indexed-column:</a></h4><blockquote> <img src="images/syntax/indexed-column.gif"></img> </blockquote>
+
 
 <p>The CREATE INDEX command consists of the keywords "CREATE INDEX" followed
 by the name of the new index, the keyword "ON", the name of a previously
@@ -121,5 +122,5 @@ command.</p>
 
 
 <hr><small><i>
-This page last modified 2008/07/18 18:34:10 UTC
+This page last modified 2008/10/10 23:40:04 UTC
 </i></small></div></body></html>

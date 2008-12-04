@@ -111,8 +111,9 @@ different in the following important respects:
 
 <hr /><a name="syntax"></a>
 <h1>PRAGMA command syntax</h1>
-<table cellpadding="10"><tr><td align="right" valign="top"><i><font color="#ff3434">sql-statement</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0">PRAGMA </font></b><i><font color="#ff3434">name</font></i><b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0">= </font></b><i><font color="#ff3434">value</font></i><b><font color="#2c2cf0"></font></b>]<b><font color="#2c2cf0"> </font></b><big>|</big><b><font color="#2c2cf0"><br>
-PRAGMA </font></b><i><font color="#ff3434">function</font></i><b><font color="#2c2cf0"><big>(</big></font></b><i><font color="#ff3434">arg</font></i><b><font color="#2c2cf0"><big>)</big></font></b></td></tr></table>
+<h4><a href="syntaxdiagrams.html#pragma-stmt">pragma-stmt:</a></h4><blockquote> <img src="images/syntax/pragma-stmt.gif"></img> </blockquote>
+<h4><a href="syntaxdiagrams.html#pragma-value">pragma-value:</a></h4><blockquote> <img src="images/syntax/pragma-value.gif"></img> </blockquote>
+
 
 <p>The pragmas that take an integer <b><i>value</i></b> also accept 
 symbolic names.  The strings "<b>on</b>", "<b>true</b>", and "<b>yes</b>" 
@@ -211,6 +212,18 @@ is returned it is as an integer.</p>
     number of rows inserted, modified or deleted by the command. The 
     returned change count does not include any insertions, modifications
     or deletions performed by triggers.</p>
+
+    <p>The use of this pragma is discouraged.  A better way to get the
+    row change count is to use the <a href="c3ref/changes.html">sqlite3_changes()</a> or
+    <a href="c3ref/total_changes.html">sqlite3_total_changes()</a> interfaces.</p>
+
+    <p>The <a href="lang_delete.html">DELETE</a> command uses a "truncate optimization" that causes
+    the row count to be incorrect when the DELETE clause has no WHERE
+    clause and there are no triggers defined on the table.  Use a
+    WHERE clause of the form "WHERE 1" to override the truncate optimization.
+    Or recompile SQLite with the <a href="compile.html#omit_truncate_optimization">SQLITE_OMIT_TRUNCATE_OPTIMIZATION</a> 
+    compile-time option to disable the truncate optimization on all DELETE
+    statements.</p>
 
 <a name="pragma_default_cache_size"></a>
 
@@ -328,9 +341,9 @@ is returned it is as an integer.</p>
 <li><p><b>PRAGMA journal_mode;
        <br>PRAGMA <i>database</i>.journal_mode;
        <br>PRAGMA journal_mode
-              = <i>DELETE | PERSIST | OFF</i>
+              = <i>DELETE | TRUNCATE | PERSIST | OFF</i>
        <br>PRAGMA <i>database</i>.journal_mode
-              = <i>DELETE | PERSIST | OFF</i></b></p>
+              = <i>DELETE | TRUNCATE | PERSIST | OFF</i></b></p>
 
     <p>This pragma queries or sets the journal mode for databases
     associated with the current <a href="c3ref/sqlite3.html">database connection</a>.</p>
@@ -358,6 +371,11 @@ is returned it is as an integer.</p>
     (See the documented titled <a href="atomiccommit.html">
     Atomic Commit In SQLite</a> for additional detail.)</p>
 
+    <p>The TRUNCATE journaling mode commits transactions by truncating
+    the rollback journal to zero-length instead of deleting it.  On many
+    systems, truncating a file is much faster than deleting the file since
+    the containing directory need to be changed.</p>
+
     <p>The PERSIST journaling mode prevents the rollback journal from
     being deleted at the end of each transaction.  Instead, the header
     of the journal is overwritten with zeros.  This will prevent other
@@ -377,8 +395,8 @@ is returned it is as an integer.</p>
 <a name="pragma_journal_size_limit"></a>
 
 <li><p><b>
-    PRAGMA &#91;database.&#93;journal_size_limit
-    PRAGMA &#91;database.&#93;journal_size_limit = </b><i>N</i> <b>;</b>
+    PRAGMA journal_size_limit<br>
+    PRAGMA journal_size_limit = </b><i>N</i> <b>;</b>
 
   <p>If a database connection is operating in either "exclusive mode"
   (PRAGMA locking_mode=exclusive) or "persistent journal mode"
@@ -835,13 +853,12 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     <br>PRAGMA vdbe_listing = OFF;</b> (0)</p>
     <p>Turn listings of virtual machine programs on and off.
     With listing is on, the entire content of a program is printed
-    just prior to beginning execution.  This is like automatically
-    executing an <a href="lang_explain.html">EXPLAIN</a> prior to each statement.  The statement
+    just prior to beginning execution.  The statement
     executes normally after the listing is printed.
     This is used for debugging.  See the 
     <a href="vdbe.html#trace">VDBE documentation</a> for more 
     information.</p></li>
 </ul>
 <hr><small><i>
-This page last modified 2008/07/10 13:43:23 UTC
+This page last modified 2008/10/10 23:44:44 UTC
 </i></small></div></body></html>

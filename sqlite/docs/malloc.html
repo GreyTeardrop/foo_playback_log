@@ -75,8 +75,8 @@ a:visited { color: #734559 }
 <h1>Dynamic Memory Allocation In SQLite</h1>
 
 
-<p>SQLite makes extensive use of dynamic memory allocation to obtain
-the memory it needs to store various objects
+<p>SQLite uses of dynamic memory allocation to obtain
+memory for storing various objects
 (ex: <a href="c3ref/sqlite3.html">database connections</a> and <a href="c3ref/stmt.html">prepared statements</a>) and to build
 a memory cache of the database file and to hold the results of queries.
 Much effort has gone into making the dynamic memory allocation subsystem
@@ -120,7 +120,7 @@ The application is resposible for destroying any objects it allocates.
 every <a href="c3ref/stmt.html">prepared statement</a> and <a href="c3ref/close.html">sqlite3_close()</a> on every 
 <a href="c3ref/sqlite3.html">database connection</a>.)   But as long as
 the application cooperates, SQLite will never leak memory.  This is
-true even in the face of memory allocation failures of other system
+true even in the face of memory allocation failures or other system
 errors.
 </p></li>
 
@@ -187,7 +187,7 @@ routines used by SQLite through the
 and verification.  Reliability is important to SQLite.
 Among the tasks of the test infrastructure is to insure that
 SQLite does not misuse dynamically allocated memory, that SQLite
-does not leak memory, and that SQLite responses
+does not leak memory, and that SQLite responds
 correctly to a dynamic memory allocation failure.</p>
 
 <p>The test infrastructure verifies that SQLite does not misuse
@@ -195,7 +195,7 @@ dynamically allocated memory by using a specially instrumented
 memory allocator.  The instrumented memory allocator is enabled
 at compile-time using the <a href="compile.html#memdebug">SQLITE_MEMDEBUG</a> option.  The instrumented
 memory allocator is much slower than the default memory allocator and
-so its use is definitely not recommended in production.  But when
+so its use is not recommended in production.  But when
 enabled during testing, 
 the instrumented memory allocator performs the following checks:</p>
 
@@ -230,7 +230,7 @@ leaks are detected.  Notice that memory leak detection is in force at
 all times, during test builds and during production builds.  Whenever
 one of the developers runs any individual test script, memory leak
 detection is active.  Hence memory leaks that do arise during development
-are quickly spotted and quinched.</p>
+are quickly detected and fixed.</p>
 
 <a name="oomtesting"></a>
 <p>The response of SQLite to out-of-memory (OOM) errors is tested using
@@ -238,7 +238,7 @@ a specialized memory allocator overlay that can simulate memory failures.
 The overlay is a layer that is inserted in between the memory allocator
 and the rest of SQLite.  The overlay passes most memory allocation
 requests straight through to the underlying allocator and passes the
-results back up to the application.  But the overlay can be set to 
+results back up to the requester.  But the overlay can be set to 
 cause the Nth memory allocation to fail.  To run an OOM test, the overlay
 is first set to fail on the first allocation attempt.  Then some test
 script is run and a verification that the allocation was correctly caught
@@ -268,7 +268,7 @@ everywhere within SQLite.</p>
 <h2>3.0 Configuration</h2>
 
 <p>The default memory allocation settings in SQLite are appropriate
-for most applications.  However, applications with unusual are particularly
+for most applications.  However, applications with unusual or particularly
 strict requirements may want to adjust the configuation to more closely
 align SQLite to their needs.
 Both compile-time and start-time configuration options are available.</p>
@@ -289,7 +289,7 @@ are surrounded by a thin wrapper that also provides a "memsize()" function
 that will return the size of an existing allocation.  The memsize() function
 is needed to keep an accurate count of the number of bytes of outstanding
 memory; memsize() determines how many bytes to remove from the outstanding
-count when an allocation is freed.  The default implementation implements
+count when an allocation is freed.  The default allocator implements
 memsize() by always allocating 8 extra bytes on each malloc() request and
 storing the size of the allocation in that 8-byte header.</p>
 
@@ -348,7 +348,7 @@ interface at start-time:</p>
 of memory space that SQLite will use to satisfy all of its memory
 allocation needs.   pBuf might point to a static array or it might
 be memory obtained from some other application-specific mechanism.
-szBuf is an integer which is the number of bytes of memry space
+szBuf is an integer which is the number of bytes of memroy space
 pointed to by pBuf.  mnReq is another integer which is the
 minimum size of an allocation.  Any call to <a href="c3ref/free.html">sqlite3_malloc(N)</a> where
 N is less than mnReq will be rounded up to mnReq.  mnReq must be
@@ -363,7 +363,7 @@ dozen megabytes, depending on system requirements and memory budget.</p>
 
 <p>The algorithm used by memsys5 is can be called "power-of-two,
 first-fit".  The sizes of all memory allocation 
-requests are rounded up to a power of two and that the request is satisfied
+requests are rounded up to a power of two and the request is satisfied
 by the first free slot in pBuf that is large enough.  Adjacent freed
 allocations are coalesced using a buddy system. When used appropriately,
 this algorithm provides mathematical guarantees against fragmentation and
@@ -396,7 +396,7 @@ from the source tree in a future release of SQLite.</p>
 <p>Code for memsys4 is still in the SQLite source tree (as of this writing - 
 SQLite release 3.6.1), but it has not been maintained for several release
 cycles and probably does not work. Memsys4 was an attempt to use mmap()
-to obtain memory for use and then use madvise() to release unused pages
+to obtain memory and then use madvise() to release unused pages
 back to the operating system so that they could be reused by other
 processes.  The target platform for memsys4 was Google Android.  The
 work on memsys4 has been abandoned and the memsys4 module will likely be
@@ -485,11 +485,12 @@ only for the duration of a single, short-lived function call.</p>
 
 <p>In older versions of SQLite, the scratch memory was obtained from
 the processor stack.  That works great on workstations with a large stack.
-But stack approach caused problems on embedded systems with a 
+But pulling large buffers from the stack 
+caused problems on embedded systems with a 
 small processor stack (typically 4K or 8K).  And so SQLite was modified
 to allocate scratch memory from the heap.</p>
 
-<p>However, doing occasional large, transient allocations from the heap can
+<p>However, doing occasional large transient allocations from the heap can
 lead to memory fragmentation in embedded systems.  To work around this
 problem, a separate memory allocation system for scratch memory has been
 created.</p>
@@ -907,7 +908,7 @@ A minimum allocation size of 512 is a reasonable setting.</p>
 
 <p>Further to keeping <b>n</b> small, one desires to keep the size of
 the largest memory allocations under control.
-Large memory allocations against the general-purpose memory allocator
+Large requests to the general-purpose memory allocator
 might come from several sources:</p>
 
 <ol>
@@ -1018,5 +1019,5 @@ to accommodate changes in the SQLite interface.</p>
 
 <p><i>To be completed...</i></p>
 <hr><small><i>
-This page last modified 2008/08/05 03:30:37 UTC
+This page last modified 2008/10/10 17:18:43 UTC
 </i></small></div></body></html>

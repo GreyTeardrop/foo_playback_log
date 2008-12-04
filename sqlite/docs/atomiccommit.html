@@ -1143,6 +1143,37 @@ COMMIT;
 since the journal file might be hot, in which case deleting it will
 corrupt the corresponding database file.</p>
 
+<p>Beginning in SQLite version 3.6.4, the TRUNCATE journal mode is
+also supported:</p>
+
+<blockquote><pre>
+PRAGMA journal_mode=TRUNCATE;
+</pre></blockquote>
+
+<p>In truncate journal mode, the transaction is committed by truncating
+the journal file to zero length rather than deleting the journal file
+(as in DELETE mode) or by zeroing the header (as in PERSIST mode).
+TRUNCATE mode shares the advantage of PERSIST mode that the directory
+that contains the journal file and database does not need to be updated.
+Hence truncating a file is often faster than deleting it.  TRUNCATE has
+the additional advantage that it is not followed by a
+system call (ex: fsync()) to synchronize the change to disk.  It might
+be safer if it did.
+But on many modern filesystems, a truncate is an atomic and
+synchronous operation and so we think that TRUNCATE will usually be safe
+in the face of power failures.  If you are uncertain about whether or
+not TRUNCATE will be synchronous and atomic on your filesystem and it is
+important to you that your database survive a power loss or operating
+system crash that occurs during the truncation operation, then you might
+consider using a different journaling mode.</p>
+
+<p>On embedded systems with synchronous filesystems, TRUNCATE is results
+in slower behavior than PERSIST.  The commit operation is the same speed.
+But subsequent transactions are slower following a TRUNCATE because it is
+faster to overwrite existing content than to append to the end of a file.
+New journal file entries will always be appended following a TRUNCATE but
+will usually overwrite with PERSIST.</p>
+
 <h2>8.0 Testing Atomic Commit Behavior</h2>
 
 <p>The developers of SQLite are confident that it is robust
@@ -1326,5 +1357,5 @@ safe append property and that many of them might support atomic
 sector writes.  But until this is known for certain, SQLite will
 take the conservative approach and assume the worst.</p>
 <hr><small><i>
-This page last modified 2008/04/26 11:22:07 UTC
+This page last modified 2008/09/26 21:36:14 UTC
 </i></small></div></body></html>

@@ -99,7 +99,7 @@ from <a href="c3ref/open.html">sqlite3_open()</a>, <a href="c3ref/open.html">sql
 <a href="c3ref/exec.html">sqlite3_exec()</a> is running. </td></tr><tr><td valign="top">A12143</td><td valign="top">The calling function should use <a href="c3ref/free.html">sqlite3_free()</a> to free
 the memory that *errmsg is left pointing at once the error
 message is no longer needed. </td></tr><tr><td valign="top">A12145</td><td valign="top">The SQL statement text in the 2nd parameter to <a href="c3ref/exec.html">sqlite3_exec()</a>
-must remain unchanged while <a href="c3ref/exec.html">sqlite3_exec()</a> is running. </td></tr><tr><td valign="top">A12232</td><td valign="top">If a separate thread performs a new INSERT on the same
+must remain unchanged while <a href="c3ref/exec.html">sqlite3_exec()</a> is running. </td></tr><tr><td valign="top">A12232</td><td valign="top">If a separate thread performs a new <a href="lang_insert.html">INSERT</a> on the same
 database connection while the <a href="c3ref/last_insert_rowid.html">sqlite3_last_insert_rowid()</a>
 function is running and thus changes the last insert rowid,
 then the value returned by <a href="c3ref/last_insert_rowid.html">sqlite3_last_insert_rowid()</a> is
@@ -168,15 +168,14 @@ a block of memory after it has been released using
 </td></tr><tr><td valign="top">A21009</td><td valign="top">      If a system failure occurs during or after a "write file"
       operation that causes the file to grow, but before the corresponding 
       file has been <i>synced</i>, then it is assumed that the size of 
-      the file following recovery is as large or larger than it was before 
-      the "write file" operation that, if successful, would cause the file 
-      to grow.
+      the file following recovery is as large or larger than it was when
+      it was most recently <i>synced</i>.
 </td></tr><tr><td valign="top">A21010</td><td valign="top">      It is assumed that writing a series of sequential blocks of data to 
       a file in order is faster than writing the same blocks in an arbitrary
       order.
 </td></tr><tr><td valign="top">A21011</td><td valign="top">      If a system failure occurs on a system that supports the 
-      <i>atomic-write</i> property for blocks of size <i>N</i> bytes,
-      and a system failure occurs following an aligned write of <i>N</i> 
+      <i>atomic-write</i> property for blocks of size <i>N</i> bytes
+      following an aligned write of <i>N</i> 
       bytes to a file but before the file has been succesfully <i>synced</i>,
       then is is assumed following recovery that all sectors spanned by the
       write operation were correctly updated, or that none of the sectors were
@@ -196,6 +195,17 @@ a block of memory after it has been released using
       assumed that it is possible for such a sector to be written 
       correctly, not written at all, populated with garbage data or any
       combination thereof.
+</td></tr><tr><td valign="top">A21014</td><td valign="top">      If a system failure occurs on a system that supports the
+      <i>sequential-write</i> property, then it is assumed that all 
+      operations completed before the last time any file was <i>synced</i> 
+      have been successfully committed to persistent media.
+</td></tr><tr><td valign="top">A21015</td><td valign="top">      If a system failure occurs on a system that supports the
+      <i>sequential-write</i> property, then it is assumed that the set
+      of possible states that the file-system may be in following recovery
+      is the same as if each of the write operations performed since the most
+      recent time a file was <i>synced</i> was itself followed by a <i>sync
+      file</i> operation, and that the system failure may have occured during
+      any of the write or <i>sync file</i> operations.
 </td></tr>
 </table>
 <hr><small><i>

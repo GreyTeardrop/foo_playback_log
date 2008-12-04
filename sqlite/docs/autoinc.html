@@ -75,9 +75,8 @@ a:visited { color: #734559 }
 
 
 <p>
-In SQLite, every row of every table has an integer ROWID.
+In SQLite, every row of every table has an 64-bit signed integer ROWID.
 The ROWID for each row is unique among all rows in the same table.
-In SQLite 3.0.0 and later the ROWID is a 64-bit signed integer.
 </p>
 
 <p>
@@ -114,7 +113,7 @@ automatically.  The usual algorithm is to give the newly created row
 a ROWID that is one larger than the largest ROWID in the table prior
 to the insert.  If the table is initially empty, then a ROWID of 1 is
 used.  If the largest ROWID is equal to the largest possible integer
-(9223372036854775807 in SQLite version 3.0.0 and later) then the database
+(9223372036854775807) then the database
 engine starts picking candidate ROWIDs at random until it finds one
 that is not previously used.
 </p>
@@ -135,7 +134,7 @@ new rows and newly created ROWIDs might not be in strictly accending order.
 <p>
 If a column has the type INTEGER PRIMARY KEY AUTOINCREMENT then a slightly
 different ROWID selection algorithm is used.  
-The ROWID chosen for the new row is one larger than the largest ROWID
+The ROWID chosen for the new row is at least one larger than the largest ROWID
 that has ever before existed in that same table.  If the table has never
 before contained any data, then a ROWID of 1 is used.  If the table
 has previously held a row with the largest possible ROWID, then new INSERTs
@@ -165,6 +164,14 @@ need these properties, you should probably stay with the default behavior
 since the use of AUTOINCREMENT requires additional work to be done
 as each row is inserted and thus causes INSERTs to run a little slower.
 </p>
+
+<p>Note that "monotonically increasing" does not imply that the ROWID always
+increases by exactly one.  One is the usual increment.  However, if an
+insert fails due to (for example) a uniqueness constraint, the ROWID of
+the failed insertion attempt might not be reused on subsequent inserts,
+resulting in gaps in the ROWID sequence.  AUTOINCREMENT guarantees that
+automatically chosen ROWIDs will be increasing but not that they will be
+sequential.</p>
 <hr><small><i>
-This page last modified 2008/04/27 16:07:11 UTC
+This page last modified 2008/10/09 15:34:39 UTC
 </i></small></div></body></html>

@@ -80,17 +80,17 @@ the table has a column of type INTEGER PRIMARY KEY then that column
 is another alias for the rowid.</p>
 
 <p>This routine returns the rowid of the most recent
-successful INSERT into the database from the <a href="../c3ref/sqlite3.html">database connection</a>
-in the first argument.  If no successful INSERTs
+successful <a href="../lang_insert.html">INSERT</a> into the database from the <a href="../c3ref/sqlite3.html">database connection</a>
+in the first argument.  If no successful <a href="../lang_insert.html">INSERT</a>s
 have ever occurred on that database connection, zero is returned.</p>
 
-<p>If an INSERT occurs within a trigger, then the rowid of the inserted
+<p>If an <a href="../lang_insert.html">INSERT</a> occurs within a trigger, then the rowid of the inserted
 row is returned by this routine as long as the trigger is running.
 But once the trigger terminates, the value returned by this routine
 reverts to the last value inserted before the trigger fired.</p>
 
-<p>An INSERT that fails due to a constraint violation is not a
-successful INSERT and does not change the value returned by this
+<p>An <a href="../lang_insert.html">INSERT</a> that fails due to a constraint violation is not a
+successful <a href="../lang_insert.html">INSERT</a> and does not change the value returned by this
 routine.  Thus INSERT OR FAIL, INSERT OR IGNORE, INSERT OR ROLLBACK,
 and INSERT OR ABORT make no changes to the return value of this
 routine when their insertion fails.  When INSERT OR REPLACE
@@ -99,29 +99,30 @@ INSERT continues to completion after deleting rows that caused
 the constraint problem so INSERT OR REPLACE will always change
 the return value of this interface.</p>
 
-<p>For the purposes of this routine, an INSERT is considered to
+<p>For the purposes of this routine, an <a href="../lang_insert.html">INSERT</a> is considered to
 be successful even if it is subsequently rolled back.</p>
 
 <p><h3>Invariants:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
 <tr><td valign="top">H12221</td> 
 <td valign="top">
-The <a href="../c3ref/last_insert_rowid.html">sqlite3_last_insert_rowid()</a> function returns the rowid
-of the most recent successful INSERT performed on the same
+The <a href="../c3ref/last_insert_rowid.html">sqlite3_last_insert_rowid()</a> function shall return the rowid
+of the most recent successful <a href="../lang_insert.html">INSERT</a> performed on the same
 <a href="../c3ref/sqlite3.html">database connection</a> and within the same or higher level
-trigger context, or zero if there have been no qualifying inserts.</td></tr>
+trigger context, or zero if there have been no qualifying
+<a href="../lang_insert.html">INSERT</a> statements.</td></tr>
 <tr><td valign="top">H12223</td> 
 <td valign="top">
-The <a href="../c3ref/last_insert_rowid.html">sqlite3_last_insert_rowid()</a> function returns the
+The <a href="../c3ref/last_insert_rowid.html">sqlite3_last_insert_rowid()</a> function shall return the
 same value when called from the same trigger context
-immediately before and after a ROLLBACK.</td></tr>
+immediately before and after a <a href="../lang_transaction.html">ROLLBACK</a>.</td></tr>
 </table></p>
 
 <p><h3>Assumptions:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
 <tr><td valign="top">A12232</td> 
 <td valign="top">
-If a separate thread performs a new INSERT on the same
+If a separate thread performs a new <a href="../lang_insert.html">INSERT</a> on the same
 database connection while the <a href="../c3ref/last_insert_rowid.html">sqlite3_last_insert_rowid()</a>
 function is running and thus changes the last insert rowid,
 then the value returned by <a href="../c3ref/last_insert_rowid.html">sqlite3_last_insert_rowid()</a> is
@@ -132,5 +133,5 @@ last insert rowid.</td></tr>
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
   <a href="funclist.html">Functions</a>.</p><hr><small><i>
-This page last modified 2008/08/04 14:33:39 UTC
+This page last modified 2008/08/11 17:57:43 UTC
 </i></small></div></body></html>

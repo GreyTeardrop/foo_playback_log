@@ -106,7 +106,9 @@ mutexing on <a href="../c3ref/sqlite3.html">database connection</a> and <a href=
 The application is responsible for serializing access to
 <a href="../c3ref/sqlite3.html">database connections</a> and <a href="../c3ref/stmt.html">prepared statements</a>.  But other mutexes
 are enabled so that SQLite will be safe to use in a multi-threaded
-environment.</dd></p>
+environment as long as no two threads attempt to use the same
+<a href="../c3ref/sqlite3.html">database connection</a> at the same time.  See the <a href="../threadsafe.html">threading mode</a>
+documentation for additional information.</dd></p>
 
 <p><dt>SQLITE_CONFIG_SERIALIZED</dt>
 <dd>There are no arguments to this option.  This option enables
@@ -116,12 +118,8 @@ In this mode (which is the default when SQLite is compiled with
 <a href="../compile.html#threadsafe">SQLITE_THREADSAFE=1</a>) the SQLite library will itself serialize access
 to <a href="../c3ref/sqlite3.html">database connections</a> and <a href="../c3ref/stmt.html">prepared statements</a> so that the
 application is free to use the same <a href="../c3ref/sqlite3.html">database connection</a> or the
-same <a href="../c3ref/stmt.html">prepared statement</a> in different threads at the same time.</p>
-
-<p><p>This configuration option merely sets the default mutex
-behavior to serialize access to <a href="../c3ref/sqlite3.html">database connections</a>.  Individual
-<a href="../c3ref/sqlite3.html">database connections</a> can override this setting
-using the <a href="../c3ref/c_open_create.html">SQLITE_OPEN_NOMUTEX</a> flag to <a href="../c3ref/open.html">sqlite3_open_v2()</a>.</p></dd></p>
+same <a href="../c3ref/stmt.html">prepared statement</a> in different threads at the same time.
+See the <a href="../threadsafe.html">threading mode</a> documentation for additional information.</dd></p>
 
 <p><dt>SQLITE_CONFIG_MALLOC</dt>
 <dd>This option takes a single argument which is a pointer to an
@@ -218,5 +216,5 @@ slots allocated to each database connection.</dd></p>
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
   <a href="funclist.html">Functions</a>.</p><hr><small><i>
-This page last modified 2008/08/04 14:33:39 UTC
+This page last modified 2008/08/11 17:57:43 UTC
 </i></small></div></body></html>

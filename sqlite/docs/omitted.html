@@ -91,7 +91,13 @@ plans to add features near the bottom of the list.
 <tr><td valign="top"><b><nobr>FOREIGN KEY constraints</nobr></b></td><td width="10">&nbsp;</th><td valign="top">
   FOREIGN KEY constraints are parsed but are not enforced.
   However, the equivalent constraint enforcement can be achieved
-  using triggers.
+  using triggers.  The SQLite source tree contains 
+  <a href="http://www.sqlite.org/cvstrac/fileview?f=sqlite/tool/genfkey.c">
+  source code</a> and 
+  <a href="http://www.sqlite.org/cvstrac/fileview?f=sqlite/tool/genfkey.README">
+  documentation</a> for a C program that will read an SQLite database,
+  analyze the foreign key constraints, and generate appropriate triggers
+  automatically.
 </td></tr><tr><td valign="top"><b><nobr>Complete trigger support</nobr></b></td><td width="10">&nbsp;</th><td valign="top">
   There is some support for triggers but it is not complete.  Missing
   subfeatures include FOR EACH STATEMENT triggers (currently all triggers
@@ -130,5 +136,5 @@ add them to the Wiki page at
 http://www.sqlite.org/cvstrac/wiki?p=Unsupported</a>
 </p>
 <hr><small><i>
-This page last modified 2007/12/20 02:08:05 UTC
+This page last modified 2008/10/10 18:25:23 UTC
 </i></small></div></body></html>

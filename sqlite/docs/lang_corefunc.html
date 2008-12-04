@@ -93,7 +93,9 @@ the <a href="c3ref/create_function.html">sqlite3_create_function()</a> API.</p>
 </td></tr><tr><td valign="top" align="right" width="120">glob(<i>X</i>,<i>Y</i>)</td><td valign="top"><a name="glob"></a>
 
   This function is used to implement the
-  "<b>X GLOB Y</b>" syntax of SQLite.
+  "<b>Y GLOB X</b>" syntax of SQLite.
+  Note that the X and Y arguments are reversed in the glob() function
+  relative to the infix <a href="lang_expr.html#glob">GLOB</a> operator.
   The <a href="c3ref/create_function.html">sqlite3_create_function()</a>
   interface can
   be used to override this function and thereby change the operation
@@ -121,11 +123,12 @@ the <a href="c3ref/create_function.html">sqlite3_create_function()</a> API.</p>
   characters is returned, not the number of bytes.
 </td></tr><tr><td valign="top" align="right" width="120">like(<i>X</i>,<i>Y</i>)<br></br>like(<i>X</i>,<i>Y</i>,<i>Z</i>)</td><td valign="top"><a name="like"></a>
 
-  This function is used to implement the "<b>X LIKE Y &#91;ESCAPE Z&#93;</b>"
+  This function is used to implement the "<b>Y LIKE X &#91;ESCAPE Z&#93;</b>"
   syntax of SQL. If the optional ESCAPE clause is present, then the
   user-function is invoked with three arguments. Otherwise, it is
-  invoked with two arguments only. The 
-  <a href="c3ref/create_function.html">sqlite3_create_function()</a> interface can be used to override this
+  invoked with two arguments only. Note that the X and Y parameters are
+  reversed in the like() function relative to the infix <a href="lang_expr.html#like">LIKE</a> operator.
+  The <a href="c3ref/create_function.html">sqlite3_create_function()</a> interface can be used to override this
   function and thereby change the operation of the
   <a href="lang_expr.html#like">LIKE</a> operator. When doing this, it may be important
   to override both the two and three argument versions of the like() 
@@ -150,7 +153,7 @@ the <a href="c3ref/create_function.html">sqlite3_create_function()</a> API.</p>
   <a href="c3ref/load_extension.html">sqlite3_load_extension()</a> C-language API.</p>
 </td></tr><tr><td valign="top" align="right" width="120">lower(<i>X</i>)</td><td valign="top"><a name="lower"></a>
 
-  Return a copy of string <i>X</i> will all ASCII characters
+  Return a copy of string <i>X</i> with all ASCII characters
   converted to lower case.  The C library <b>tolower()</b> routine is used
   for the conversion, which means that this function might not
   work correctly on non-ASCII UTF-8 characters.
@@ -266,5 +269,5 @@ the <a href="c3ref/create_function.html">sqlite3_create_function()</a> API.</p>
 </table>
 
 <hr><small><i>
-This page last modified 2008/07/18 18:34:10 UTC
+This page last modified 2008/10/10 23:40:04 UTC
 </i></small></div></body></html>

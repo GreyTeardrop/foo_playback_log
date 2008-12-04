@@ -70,7 +70,8 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a><h3>ON CONFLICT clause</h3><table cellpadding="10"><tr><td align="right" valign="top"><i><font color="#ff3434">conflict-clause</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0">ON CONFLICT </font></b><i><font color="#ff3434">conflict-algorithm</font></i><b><font color="#2c2cf0"></font></b></td></tr><tr><td align="right" valign="top"><i><font color="#ff3434">conflict-algorithm</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0">ROLLBACK </font></b><big>|</big><b><font color="#2c2cf0"> ABORT </font></b><big>|</big><b><font color="#2c2cf0"> FAIL </font></b><big>|</big><b><font color="#2c2cf0"> IGNORE </font></b><big>|</big><b><font color="#2c2cf0"> REPLACE</font></b></td></tr></table>
+<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a><h3>ON CONFLICT clause</h3><h4><a href="syntaxdiagrams.html#conflict-clause">conflict-clause:</a></h4><blockquote> <img src="images/syntax/conflict-clause.gif"></img> </blockquote>
+
 
 <p>The ON CONFLICT clause is not a separate SQL command.  It is a
 non-standard clause that can appear in many other SQL commands.
@@ -141,5 +142,5 @@ overrides any algorithm specified in a CREATE TABLE.
 If no algorithm is specified anywhere, the ABORT algorithm is used.</p>
 
 <hr><small><i>
-This page last modified 2008/07/18 18:34:10 UTC
+This page last modified 2008/10/10 23:40:04 UTC
 </i></small></div></body></html>

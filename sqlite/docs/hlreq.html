@@ -78,8 +78,8 @@ a:visited { color: #734559 }
 <tr><td valign="top">H10010</td><td valign="top">The sqlite3.h header file shall define the
 the following interfaces:
 <blockquote><pre>
-#define SQLITE_VERSION         "3.6.1"
-#define SQLITE_VERSION_NUMBER  3006001
+#define SQLITE_VERSION         "3.6.4"
+#define SQLITE_VERSION_NUMBER  3006004
 
 </pre></blockquote></td></tr><tr><td valign="top">H10011</td><td valign="top">The SQLITE_VERSION #define in the sqlite3.h header file shall
 evaluate to a string literal that is the SQLite version
@@ -100,26 +100,15 @@ the following interfaces:
 <blockquote><pre>
 int sqlite3_threadsafe(void);
 
-</pre></blockquote></td></tr><tr><td valign="top">H10101</td><td valign="top">The <a href="c3ref/threadsafe.html">sqlite3_threadsafe()</a> function shall return nonzero if
-SQLite was compiled with the its mutexes enabled by default
-or zero if SQLite was compiled such that mutexes are
-permanently disabled. </td></tr><tr><td valign="top">H10102</td><td valign="top">The value returned by the <a href="c3ref/threadsafe.html">sqlite3_threadsafe()</a> function
-shall not change when mutex setting are modified at
-runtime using the <a href="c3ref/config.html">sqlite3_config()</a> interface and
-especially the <a href="c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_SINGLETHREAD</a>,
-<a href="c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_MULTITHREAD</a>, <a href="c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_SERIALIZED</a>,
-and <a href="c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_MUTEX</a> verbs. </td></tr><tr><td valign="top">H10130</td><td valign="top">The sqlite3.h header file shall define the
+</pre></blockquote></td></tr><tr><td valign="top">H10101</td><td valign="top">The <a href="c3ref/threadsafe.html">sqlite3_threadsafe()</a> function shall return zero if
+and only if SQLite was compiled with mutexing code omitted. </td></tr><tr><td valign="top">H10102</td><td valign="top">The value returned by the <a href="c3ref/threadsafe.html">sqlite3_threadsafe()</a> function
+shall remain the same across calls to <a href="c3ref/config.html">sqlite3_config()</a>. </td></tr><tr><td valign="top">H10130</td><td valign="top">The sqlite3.h header file shall define the
 the following interfaces:
 <blockquote><pre>
 int sqlite3_initialize(void);
 int sqlite3_shutdown(void);
 int sqlite3_os_init(void);
 int sqlite3_os_end(void);
-
-</pre></blockquote></td></tr><tr><td valign="top">H10145</td><td valign="top">The sqlite3.h header file shall define the
-the following interfaces:
-<blockquote><pre>
-int sqlite3_config(int, ...);
 
 </pre></blockquote></td></tr><tr><td valign="top">H10155</td><td valign="top">The sqlite3.h header file shall define the
 the following interfaces:
@@ -157,11 +146,6 @@ the following interfaces:
 the following interfaces:
 <blockquote><pre>
 #define SQLITE_DBCONFIG_LOOKASIDE    1001  /* void* int int */
-
-</pre></blockquote></td></tr><tr><td valign="top">H10180</td><td valign="top">The sqlite3.h header file shall define the
-the following interfaces:
-<blockquote><pre>
-int sqlite3_db_config(sqlite3*, int op, ...);
 
 </pre></blockquote></td></tr><tr><td valign="top">H10200</td><td valign="top">The sqlite3.h header file shall define the
 the following interfaces:
@@ -233,6 +217,7 @@ the following interfaces:
 #define SQLITE_IOERR_NOMEM             (SQLITE_IOERR | (12&lt;&lt;8))
 #define SQLITE_IOERR_ACCESS            (SQLITE_IOERR | (13&lt;&lt;8))
 #define SQLITE_IOERR_CHECKRESERVEDLOCK (SQLITE_IOERR | (14&lt;&lt;8))
+#define SQLITE_IOERR_LOCK              (SQLITE_IOERR | (15&lt;&lt;8))
 
 </pre></blockquote></td></tr><tr><td valign="top">H10223</td><td valign="top">The symbolic name for an extended result code shall contains
 a related primary result code as a prefix. </td></tr><tr><td valign="top">H10224</td><td valign="top">Primary result code names shall contain a single "_" character. </td></tr><tr><td valign="top">H10225</td><td valign="top">Extended result code names shall contain two or more "_" characters. </td></tr><tr><td valign="top">H10226</td><td valign="top">The numeric value of an extended result code shall contain the
@@ -253,6 +238,7 @@ the following interfaces:
 #define SQLITE_OPEN_SUBJOURNAL       0x00002000
 #define SQLITE_OPEN_MASTER_JOURNAL   0x00004000
 #define SQLITE_OPEN_NOMUTEX          0x00008000
+#define SQLITE_OPEN_FULLMUTEX        0x00010000
 
 </pre></blockquote></td></tr><tr><td valign="top">H10240</td><td valign="top">The sqlite3.h header file shall define the
 the following interfaces:
@@ -480,7 +466,7 @@ memory and system resources associated with <a href="c3ref/sqlite3.html">databas
 C. </td></tr><tr><td valign="top">H12014</td><td valign="top">A call to <a href="c3ref/close.html">sqlite3_close(C)</a> on a <a href="c3ref/sqlite3.html">database connection</a> C that
 has one or more open <a href="c3ref/stmt.html">prepared statements</a> shall fail with
 an <a href="c3ref/c_abort.html">SQLITE_BUSY</a> error code. </td></tr><tr><td valign="top">H12015</td><td valign="top">A call to <a href="c3ref/close.html">sqlite3_close(C)</a> where C is a NULL pointer shall
-return SQLITE_OK. </td></tr><tr><td valign="top">H12019</td><td valign="top">When <a href="c3ref/close.html">sqlite3_close(C)</a> is invoked on a <a href="c3ref/sqlite3.html">database connection</a> C
+be a harmless no-op returning SQLITE_OK. </td></tr><tr><td valign="top">H12019</td><td valign="top">When <a href="c3ref/close.html">sqlite3_close(C)</a> is invoked on a <a href="c3ref/sqlite3.html">database connection</a> C
 that has a pending transaction, the transaction shall be
 rolled back. </td></tr><tr><td valign="top">H12100</td><td valign="top">The sqlite3.h header file shall define the
 the following interfaces:
@@ -538,12 +524,13 @@ the following interfaces:
 <blockquote><pre>
 sqlite3_int64 sqlite3_last_insert_rowid(sqlite3*);
 
-</pre></blockquote></td></tr><tr><td valign="top">H12221</td><td valign="top">The <a href="c3ref/last_insert_rowid.html">sqlite3_last_insert_rowid()</a> function returns the rowid
-of the most recent successful INSERT performed on the same
+</pre></blockquote></td></tr><tr><td valign="top">H12221</td><td valign="top">The <a href="c3ref/last_insert_rowid.html">sqlite3_last_insert_rowid()</a> function shall return the rowid
+of the most recent successful <a href="lang_insert.html">INSERT</a> performed on the same
 <a href="c3ref/sqlite3.html">database connection</a> and within the same or higher level
-trigger context, or zero if there have been no qualifying inserts. </td></tr><tr><td valign="top">H12223</td><td valign="top">The <a href="c3ref/last_insert_rowid.html">sqlite3_last_insert_rowid()</a> function returns the
+trigger context, or zero if there have been no qualifying
+<a href="lang_insert.html">INSERT</a> statements. </td></tr><tr><td valign="top">H12223</td><td valign="top">The <a href="c3ref/last_insert_rowid.html">sqlite3_last_insert_rowid()</a> function shall return the
 same value when called from the same trigger context
-immediately before and after a ROLLBACK. </td></tr><tr><td valign="top">H12240</td><td valign="top">The sqlite3.h header file shall define the
+immediately before and after a <a href="lang_transaction.html">ROLLBACK</a>. </td></tr><tr><td valign="top">H12240</td><td valign="top">The sqlite3.h header file shall define the
 the following interfaces:
 <blockquote><pre>
 int sqlite3_changes(sqlite3*);
@@ -580,10 +567,11 @@ void *sqlite3_trace(sqlite3*, void(*xTrace)(void*,const char*), void*);
 void *sqlite3_profile(sqlite3*,
    void(*xProfile)(void*,const char*,sqlite3_uint64), void*);
 
-</pre></blockquote></td></tr><tr><td valign="top">H12281</td><td valign="top">The callback function registered by <a href="c3ref/profile.html">sqlite3_trace()</a> is
+</pre></blockquote></td></tr><tr><td valign="top">H12281</td><td valign="top">The callback function registered by <a href="c3ref/profile.html">sqlite3_trace()</a>
+shall be invoked
 whenever an SQL statement first begins to execute and
-whenever a trigger subprogram first begins to run. </td></tr><tr><td valign="top">H12282</td><td valign="top">Each call to <a href="c3ref/profile.html">sqlite3_trace()</a> overrides the previously
-registered trace callback. </td></tr><tr><td valign="top">H12283</td><td valign="top">A NULL trace callback disables tracing. </td></tr><tr><td valign="top">H12284</td><td valign="top">The first argument to the trace callback is a copy of
+whenever a trigger subprogram first begins to run. </td></tr><tr><td valign="top">H12282</td><td valign="top">Each call to <a href="c3ref/profile.html">sqlite3_trace()</a> shall override the previously
+registered trace callback. </td></tr><tr><td valign="top">H12283</td><td valign="top">A NULL trace callback shall disable tracing. </td></tr><tr><td valign="top">H12284</td><td valign="top">The first argument to the trace callback shall be a copy of
 the pointer which was the 3rd argument to <a href="c3ref/profile.html">sqlite3_trace()</a>. </td></tr><tr><td valign="top">H12285</td><td valign="top">The second argument to the trace callback is a
 zero-terminated UTF-8 string containing the original text
 of the SQL statement as it was passed into <a href="c3ref/prepare.html">sqlite3_prepare_v2()</a>
@@ -666,13 +654,13 @@ int sqlite3_set_authorizer(
 
 </pre></blockquote></td></tr><tr><td valign="top">H12501</td><td valign="top">The <a href="c3ref/set_authorizer.html">sqlite3_set_authorizer(D,...)</a> interface registers a
 authorizer callback with database connection D. </td></tr><tr><td valign="top">H12502</td><td valign="top">The authorizer callback is invoked as SQL statements are
-being compiled. </td></tr><tr><td valign="top">H12503</td><td valign="top">If the authorizer callback returns any value other than
+being parseed and compiled. </td></tr><tr><td valign="top">H12503</td><td valign="top">If the authorizer callback returns any value other than
 <a href="c3ref/c_deny.html">SQLITE_IGNORE</a>, <a href="c3ref/c_abort.html">SQLITE_OK</a>, or <a href="c3ref/c_deny.html">SQLITE_DENY</a>, then
-the <a href="c3ref/prepare.html">sqlite3_prepare_v2()</a> or equivalent call that caused
+the application interface call that caused
 the authorizer callback to run shall fail with an
 <a href="c3ref/c_abort.html">SQLITE_ERROR</a> error code and an appropriate error message. </td></tr><tr><td valign="top">H12504</td><td valign="top">When the authorizer callback returns <a href="c3ref/c_abort.html">SQLITE_OK</a>, the operation
 described is processed normally. </td></tr><tr><td valign="top">H12505</td><td valign="top">When the authorizer callback returns <a href="c3ref/c_deny.html">SQLITE_DENY</a>, the
-<a href="c3ref/prepare.html">sqlite3_prepare_v2()</a> or equivalent call that caused the
+application interface call that caused the
 authorizer callback to run shall fail
 with an <a href="c3ref/c_abort.html">SQLITE_ERROR</a> error code and an error message
 explaining that access is denied. </td></tr><tr><td valign="top">H12506</td><td valign="top">If the authorizer code (the 2nd parameter to the authorizer
@@ -726,15 +714,15 @@ the following interfaces:
 #define SQLITE_COPY                  0   /* No longer used */
 
 </pre></blockquote></td></tr><tr><td valign="top">H12551</td><td valign="top">The second parameter to an
-<a href="c3ref/set_authorizer.html">authorizer callback</a> is always an integer
+<a href="c3ref/set_authorizer.html">authorizer callback</a> shall be an integer
 <a href="c3ref/c_alter_table.html">authorizer code</a> that specifies what action
 is being authorized. </td></tr><tr><td valign="top">H12552</td><td valign="top">The 3rd and 4th parameters to the
 <a href="c3ref/set_authorizer.html">authorization callback</a>
-will be parameters or NULL depending on which
+shall be parameters or NULL depending on which
 <a href="c3ref/c_alter_table.html">authorizer code</a> is used as the second parameter. </td></tr><tr><td valign="top">H12553</td><td valign="top">The 5th parameter to the
-<a href="c3ref/set_authorizer.html">authorizer callback</a> is the name
+<a href="c3ref/set_authorizer.html">authorizer callback</a> shall be the name
 of the database (example: "main", "temp", etc.) if applicable. </td></tr><tr><td valign="top">H12554</td><td valign="top">The 6th parameter to the
-<a href="c3ref/set_authorizer.html">authorizer callback</a> is the name
+<a href="c3ref/set_authorizer.html">authorizer callback</a> shall be the name
 of the inner-most trigger or view that is responsible for
 the access attempt or NULL if this access attempt is directly from
 top-level SQL code. </td></tr><tr><td valign="top">H12590</td><td valign="top">The sqlite3.h header file shall define the
@@ -804,9 +792,9 @@ bit value <a href="c3ref/c_open_create.html">SQLITE_OPEN_READONLY</a> then the d
 for reading only. </td></tr><tr><td valign="top">H12712</td><td valign="top">If the G parameter to <a href="c3ref/open.html">sqlite3_open_v2(F,D,G,V)</a> contains the
 bit value <a href="c3ref/c_open_create.html">SQLITE_OPEN_READWRITE</a> then the database is opened
 reading and writing if possible, or for reading only if the
-file is write protected by the operating system. </td></tr><tr><td valign="top">H12713</td><td valign="top">If the G parameter to <a href="c3ref/open.html">sqlite3_open(v2(F,D,G,V)</a> omits the
+file is write protected by the operating system. </td></tr><tr><td valign="top">H12713</td><td valign="top">If the G parameter to <a href="c3ref/open.html">sqlite3_open_v2(F,D,G,V)</a> omits the
 bit value <a href="c3ref/c_open_create.html">SQLITE_OPEN_CREATE</a> and the database does not
-previously exist, an error is returned. </td></tr><tr><td valign="top">H12714</td><td valign="top">If the G parameter to <a href="c3ref/open.html">sqlite3_open(v2(F,D,G,V)</a> contains the
+previously exist, an error is returned. </td></tr><tr><td valign="top">H12714</td><td valign="top">If the G parameter to <a href="c3ref/open.html">sqlite3_open_v2(F,D,G,V)</a> contains the
 bit value <a href="c3ref/c_open_create.html">SQLITE_OPEN_CREATE</a> and the database does not
 previously exist, then an attempt is made to create and
 initialize the database. </td></tr><tr><td valign="top">H12717</td><td valign="top">If the filename argument to <a href="c3ref/open.html">sqlite3_open()</a>, <a href="c3ref/open.html">sqlite3_open16()</a>,
@@ -1007,7 +995,19 @@ or one of its variants writes into *ppStmt a pointer to a new
 nothing other than whitespace or comments. </td></tr><tr><td valign="top">H13019</td><td valign="top">The <a href="c3ref/prepare.html">sqlite3_prepare_v2()</a> interface and its variants return
 <a href="c3ref/c_abort.html">SQLITE_OK</a> or an appropriate <a href="c3ref/c_abort.html">error code</a> upon failure. </td></tr><tr><td valign="top">H13021</td><td valign="top">Before <a href="c3ref/prepare.html">sqlite3_prepare(db,zSql,nByte,ppStmt,pzTail)</a> or its
 variants returns an error (any value other than <a href="c3ref/c_abort.html">SQLITE_OK</a>),
-they first set *ppStmt to NULL. </td></tr><tr><td valign="top">H13120</td><td valign="top">The sqlite3.h header file shall define the
+they first set *ppStmt to NULL. </td></tr><tr><td valign="top">H13100</td><td valign="top">The sqlite3.h header file shall define the
+the following interfaces:
+<blockquote><pre>
+const char *sqlite3_sql(sqlite3_stmt *pStmt);
+
+</pre></blockquote></td></tr><tr><td valign="top">H13101</td><td valign="top">If the <a href="c3ref/stmt.html">prepared statement</a> passed as the argument to
+<a href="c3ref/sql.html">sqlite3_sql()</a> was compiled using either <a href="c3ref/prepare.html">sqlite3_prepare_v2()</a> or
+<a href="c3ref/prepare.html">sqlite3_prepare16_v2()</a>, then <a href="c3ref/sql.html">sqlite3_sql()</a> returns
+a pointer to a zero-terminated string containing a UTF-8 rendering
+of the original SQL statement. </td></tr><tr><td valign="top">H13102</td><td valign="top">If the <a href="c3ref/stmt.html">prepared statement</a> passed as the argument to
+<a href="c3ref/sql.html">sqlite3_sql()</a> was compiled using either <a href="c3ref/prepare.html">sqlite3_prepare()</a> or
+<a href="c3ref/prepare.html">sqlite3_prepare16()</a>, then <a href="c3ref/sql.html">sqlite3_sql()</a> returns a NULL pointer. </td></tr><tr><td valign="top">H13103</td><td valign="top">The string returned by <a href="c3ref/sql.html">sqlite3_sql(S)</a> is valid until the
+<a href="c3ref/stmt.html">prepared statement</a> S is deleted using <a href="c3ref/finalize.html">sqlite3_finalize(S)</a>. </td></tr><tr><td valign="top">H13120</td><td valign="top">The sqlite3.h header file shall define the
 the following interfaces:
 <blockquote><pre>
 sqlite3 *sqlite3_db_handle(sqlite3_stmt*);
@@ -1276,7 +1276,84 @@ the Nth column in the current row of the result set for
 the <a href="c3ref/stmt.html">prepared statement</a> S. </td></tr><tr><td valign="top">H13830</td><td valign="top">The <a href="c3ref/column_blob.html">sqlite3_column_value(S,N)</a> interface returns a
 pointer to an <a href="c3ref/value.html">unprotected sqlite3_value</a> object for the
 Nth column in the current row of the result set for
-the <a href="c3ref/stmt.html">prepared statement</a> S. </td></tr><tr><td valign="top">H15000</td><td valign="top">The sqlite3.h header file shall define the
+the <a href="c3ref/stmt.html">prepared statement</a> S. </td></tr><tr><td valign="top">H14100</td><td valign="top">The sqlite3.h header file shall define the
+the following interfaces:
+<blockquote><pre>
+int sqlite3_config(int, ...);
+
+</pre></blockquote></td></tr><tr><td valign="top">H14103</td><td valign="top">A successful invocation of <a href="c3ref/config.html">sqlite3_config()</a> shall return
+<a href="c3ref/c_abort.html">SQLITE_OK</a>. </td></tr><tr><td valign="top">H14106</td><td valign="top">The <a href="c3ref/config.html">sqlite3_config()</a> interface shall return <a href="c3ref/c_abort.html">SQLITE_MISUSE</a>
+if it is invoked in between calls to <a href="c3ref/initialize.html">sqlite3_initialize()</a> and
+<a href="c3ref/initialize.html">sqlite3_shutdown()</a>. </td></tr><tr><td valign="top">H14120</td><td valign="top">A successful call to <a href="c3ref/config.html">sqlite3_config</a>(<a href="c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_SINGLETHREAD</a>)
+shall set the default <a href="threadsafe.html">threading mode</a> to Single-thread. </td></tr><tr><td valign="top">H14123</td><td valign="top">A successful call to <a href="c3ref/config.html">sqlite3_config</a>(<a href="c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_MULTITHREAD</a>)
+shall set the default <a href="threadsafe.html">threading mode</a> to Multi-thread. </td></tr><tr><td valign="top">H14126</td><td valign="top">A successful call to <a href="c3ref/config.html">sqlite3_config</a>(<a href="c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_SERIALIZED</a>)
+shall set the default <a href="threadsafe.html">threading mode</a> to Serialized. </td></tr><tr><td valign="top">H14129</td><td valign="top">A successful call to <a href="c3ref/config.html">sqlite3_config</a>(<a href="c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_MUTEX</a>,X)
+where X is a pointer to an initialized <a href="c3ref/mutex_methods.html">sqlite3_mutex_methods</a>
+object shall cause all subsequent mutex operations performed
+by SQLite to use the mutex methods that were present in X
+during the call to <a href="c3ref/config.html">sqlite3_config()</a>. </td></tr><tr><td valign="top">H14132</td><td valign="top">A successful call to <a href="c3ref/config.html">sqlite3_config</a>(<a href="c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_GETMUTEX</a>,X)
+where X is a pointer to an <a href="c3ref/mutex_methods.html">sqlite3_mutex_methods</a> object
+shall overwrite the content of <a href="c3ref/mutex_methods.html">sqlite3_mutex_methods</a> object
+with the mutex methods currently in use by SQLite. </td></tr><tr><td valign="top">H14135</td><td valign="top">A successful call to <a href="c3ref/config.html">sqlite3_config</a>(<a href="c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_MALLOC</a>,M)
+where M is a pointer to an initialized <a href="c3ref/mem_methods.html">sqlite3_mem_methods</a>
+object shall cause all subsequent memory allocation operations
+performed by SQLite to use the methods that were present in
+M during the call to <a href="c3ref/config.html">sqlite3_config()</a>. </td></tr><tr><td valign="top">H14138</td><td valign="top">A successful call to <a href="c3ref/config.html">sqlite3_config</a>(<a href="c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_GETMALLOC</a>,M)
+where M is a pointer to an <a href="c3ref/mem_methods.html">sqlite3_mem_methods</a> object shall
+overwrite the content of <a href="c3ref/mem_methods.html">sqlite3_mem_methods</a> object with
+the memory allocation methods currently in use by
+SQLite. </td></tr><tr><td valign="top">H14141</td><td valign="top">A successful call to <a href="c3ref/config.html">sqlite3_config</a>(<a href="c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_MEMSTATUS</a>,1)
+shall enable the memory allocation status collection logic. </td></tr><tr><td valign="top">H14144</td><td valign="top">A successful call to <a href="c3ref/config.html">sqlite3_config</a>(<a href="c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_MEMSTATUS</a>,0)
+shall disable the memory allocation status collection logic. </td></tr><tr><td valign="top">H14147</td><td valign="top">The memory allocation status collection logic shall be
+enabled by default. </td></tr><tr><td valign="top">H14150</td><td valign="top">A successful call to <a href="c3ref/config.html">sqlite3_config</a>(<a href="c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_SCRATCH</a>,S,Z,N)
+where Z and N are non-negative integers and
+S is a pointer to an aligned memory buffer not less than
+Z*N bytes in size shall cause S to be used by the
+<a href="malloc.html#scratch">scratch memory allocator</a> for as many as N simulataneous
+allocations each of size Z. </td></tr><tr><td valign="top">H14153</td><td valign="top">A successful call to <a href="c3ref/config.html">sqlite3_config</a>(<a href="c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_SCRATCH</a>,S,Z,N)
+where S is a NULL pointer shall disable the
+<a href="malloc.html#scratch">scratch memory allocator</a>. </td></tr><tr><td valign="top">H14156</td><td valign="top">A successful call to
+<a href="c3ref/config.html">sqlite3_config</a>(<a href="c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_PAGECACHE</a>,S,Z,N)
+where Z and N are non-negative integers and
+S is a pointer to an aligned memory buffer not less than
+Z*N bytes in size shall cause S to be used by the
+<a href="malloc.html#pagecache">pagecache memory allocator</a> for as many as N simulataneous
+allocations each of size Z. </td></tr><tr><td valign="top">H14159</td><td valign="top">A successful call to
+<a href="c3ref/config.html">sqlite3_config</a>(<a href="c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_PAGECACHE</a>,S,Z,N)
+where S is a NULL pointer shall disable the
+<a href="malloc.html#pagecache">pagecache memory allocator</a>. </td></tr><tr><td valign="top">H14162</td><td valign="top">A successful call to <a href="c3ref/config.html">sqlite3_config</a>(<a href="c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_HEAP</a>,H,Z,N)
+where Z and N are non-negative integers and
+H is a pointer to an aligned memory buffer not less than
+Z bytes in size shall enable the <a href="malloc.html#memsys5">memsys5</a> memory allocator
+and cause it to use buffer S as its memory source and to use
+a minimum allocation size of N. </td></tr><tr><td valign="top">H14165</td><td valign="top">A successful call to <a href="c3ref/config.html">sqlite3_config</a>(<a href="c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_HEAP</a>,H,Z,N)
+where H is a NULL pointer shall disable the
+<a href="malloc.html#memsys5">memsys5</a> memory allocator. </td></tr><tr><td valign="top">H14168</td><td valign="top">A successful call to <a href="c3ref/config.html">sqlite3_config</a>(<a href="c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_LOOKASIDE</a>,Z,N)
+shall cause the default <a href="malloc.html#lookaside">lookaside memory allocator</a> configuration
+for new <a href="c3ref/sqlite3.html">database connections</a> to be N slots of Z bytes each. </td></tr><tr><td valign="top">H14200</td><td valign="top">The sqlite3.h header file shall define the
+the following interfaces:
+<blockquote><pre>
+int sqlite3_db_config(sqlite3*, int op, ...);
+
+</pre></blockquote></td></tr><tr><td valign="top">H14203</td><td valign="top">A call to <a href="c3ref/db_config.html">sqlite3_db_config(D,V,...)</a> shall return <a href="c3ref/c_abort.html">SQLITE_OK</a>
+if and only if the call is successful. </td></tr><tr><td valign="top">H14206</td><td valign="top">If one or more slots of the <a href="malloc.html#lookaside">lookaside memory allocator</a> for
+<a href="c3ref/sqlite3.html">database connection</a> D are in use, then a call to
+<a href="c3ref/db_config.html">sqlite3_db_config</a>(D,<a href="c3ref/c_dbconfig_lookaside.html">SQLITE_DBCONFIG_LOOKASIDE</a>,...) shall
+fail with an <a href="c3ref/c_abort.html">SQLITE_BUSY</a> return code. </td></tr><tr><td valign="top">H14209</td><td valign="top">A successful call to
+<a href="c3ref/db_config.html">sqlite3_db_config</a>(D,<a href="c3ref/c_dbconfig_lookaside.html">SQLITE_DBCONFIG_LOOKASIDE</a>,B,Z,N) where
+D is an open <a href="c3ref/sqlite3.html">database connection</a> and Z and N are positive
+integers and B is an aligned buffer at least Z*N bytes in size
+shall cause the <a href="malloc.html#lookaside">lookaside memory allocator</a> for D to use buffer B
+with N slots of Z bytes each. </td></tr><tr><td valign="top">H14212</td><td valign="top">A successful call to
+<a href="c3ref/db_config.html">sqlite3_db_config</a>(D,<a href="c3ref/c_dbconfig_lookaside.html">SQLITE_DBCONFIG_LOOKASIDE</a>,B,Z,N) where
+D is an open <a href="c3ref/sqlite3.html">database connection</a> and Z and N are positive
+integers and B is NULL pointer shall cause the
+<a href="malloc.html#lookaside">lookaside memory allocator</a> for D to a obtain Z*N byte buffer
+from the primary memory allocator and use that buffer
+with N lookaside slots of Z bytes each. </td></tr><tr><td valign="top">H14215</td><td valign="top">A successful call to
+<a href="c3ref/db_config.html">sqlite3_db_config</a>(D,<a href="c3ref/c_dbconfig_lookaside.html">SQLITE_DBCONFIG_LOOKASIDE</a>,B,Z,N) where
+D is an open <a href="c3ref/sqlite3.html">database connection</a> and Z and N are zero shall
+disable the <a href="malloc.html#lookaside">lookaside memory allocator</a> for D. </td></tr><tr><td valign="top">H15000</td><td valign="top">The sqlite3.h header file shall define the
 the following interfaces:
 <blockquote><pre>
 typedef struct Mem sqlite3_value;
@@ -1372,44 +1449,44 @@ int sqlite3_create_function16(
   void (*xFinal)(sqlite3_context*)
 );
 
-</pre></blockquote></td></tr><tr><td valign="top">H16103</td><td valign="top">The <a href="c3ref/create_function.html">sqlite3_create_function16()</a> interface behaves exactly
-like <a href="c3ref/create_function.html">sqlite3_create_function()</a> in every way except that it
-interprets the zFunctionName argument as zero-terminated UTF-16
-native byte order instead of as zero-terminated UTF-8. </td></tr><tr><td valign="top">H16106</td><td valign="top">A successful invocation of
-the <a href="c3ref/create_function.html">sqlite3_create_function(D,X,N,E,...)</a> interface registers
+</pre></blockquote></td></tr><tr><td valign="top">H16103</td><td valign="top">The <a href="c3ref/create_function.html">sqlite3_create_function16(D,X,...)</a> interface shall behave
+as <a href="c3ref/create_function.html">sqlite3_create_function(D,X,...)</a> in every way except that it
+interprets the X argument as zero-terminated UTF-16
+native byte order instead of as zero-terminated UTF-8. </td></tr><tr><td valign="top">H16106</td><td valign="top">A successful invocation of the
+<a href="c3ref/create_function.html">sqlite3_create_function(D,X,N,E,...)</a> interface shall register
 or replaces callback functions in the <a href="c3ref/sqlite3.html">database connection</a> D
 used to implement the SQL function named X with N parameters
 and having a preferred text encoding of E. </td></tr><tr><td valign="top">H16109</td><td valign="top">A successful call to <a href="c3ref/create_function.html">sqlite3_create_function(D,X,N,E,P,F,S,L)</a>
-replaces the P, F, S, and L values from any prior calls with
-the same D, X, N, and E values. </td></tr><tr><td valign="top">H16112</td><td valign="top">The <a href="c3ref/create_function.html">sqlite3_create_function(D,X,...)</a> interface fails with
-a return code of <a href="c3ref/c_abort.html">SQLITE_ERROR</a> if the SQL function name X is
-longer than 255 bytes exclusive of the zero terminator. </td></tr><tr><td valign="top">H16118</td><td valign="top">Either F must be NULL and S and L are non-NULL or else F
-is non-NULL and S and L are NULL, otherwise
-<a href="c3ref/create_function.html">sqlite3_create_function(D,X,N,E,P,F,S,L)</a> returns <a href="c3ref/c_abort.html">SQLITE_ERROR</a>. </td></tr><tr><td valign="top">H16121</td><td valign="top">The <a href="c3ref/create_function.html">sqlite3_create_function(D,...)</a> interface fails with an
+shall replace the P, F, S, and L values from any prior calls with
+the same D, X, N, and E values. </td></tr><tr><td valign="top">H16112</td><td valign="top">The <a href="c3ref/create_function.html">sqlite3_create_function(D,X,...)</a> interface shall fail
+if the SQL function name X is
+longer than 255 bytes exclusive of the zero terminator. </td></tr><tr><td valign="top">H16118</td><td valign="top">The <a href="c3ref/create_function.html">sqlite3_create_function(D,X,N,E,P,F,S,L)</a> interface
+shall fail unless either F is NULL and S and L are non-NULL or
+F is non-NULL and S and L are NULL. </td></tr><tr><td valign="top">H16121</td><td valign="top">The <a href="c3ref/create_function.html">sqlite3_create_function(D,...)</a> interface shall fails with an
 error code of <a href="c3ref/c_abort.html">SQLITE_BUSY</a> if there exist <a href="c3ref/stmt.html">prepared statements</a>
-associated with the <a href="c3ref/sqlite3.html">database connection</a> D. </td></tr><tr><td valign="top">H16124</td><td valign="top">The <a href="c3ref/create_function.html">sqlite3_create_function(D,X,N,...)</a> interface fails with an
-error code of <a href="c3ref/c_abort.html">SQLITE_ERROR</a> if parameter N (specifying the number
-of arguments to the SQL function being registered) is less
+associated with the <a href="c3ref/sqlite3.html">database connection</a> D. </td></tr><tr><td valign="top">H16124</td><td valign="top">The <a href="c3ref/create_function.html">sqlite3_create_function(D,X,N,...)</a> interface shall fail with
+an error code of <a href="c3ref/c_abort.html">SQLITE_ERROR</a> if parameter N is less
 than -1 or greater than 127. </td></tr><tr><td valign="top">H16127</td><td valign="top">When N is non-negative, the <a href="c3ref/create_function.html">sqlite3_create_function(D,X,N,...)</a>
-interface causes callbacks to be invoked for the SQL function
+interface shall register callbacks to be invoked for the
+SQL function
 named X when the number of arguments to the SQL function is
 exactly N. </td></tr><tr><td valign="top">H16130</td><td valign="top">When N is -1, the <a href="c3ref/create_function.html">sqlite3_create_function(D,X,N,...)</a>
-interface causes callbacks to be invoked for the SQL function
-named X with any number of arguments. </td></tr><tr><td valign="top">H16133</td><td valign="top">When calls to <a href="c3ref/create_function.html">sqlite3_create_function(D,X,N,...)</a>
+interface shall register callbacks to be invoked for the SQL
+function named X with any number of arguments. </td></tr><tr><td valign="top">H16133</td><td valign="top">When calls to <a href="c3ref/create_function.html">sqlite3_create_function(D,X,N,...)</a>
 specify multiple implementations of the same function X
 and when one implementation has N>=0 and the other has N=(-1)
-the implementation with a non-zero N is preferred. </td></tr><tr><td valign="top">H16136</td><td valign="top">When calls to <a href="c3ref/create_function.html">sqlite3_create_function(D,X,N,E,...)</a>
+the implementation with a non-zero N shall be preferred. </td></tr><tr><td valign="top">H16136</td><td valign="top">When calls to <a href="c3ref/create_function.html">sqlite3_create_function(D,X,N,E,...)</a>
 specify multiple implementations of the same function X with
 the same number of arguments N but with different
 encodings E, then the implementation where E matches the
-database encoding is preferred. </td></tr><tr><td valign="top">H16139</td><td valign="top">For an aggregate SQL function created using
+database encoding shall preferred. </td></tr><tr><td valign="top">H16139</td><td valign="top">For an aggregate SQL function created using
 <a href="c3ref/create_function.html">sqlite3_create_function(D,X,N,E,P,0,S,L)</a> the finalizer
-function L will always be invoked exactly once if the
+function L shall always be invoked exactly once if the
 step function S is called one or more times. </td></tr><tr><td valign="top">H16142</td><td valign="top">When SQLite invokes either the xFunc or xStep function of
 an application-defined SQL function or aggregate created
 by <a href="c3ref/create_function.html">sqlite3_create_function()</a> or <a href="c3ref/create_function.html">sqlite3_create_function16()</a>,
 then the array of <a href="c3ref/value.html">sqlite3_value</a> objects passed as the
-third parameter are always <a href="c3ref/value.html">protected sqlite3_value</a> objects. </td></tr><tr><td valign="top">H16210</td><td valign="top">The sqlite3.h header file shall define the
+third parameter shall be <a href="c3ref/value.html">protected sqlite3_value</a> objects. </td></tr><tr><td valign="top">H16210</td><td valign="top">The sqlite3.h header file shall define the
 the following interfaces:
 <blockquote><pre>
 void *sqlite3_aggregate_context(sqlite3_context*, int nBytes);
@@ -1675,11 +1752,6 @@ the following interfaces:
 <blockquote><pre>
 int sqlite3_status(int op, int *pCurrent, int *pHighwater, int resetFlag);
 
-</pre></blockquote></td></tr><tr><td valign="top">H17201</td><td valign="top">The sqlite3.h header file shall define the
-the following interfaces:
-<blockquote><pre>
-int sqlite3_db_status(sqlite3*, int op, int *pCur, int *pHiwtr, int resetFlg);
-
 </pre></blockquote></td></tr><tr><td valign="top">H17250</td><td valign="top">The sqlite3.h header file shall define the
 the following interfaces:
 <blockquote><pre>
@@ -1692,11 +1764,6 @@ the following interfaces:
 #define SQLITE_STATUS_PARSER_STACK         6
 #define SQLITE_STATUS_PAGECACHE_SIZE       7
 #define SQLITE_STATUS_SCRATCH_SIZE         8
-
-</pre></blockquote></td></tr><tr><td valign="top">H17275</td><td valign="top">The sqlite3.h header file shall define the
-the following interfaces:
-<blockquote><pre>
-#define SQLITE_DBSTATUS_LOOKASIDE_USED     0
 
 </pre></blockquote></td></tr><tr><td valign="top">H17300</td><td valign="top">The sqlite3.h header file shall define the
 the following interfaces:
@@ -1773,7 +1840,28 @@ provided that the first parameter is greater than zero. </td></tr><tr><td valign
 its output buffer (the second parameter) outside the range
 of 0 through N-1 (where N is the first parameter)
 regardless of the length of the string
-requested by the format specification. </td></tr><tr><td valign="top">H17800</td><td valign="top">The sqlite3.h header file shall define the
+requested by the format specification. </td></tr><tr><td valign="top">H17500</td><td valign="top">The sqlite3.h header file shall define the
+the following interfaces:
+<blockquote><pre>
+int sqlite3_db_status(sqlite3*, int op, int *pCur, int *pHiwtr, int resetFlg);
+
+</pre></blockquote></td></tr><tr><td valign="top">H17520</td><td valign="top">The sqlite3.h header file shall define the
+the following interfaces:
+<blockquote><pre>
+#define SQLITE_DBSTATUS_LOOKASIDE_USED     0
+
+</pre></blockquote></td></tr><tr><td valign="top">H17550</td><td valign="top">The sqlite3.h header file shall define the
+the following interfaces:
+<blockquote><pre>
+int sqlite3_stmt_status(sqlite3_stmt*, int op,int resetFlg);
+
+</pre></blockquote></td></tr><tr><td valign="top">H17570</td><td valign="top">The sqlite3.h header file shall define the
+the following interfaces:
+<blockquote><pre>
+#define SQLITE_STMTSTATUS_FULLSCAN_STEP     1
+#define SQLITE_STMTSTATUS_SORT              2
+
+</pre></blockquote></td></tr><tr><td valign="top">H17800</td><td valign="top">The sqlite3.h header file shall define the
 the following interfaces:
 <blockquote><pre>
 typedef struct sqlite3_blob sqlite3_blob;
@@ -1987,25 +2075,28 @@ the following interfaces:
 int sqlite3_overload_function(sqlite3*, const char *zFuncName, int nArg);
 
 </pre></blockquote></td></tr><tr><td valign="top">H21001</td><td valign="top">    Except for the read operation required by H21007 and those reads made
-    as part of opening a read-only transaction, SQLite shall only read
-    data from a <i>database connection</i> while the 
-    <i>database connection</i> has an open read-only or read/write transaction.
+    as part of opening a read-only transaction, SQLite shall ensure that
+    a <i>database connection</i> has an open read-only or read/write 
+    transaction when any data is read from the <i>database file</i>.
 </td></tr><tr><td valign="top">H21002</td><td valign="top">    Aside from those read operations described by H21007 and H21XXX, SQLite
-    shall read data from the database in aligned blocks of <i>page-size</i>
-    bytes, where <i>page-size</i> is the database page size used by the
-    database file.
+    shall read data from the database file in aligned blocks of 
+    <i>page-size</i> bytes, where <i>page-size</i> is the database page size 
+    used by the database file.
 </td></tr><tr><td valign="top">H21003</td><td valign="top">      While opening a <i>read-only transaction</i>, after successfully
       obtaining a <i>shared lock</i> on the database file, SQLite shall 
       attempt to detect and roll back a <i>hot journal file</i> associated 
       with the same database file.
 </td></tr><tr><td valign="top">H21004</td><td valign="top">      Assuming no errors have occured, then after attempting to detect and
-      roll back a <i>hot journal file</i>, if the connections 
-      <i>page cache</i> is not empty, then SQLite shall validate the contents 
-      of the <i>page cache</i> by testing the <i>file change counter</i>. 
-      This procedure is known as <i>cache validiation</i>.
-</td></tr><tr><td valign="top">H21005</td><td valign="top">      If the contents of the <i>page cache</i> are found to be invalid by
-      the check prescribed by F20040, SQLite shall discard the cache contents
-      before continuing.
+      roll back a <i>hot journal file</i>, if the <i>page cache</i> contains
+      any entries associated with the current <i>database connection</i>,
+      then SQLite shall validate the contents of the <i>page cache</i> by
+      testing the <i>file change counter</i>.  This procedure is known as
+      <i>cache validiation</i>.
+</td></tr><tr><td valign="top">H21005</td><td valign="top">      If the cache validiate procedure prescribed by H21004 is required and
+      does not prove that the <i>page cache</i> entries associated with the
+      current <i>database connection</i> are valid, then SQLite shall discard
+      all entries associated with the current <i>database connection</i> from
+      the <i>page cache</i>.
 </td></tr><tr><td valign="top">H21006</td><td valign="top">      When a new <i>database connection</i> is required, SQLite shall attempt
       to open a file-handle on the database file. If the attempt fails, then
       no new <i>database connection</i> is created and an error returned.
@@ -2041,8 +2132,9 @@ int sqlite3_overload_function(sqlite3*, const char *zFuncName, int nArg);
       journal file exists in the file-system.
 </td></tr><tr><td valign="top">H21015</td><td valign="top">      When required to attempt to detect a <i>hot-journal file</i>, if the
       call to xAccess() required by H21014 indicates that a journal file does
-      not exist, then the attempt to detect a <i>hot-journal file</i> is
-      finished. A <i>hot-journal file</i> was not detected.
+      not exist, then SQLite shall conclude that there is no <i>hot-journal
+      file</i> in the file system and therefore that no <i>hot journal
+      rollback</i> is required.
 </td></tr><tr><td valign="top">H21016</td><td valign="top">      When required to attempt to detect a <i>hot-journal file</i>, if the
       call to xAccess() required by H21014 indicates that a journal file
       is present, then the xCheckReservedLock() method of the database file
@@ -2051,11 +2143,13 @@ int sqlite3_overload_function(sqlite3*, const char *zFuncName, int nArg);
       file.
 </td></tr><tr><td valign="top">H21017</td><td valign="top">      If the call to xCheckReservedLock() required by H21016 indicates that
       some other <i>database connection</i> is holding a <i>reserved</i>
-      or greater lock on the database file, 
+      or greater lock on the database file, then SQLite shall conclude that
+      there is no <i>hot journal file</i>. In this case the attempt to detect 
+      a <i>hot journal file</i> is concluded.
 </td></tr><tr><td valign="top">H21018</td><td valign="top">      When a file-handle open on a database file is unlocked, if the
-      <i>page cache</i> belonging to the associated <i>database connection</i>
-      is not empty, SQLite shall store the value of the <i>file change
-      counter</i> internally.
+      <i>page cache</i> contains one or more entries belonging to the
+      associated <i>database connection</i>, SQLite shall store the value 
+      of the <i>file change counter</i> internally.
 </td></tr><tr><td valign="top">H21019</td><td valign="top">      When required to perform <i>cache validation</i> as part of opening
       a <i>read transaction</i>, SQLite shall read a 16 byte block 
       starting at byte offset 24 of the <i>database file</i> using the xRead()
@@ -2066,7 +2160,7 @@ int sqlite3_overload_function(sqlite3*, const char *zFuncName, int nArg);
       recently stored value of the <i>file change counter</i> (see H21018).
       If the values are not the same, then SQLite shall conclude that
       the contents of the cache are invalid.
-</td></tr><tr><td valign="top">H21021</td><td valign="top">      During the conclusing of a <i>read transaction</i>, before unlocking
+</td></tr><tr><td valign="top">H21021</td><td valign="top">      During the conclusion of a <i>read transaction</i>, before unlocking
       the database file, SQLite shall set the connections 
       <i>expected page size</i> to the current database <i>page-size</i>.
 </td></tr><tr><td valign="top">H21022</td><td valign="top">      As part of opening a new <i>read transaction</i>, immediately after 
@@ -2086,7 +2180,7 @@ int sqlite3_overload_function(sqlite3*, const char *zFuncName, int nArg);
       <i>page-size</i> field that appears in the database file header that
       consumes the first 100 bytes of the read block is the same as the
       connections current <i>expected page size</i>, then the block of data
-      read is added to the connections <i>page cache</i> as page 1.
+      read is stored in the <i>page cache</i> as page 1.
 </td></tr><tr><td valign="top">H21025</td><td valign="top">    Before modifying or adding any in-memory <i>page cache</i> pages in 
     preparation for writing to the <i>database file</i>, the 
     <i>database connection</i> shall open a <i>write transaction</i> on 
@@ -2152,7 +2246,1314 @@ int sqlite3_overload_function(sqlite3*, const char *zFuncName, int nArg);
       by H21038 shall be:
 </td></tr><tr><td valign="top">H21040</td><td valign="top">      When a <i>database connection</i> is closed, SQLite shall close the 
       associated file handle at the VFS level.
-</td></tr>
+</td></tr><tr><td valign="top">H21041</td><td valign="top">    After reading a page of data from a database file, SQLite shall 
+    store the data in the <i>page cache</i>.
+</td></tr><tr><td valign="top">H21042</td><td valign="top">    SQLite shall ensure that a <i>database connection</i> has an open
+    read-only or read/write transaction before using data stored in the <i>page
+    cache</i> to satisfy user queries.
+</td></tr><tr><td valign="top">H21043</td><td valign="top">      When a <i>database connection</i> is closed, all associated <i>page
+      cache</i> entries shall be discarded.
+</td></tr><tr><td valign="top">H21044</td><td valign="top">      If while attempting to detect a <i>hot-journal file</i> the call to
+      xCheckReservedLock() indicates that no process holds a <i>reserved</i>
+      or greater lock on the <i>database file</i>, then SQLite shall open
+      a file handle on the potentially hot journal file using the VFS xOpen()
+      method.
+</td></tr><tr><td valign="top">H21045</td><td valign="top">      After successfully opening a file-handle on a potentially hot journal
+      file, SQLite shall query the file for its size in bytes using the
+      xFileSize() method of the open file handle. 
+</td></tr><tr><td valign="top">H21046</td><td valign="top">      If the size of a potentially hot journal file is revealed to be zero
+      bytes by a query required by H21045, then SQLite shall close the
+      file handle opened on the journal file and delete the journal file using
+      a call to the VFS xDelete() method. In this case SQLite shall conclude
+      that there is no <i>hot journal file</i>.
+</td></tr><tr><td valign="top">H21047</td><td valign="top">      If the size of a potentially hot journal file is revealed to be greater
+      than zero bytes by a query required by H21045, then SQLite shall attempt
+      to upgrade the <i>shared lock</i> held by the <i>database connection</i>
+      on the <i>database file</i> directly to an <i>exclusive lock</i>.
+</td></tr><tr><td valign="top">H21048</td><td valign="top">      If an attempt to upgrade to an <i>exclusive lock</i> prescribed by 
+      H21047 fails for any reason, then SQLite shall release all locks held by
+      the <i>database connection</i> and close the file handle opened on the
+      <i>journal file</i>. The attempt to open a <i>read-only transaction</i>
+      shall be deemed to have failed and an error returned to the user.
+</td></tr><tr><td valign="top">H21049</td><td valign="top">      If, as part of the <i>hot journal file</i> detection process, the
+      attempt to upgrade to an <i>exclusive lock</i> mandated by H21047 is
+      successful, then SQLite shall query the file-system using the xAccess()
+      method of the VFS implementation to test whether or not the journal
+      file is still present in the file-system.
+</td></tr><tr><td valign="top">H21050</td><td valign="top">      If the xAccess() query required by H21049 reveals that the journal
+      file is still present in the file system, then SQLite shall conclude
+      that the journal file is a <i>hot journal file</i> that needs to
+      be rolled back. SQLite shall immediately begin <i>hot journal
+      rollback</i>.
+</td></tr><tr><td valign="top">H21051</td><td valign="top">      If the call to xAccess() required by H21014 fails (due to an IO error or
+      similar), then SQLite shall abandon the attempt to open a <i>read-only
+      transaction</i>, relinquish the <i>shared lock</i> held on the database
+      file and return an error to the user.
+</td></tr><tr><td valign="top">H21052</td><td valign="top">      If the call to xCheckReservedLock() required by H21016 fails (due to an
+      IO or other internal VFS error), then SQLite shall abandon the attempt
+      to open a <i>read-only transaction</i>, relinquish the <i>shared lock</i>
+      held on the database file and return an error to the user.
+</td></tr><tr><td valign="top">H21053</td><td valign="top">      If the call to xOpen() required by H21044 fails (due to an IO or other
+      internal VFS error), then SQLite shall abandon the attempt to open a
+      <i>read-only transaction</i>, relinquish the <i>shared lock</i> held on
+      the database file and return an error to the user.
+</td></tr><tr><td valign="top">H21054</td><td valign="top">      If the call to xFileSize() required by H21045 fails (due to an IO or
+      other internal VFS error), then SQLite shall abandon the attempt to open
+      a <i>read-only transaction</i>, relinquish the <i>shared lock</i> held on
+      the database file, close the file handle opened on the journal file and
+      return an error to the user.
+</td></tr><tr><td valign="top">H21055</td><td valign="top">      If the call to xDelete() required by H21045 fails (due to an IO or
+      other internal VFS error), then SQLite shall abandon the attempt to open
+      a <i>read-only transaction</i>, relinquish the <i>shared lock</i> held on
+      the database file and return an error to the user.
+</td></tr><tr><td valign="top">H21056</td><td valign="top">      If the call to xAccess() required by H21049 fails (due to an IO or
+      other internal VFS error), then SQLite shall abandon the attempt to open
+      a <i>read-only transaction</i>, relinquish the lock held on the 
+      database file, close the file handle opened on the journal file and
+      return an error to the user.
+</td></tr><tr><td valign="top">H21057</td><td valign="top">      If the call to xAccess() required by H21049 reveals that the journal
+      file is no longer present in the file system, then SQLite shall abandon 
+      the attempt to open a <i>read-only transaction</i>, relinquish the 
+      lock held on the database file, close the file handle opened on the 
+      journal file and return an SQLITE_BUSY error to the user.
+</td></tr><tr><td valign="top">H40310</td><td valign="top">
+  SQLite shall recognize as a VARIABLE token the a question-mark (u003f)
+  followed by zero or more NUMERIC characters.
+</td></tr><tr><td valign="top">H40320</td><td valign="top">
+  SQLite shall recognize as a VARIABLE token one of the characters
+  at-sign (u0040), dollar-sign (u0024), or colon (u003a) followed
+  by a parameter name.
+</td></tr><tr><td valign="top">H40330</td><td valign="top">
+  SQLite shall recognize as a VARIABLE token the shape-sign (u0023)
+  followed by a parameter name that does not begin with a
+  NUMERIC character.
+</td></tr><tr><td valign="top">H41010</td><td valign="top">
+  SQLite shall divide input SQL text into tokens working from left to
+  right.
+</td></tr><tr><td valign="top">H41020</td><td valign="top">
+  At each step in the SQL tokenization process, SQLite shall extract
+  the longest possible token from the remaining input text.
+</td></tr><tr><td valign="top">H41030</td><td valign="top">
+  The tokenizer shall pass each non-WHITESPACE token seen on to the
+  parser in the order in which the tokens are seen.
+</td></tr><tr><td valign="top">H41040</td><td valign="top">
+  When the tokenizer reaches the end of input where the last token sent
+  to the parser was not a SEMI token, it shall 
+  send a SEMI token to the parser.
+</td></tr><tr><td valign="top">H41050</td><td valign="top">
+  When the tokenizer encounters text that is not a valid token, it shall
+  cause an error to be returned to the application.
+</td></tr><tr><td valign="top">H41100</td><td valign="top">
+  SQLite shall recognize a sequence of one or more WHITESPACE characters
+  as a WHITESPACE token.
+</td></tr><tr><td valign="top">H41110</td><td valign="top">
+  SQLite shall recognize as a WHITESPACE token the two-character sequence "--" 
+  (u002d, u002d) followed by any sequence of non-zero characters up through and
+  including the first u000a character or until end of input.
+</td></tr><tr><td valign="top">H41120</td><td valign="top">
+  SQLite shall recognize as a WHITESPACE token the two-character sequence "/*"
+  (u002f, u002a) followed by any sequence of zero or more 
+  non-zero characters through with the first "*/" (u002a, u002f) sequence or 
+  until end of input.
+</td></tr><tr><td valign="top">H41130</td><td valign="top">
+  SQLite shall recognize as an ID token 
+  any sequence of characters that begins with
+  an ALPHABETIC character and continue with zero or more
+  ALPHANUMERIC characters and/or "$" (u0024) characters and which is
+  not a keyword token.
+</td></tr><tr><td valign="top">H41140</td><td valign="top">
+  SQLite shall recognize as an ID token
+  any sequence of non-zero characters that begins with "&#91;" (u005b) and
+  continuing through the first "&#93;" (u005d) character.
+</td></tr><tr><td valign="top">H41150</td><td valign="top">
+  SQLite shall recognize as an ID token
+  any sequence of characters
+  that begins with a double-quote (u0022), is followed by zero or
+  more non-zero characters and/or pairs of double-quotes (u0022)
+  and terminates with a double-quote (u0022) that
+  is not part of a pair.
+</td></tr><tr><td valign="top">H41160</td><td valign="top">
+  SQLite shall recognize as an ID token
+  any sequence of characters
+  that begins with a grave accent (u0060), is followed by zero or
+  more non-zero characters and/or pairs ofgrave accents (u0060)
+  and terminates with a grave accent (u0022) that
+  is not part of a pair.
+</td></tr><tr><td valign="top">H41200</td><td valign="top">
+  SQLite shall recognize as a STRING token a sequence of characters
+  that begins with a single-quote (u0027), is followed by zero or
+  more non-zero characters and/or pairs of single-quotes (u0027)
+  and terminates with a single-quote (u0027) that
+  is not part of a pair.
+</td></tr><tr><td valign="top">H41210</td><td valign="top">
+  SQLite shall recognize as a BLOB token an upper or lower-case "X"
+  (u0058 or u0078) followed by a single-quote (u0027) followed by
+  a number of HEXADECIMAL character that is a multiple of two and
+  terminated by a single-quote (u0027).
+</td></tr><tr><td valign="top">H41220</td><td valign="top">
+  SQLite shall recognize as an INTEGER token any squence of
+  one or more NUMERIC characters.
+</td></tr><tr><td valign="top">H41230</td><td valign="top">
+  SQLite shall recognize as a FLOAT token a sequence of one
+  or more NUMERIC characters together with zero or one period
+  (u002e) and followed by an exponentiation suffix.
+</td></tr><tr><td valign="top">H41240</td><td valign="top">
+  SQLite shall recognize as a FLOAT token a sequence of one
+  or more NUMERIC characters that includes exactly one period
+  (u002e) character.
+</td></tr><tr><td valign="top">H41403</td><td valign="top"> SQLite shall recognize the 1-character sequenence "-" (u002d) as token MINUS</td></tr><tr><td valign="top">H41406</td><td valign="top"> SQLite shall recognize the 1-character sequenence "(" (u0028) as token LP</td></tr><tr><td valign="top">H41409</td><td valign="top"> SQLite shall recognize the 1-character sequenence ")" (u0029) as token RP</td></tr><tr><td valign="top">H41412</td><td valign="top"> SQLite shall recognize the 1-character sequenence ";" (u003b) as token SEMI</td></tr><tr><td valign="top">H41415</td><td valign="top"> SQLite shall recognize the 1-character sequenence "+" (u002b) as token PLUS</td></tr><tr><td valign="top">H41418</td><td valign="top"> SQLite shall recognize the 1-character sequenence "*" (u002a) as token STAR</td></tr><tr><td valign="top">H41421</td><td valign="top"> SQLite shall recognize the 1-character sequenence "/" (u002f) as token SLASH</td></tr><tr><td valign="top">H41424</td><td valign="top"> SQLite shall recognize the 1-character sequenence "%" (u0025) as token REM</td></tr><tr><td valign="top">H41427</td><td valign="top"> SQLite shall recognize the 1-character sequenence "=" (u003d) as token EQ</td></tr><tr><td valign="top">H41430</td><td valign="top"> SQLite shall recognize the 2-character sequenence "==" (u003d u003d) as token EQ</td></tr><tr><td valign="top">H41433</td><td valign="top"> SQLite shall recognize the 2-character sequenence "<=" (u003c u003d) as token LE</td></tr><tr><td valign="top">H41436</td><td valign="top"> SQLite shall recognize the 2-character sequenence "<>" (u003c u003e) as token NE</td></tr><tr><td valign="top">H41439</td><td valign="top"> SQLite shall recognize the 2-character sequenence "<<" (u003c u003c) as token LSHIFT</td></tr><tr><td valign="top">H41442</td><td valign="top"> SQLite shall recognize the 1-character sequenence "<" (u003c) as token LT</td></tr><tr><td valign="top">H41445</td><td valign="top"> SQLite shall recognize the 2-character sequenence ">=" (u003e u003d) as token GE</td></tr><tr><td valign="top">H41448</td><td valign="top"> SQLite shall recognize the 2-character sequenence ">>" (u003e u003e) as token RSHIFT</td></tr><tr><td valign="top">H41451</td><td valign="top"> SQLite shall recognize the 1-character sequenence ">" (u003e) as token GT</td></tr><tr><td valign="top">H41454</td><td valign="top"> SQLite shall recognize the 2-character sequenence "!=" (u0021 u003d) as token NE</td></tr><tr><td valign="top">H41457</td><td valign="top"> SQLite shall recognize the 1-character sequenence "," (u002c) as token COMMA</td></tr><tr><td valign="top">H41460</td><td valign="top"> SQLite shall recognize the 1-character sequenence "&" (u0026) as token BITAND</td></tr><tr><td valign="top">H41463</td><td valign="top"> SQLite shall recognize the 1-character sequenence "~" (u007e) as token BITNOT</td></tr><tr><td valign="top">H41466</td><td valign="top"> SQLite shall recognize the 1-character sequenence "|" (u007c) as token BITOR</td></tr><tr><td valign="top">H41469</td><td valign="top"> SQLite shall recognize the 2-character sequenence "||" (u007c u007c) as token CONCAT</td></tr><tr><td valign="top">H41472</td><td valign="top"> SQLite shall recognize the 1-character sequenence "." (u002e) as token DOT</td></tr><tr><td valign="top">H41503</td><td valign="top"> SQLite shall recognize the 5-character sequenence "ABORT" in any combination of upper and lower caseletters as the keyword token ABORT</td></tr><tr><td valign="top">H41506</td><td valign="top"> SQLite shall recognize the 3-character sequenence "ADD" in any combination of upper and lower caseletters as the keyword token ADD</td></tr><tr><td valign="top">H41509</td><td valign="top"> SQLite shall recognize the 5-character sequenence "AFTER" in any combination of upper and lower caseletters as the keyword token AFTER</td></tr><tr><td valign="top">H41512</td><td valign="top"> SQLite shall recognize the 3-character sequenence "ALL" in any combination of upper and lower caseletters as the keyword token ALL</td></tr><tr><td valign="top">H41515</td><td valign="top"> SQLite shall recognize the 5-character sequenence "ALTER" in any combination of upper and lower caseletters as the keyword token ALTER</td></tr><tr><td valign="top">H41518</td><td valign="top"> SQLite shall recognize the 7-character sequenence "ANALYZE" in any combination of upper and lower caseletters as the keyword token ANALYZE</td></tr><tr><td valign="top">H41521</td><td valign="top"> SQLite shall recognize the 3-character sequenence "AND" in any combination of upper and lower caseletters as the keyword token AND</td></tr><tr><td valign="top">H41524</td><td valign="top"> SQLite shall recognize the 2-character sequenence "AS" in any combination of upper and lower caseletters as the keyword token AS</td></tr><tr><td valign="top">H41527</td><td valign="top"> SQLite shall recognize the 3-character sequenence "ASC" in any combination of upper and lower caseletters as the keyword token ASC</td></tr><tr><td valign="top">H41530</td><td valign="top"> SQLite shall recognize the 6-character sequenence "ATTACH" in any combination of upper and lower caseletters as the keyword token ATTACH</td></tr><tr><td valign="top">H41533</td><td valign="top"> SQLite shall recognize the 13-character sequenence "AUTOINCREMENT" in any combination of upper and lower caseletters as the keyword token AUTOINCR</td></tr><tr><td valign="top">H41536</td><td valign="top"> SQLite shall recognize the 6-character sequenence "BEFORE" in any combination of upper and lower caseletters as the keyword token BEFORE</td></tr><tr><td valign="top">H41539</td><td valign="top"> SQLite shall recognize the 5-character sequenence "BEGIN" in any combination of upper and lower caseletters as the keyword token BEGIN</td></tr><tr><td valign="top">H41542</td><td valign="top"> SQLite shall recognize the 7-character sequenence "BETWEEN" in any combination of upper and lower caseletters as the keyword token BETWEEN</td></tr><tr><td valign="top">H41545</td><td valign="top"> SQLite shall recognize the 2-character sequenence "BY" in any combination of upper and lower caseletters as the keyword token BY</td></tr><tr><td valign="top">H41548</td><td valign="top"> SQLite shall recognize the 7-character sequenence "CASCADE" in any combination of upper and lower caseletters as the keyword token CASCADE</td></tr><tr><td valign="top">H41551</td><td valign="top"> SQLite shall recognize the 4-character sequenence "CASE" in any combination of upper and lower caseletters as the keyword token CASE</td></tr><tr><td valign="top">H41554</td><td valign="top"> SQLite shall recognize the 4-character sequenence "CAST" in any combination of upper and lower caseletters as the keyword token CAST</td></tr><tr><td valign="top">H41557</td><td valign="top"> SQLite shall recognize the 5-character sequenence "CHECK" in any combination of upper and lower caseletters as the keyword token CHECK</td></tr><tr><td valign="top">H41560</td><td valign="top"> SQLite shall recognize the 7-character sequenence "COLLATE" in any combination of upper and lower caseletters as the keyword token COLLATE</td></tr><tr><td valign="top">H41563</td><td valign="top"> SQLite shall recognize the 6-character sequenence "COLUMN" in any combination of upper and lower caseletters as the keyword token COLUMNKW</td></tr><tr><td valign="top">H41566</td><td valign="top"> SQLite shall recognize the 6-character sequenence "COMMIT" in any combination of upper and lower caseletters as the keyword token COMMIT</td></tr><tr><td valign="top">H41569</td><td valign="top"> SQLite shall recognize the 8-character sequenence "CONFLICT" in any combination of upper and lower caseletters as the keyword token CONFLICT</td></tr><tr><td valign="top">H41572</td><td valign="top"> SQLite shall recognize the 10-character sequenence "CONSTRAINT" in any combination of upper and lower caseletters as the keyword token CONSTRAINT</td></tr><tr><td valign="top">H41575</td><td valign="top"> SQLite shall recognize the 6-character sequenence "CREATE" in any combination of upper and lower caseletters as the keyword token CREATE</td></tr><tr><td valign="top">H41578</td><td valign="top"> SQLite shall recognize the 5-character sequenence "CROSS" in any combination of upper and lower caseletters as the keyword token JOIN_KW</td></tr><tr><td valign="top">H41581</td><td valign="top"> SQLite shall recognize the 12-character sequenence "CURRENT_DATE" in any combination of upper and lower caseletters as the keyword token CTIME_KW</td></tr><tr><td valign="top">H41584</td><td valign="top"> SQLite shall recognize the 12-character sequenence "CURRENT_TIME" in any combination of upper and lower caseletters as the keyword token CTIME_KW</td></tr><tr><td valign="top">H41587</td><td valign="top"> SQLite shall recognize the 17-character sequenence "CURRENT_TIMESTAMP" in any combination of upper and lower caseletters as the keyword token CTIME_KW</td></tr><tr><td valign="top">H41590</td><td valign="top"> SQLite shall recognize the 8-character sequenence "DATABASE" in any combination of upper and lower caseletters as the keyword token DATABASE</td></tr><tr><td valign="top">H41593</td><td valign="top"> SQLite shall recognize the 7-character sequenence "DEFAULT" in any combination of upper and lower caseletters as the keyword token DEFAULT</td></tr><tr><td valign="top">H41596</td><td valign="top"> SQLite shall recognize the 8-character sequenence "DEFERRED" in any combination of upper and lower caseletters as the keyword token DEFERRED</td></tr><tr><td valign="top">H41599</td><td valign="top"> SQLite shall recognize the 10-character sequenence "DEFERRABLE" in any combination of upper and lower caseletters as the keyword token DEFERRABLE</td></tr><tr><td valign="top">H41602</td><td valign="top"> SQLite shall recognize the 6-character sequenence "DELETE" in any combination of upper and lower caseletters as the keyword token DELETE</td></tr><tr><td valign="top">H41605</td><td valign="top"> SQLite shall recognize the 4-character sequenence "DESC" in any combination of upper and lower caseletters as the keyword token DESC</td></tr><tr><td valign="top">H41608</td><td valign="top"> SQLite shall recognize the 6-character sequenence "DETACH" in any combination of upper and lower caseletters as the keyword token DETACH</td></tr><tr><td valign="top">H41611</td><td valign="top"> SQLite shall recognize the 8-character sequenence "DISTINCT" in any combination of upper and lower caseletters as the keyword token DISTINCT</td></tr><tr><td valign="top">H41614</td><td valign="top"> SQLite shall recognize the 4-character sequenence "DROP" in any combination of upper and lower caseletters as the keyword token DROP</td></tr><tr><td valign="top">H41617</td><td valign="top"> SQLite shall recognize the 3-character sequenence "END" in any combination of upper and lower caseletters as the keyword token END</td></tr><tr><td valign="top">H41620</td><td valign="top"> SQLite shall recognize the 4-character sequenence "EACH" in any combination of upper and lower caseletters as the keyword token EACH</td></tr><tr><td valign="top">H41623</td><td valign="top"> SQLite shall recognize the 4-character sequenence "ELSE" in any combination of upper and lower caseletters as the keyword token ELSE</td></tr><tr><td valign="top">H41626</td><td valign="top"> SQLite shall recognize the 6-character sequenence "ESCAPE" in any combination of upper and lower caseletters as the keyword token ESCAPE</td></tr><tr><td valign="top">H41629</td><td valign="top"> SQLite shall recognize the 6-character sequenence "EXCEPT" in any combination of upper and lower caseletters as the keyword token EXCEPT</td></tr><tr><td valign="top">H41632</td><td valign="top"> SQLite shall recognize the 9-character sequenence "EXCLUSIVE" in any combination of upper and lower caseletters as the keyword token EXCLUSIVE</td></tr><tr><td valign="top">H41635</td><td valign="top"> SQLite shall recognize the 6-character sequenence "EXISTS" in any combination of upper and lower caseletters as the keyword token EXISTS</td></tr><tr><td valign="top">H41638</td><td valign="top"> SQLite shall recognize the 7-character sequenence "EXPLAIN" in any combination of upper and lower caseletters as the keyword token EXPLAIN</td></tr><tr><td valign="top">H41641</td><td valign="top"> SQLite shall recognize the 4-character sequenence "FAIL" in any combination of upper and lower caseletters as the keyword token FAIL</td></tr><tr><td valign="top">H41644</td><td valign="top"> SQLite shall recognize the 3-character sequenence "FOR" in any combination of upper and lower caseletters as the keyword token FOR</td></tr><tr><td valign="top">H41647</td><td valign="top"> SQLite shall recognize the 7-character sequenence "FOREIGN" in any combination of upper and lower caseletters as the keyword token FOREIGN</td></tr><tr><td valign="top">H41650</td><td valign="top"> SQLite shall recognize the 4-character sequenence "FROM" in any combination of upper and lower caseletters as the keyword token FROM</td></tr><tr><td valign="top">H41653</td><td valign="top"> SQLite shall recognize the 4-character sequenence "FULL" in any combination of upper and lower caseletters as the keyword token JOIN_KW</td></tr><tr><td valign="top">H41656</td><td valign="top"> SQLite shall recognize the 4-character sequenence "GLOB" in any combination of upper and lower caseletters as the keyword token LIKE_KW</td></tr><tr><td valign="top">H41659</td><td valign="top"> SQLite shall recognize the 5-character sequenence "GROUP" in any combination of upper and lower caseletters as the keyword token GROUP</td></tr><tr><td valign="top">H41662</td><td valign="top"> SQLite shall recognize the 6-character sequenence "HAVING" in any combination of upper and lower caseletters as the keyword token HAVING</td></tr><tr><td valign="top">H41665</td><td valign="top"> SQLite shall recognize the 2-character sequenence "IF" in any combination of upper and lower caseletters as the keyword token IF</td></tr><tr><td valign="top">H41668</td><td valign="top"> SQLite shall recognize the 6-character sequenence "IGNORE" in any combination of upper and lower caseletters as the keyword token IGNORE</td></tr><tr><td valign="top">H41671</td><td valign="top"> SQLite shall recognize the 9-character sequenence "IMMEDIATE" in any combination of upper and lower caseletters as the keyword token IMMEDIATE</td></tr><tr><td valign="top">H41674</td><td valign="top"> SQLite shall recognize the 2-character sequenence "IN" in any combination of upper and lower caseletters as the keyword token IN</td></tr><tr><td valign="top">H41677</td><td valign="top"> SQLite shall recognize the 5-character sequenence "INDEX" in any combination of upper and lower caseletters as the keyword token INDEX</td></tr><tr><td valign="top">H41680</td><td valign="top"> SQLite shall recognize the 9-character sequenence "INITIALLY" in any combination of upper and lower caseletters as the keyword token INITIALLY</td></tr><tr><td valign="top">H41683</td><td valign="top"> SQLite shall recognize the 5-character sequenence "INNER" in any combination of upper and lower caseletters as the keyword token JOIN_KW</td></tr><tr><td valign="top">H41686</td><td valign="top"> SQLite shall recognize the 6-character sequenence "INSERT" in any combination of upper and lower caseletters as the keyword token INSERT</td></tr><tr><td valign="top">H41689</td><td valign="top"> SQLite shall recognize the 7-character sequenence "INSTEAD" in any combination of upper and lower caseletters as the keyword token INSTEAD</td></tr><tr><td valign="top">H41692</td><td valign="top"> SQLite shall recognize the 9-character sequenence "INTERSECT" in any combination of upper and lower caseletters as the keyword token INTERSECT</td></tr><tr><td valign="top">H41695</td><td valign="top"> SQLite shall recognize the 4-character sequenence "INTO" in any combination of upper and lower caseletters as the keyword token INTO</td></tr><tr><td valign="top">H41698</td><td valign="top"> SQLite shall recognize the 2-character sequenence "IS" in any combination of upper and lower caseletters as the keyword token IS</td></tr><tr><td valign="top">H41701</td><td valign="top"> SQLite shall recognize the 6-character sequenence "ISNULL" in any combination of upper and lower caseletters as the keyword token ISNULL</td></tr><tr><td valign="top">H41704</td><td valign="top"> SQLite shall recognize the 4-character sequenence "JOIN" in any combination of upper and lower caseletters as the keyword token JOIN</td></tr><tr><td valign="top">H41707</td><td valign="top"> SQLite shall recognize the 3-character sequenence "KEY" in any combination of upper and lower caseletters as the keyword token KEY</td></tr><tr><td valign="top">H41710</td><td valign="top"> SQLite shall recognize the 4-character sequenence "LEFT" in any combination of upper and lower caseletters as the keyword token JOIN_KW</td></tr><tr><td valign="top">H41713</td><td valign="top"> SQLite shall recognize the 4-character sequenence "LIKE" in any combination of upper and lower caseletters as the keyword token LIKE_KW</td></tr><tr><td valign="top">H41716</td><td valign="top"> SQLite shall recognize the 5-character sequenence "LIMIT" in any combination of upper and lower caseletters as the keyword token LIMIT</td></tr><tr><td valign="top">H41719</td><td valign="top"> SQLite shall recognize the 5-character sequenence "MATCH" in any combination of upper and lower caseletters as the keyword token MATCH</td></tr><tr><td valign="top">H41722</td><td valign="top"> SQLite shall recognize the 7-character sequenence "NATURAL" in any combination of upper and lower caseletters as the keyword token JOIN_KW</td></tr><tr><td valign="top">H41725</td><td valign="top"> SQLite shall recognize the 3-character sequenence "NOT" in any combination of upper and lower caseletters as the keyword token NOT</td></tr><tr><td valign="top">H41728</td><td valign="top"> SQLite shall recognize the 7-character sequenence "NOTNULL" in any combination of upper and lower caseletters as the keyword token NOTNULL</td></tr><tr><td valign="top">H41731</td><td valign="top"> SQLite shall recognize the 4-character sequenence "NULL" in any combination of upper and lower caseletters as the keyword token NULL</td></tr><tr><td valign="top">H41734</td><td valign="top"> SQLite shall recognize the 2-character sequenence "OF" in any combination of upper and lower caseletters as the keyword token OF</td></tr><tr><td valign="top">H41737</td><td valign="top"> SQLite shall recognize the 6-character sequenence "OFFSET" in any combination of upper and lower caseletters as the keyword token OFFSET</td></tr><tr><td valign="top">H41740</td><td valign="top"> SQLite shall recognize the 2-character sequenence "ON" in any combination of upper and lower caseletters as the keyword token ON</td></tr><tr><td valign="top">H41743</td><td valign="top"> SQLite shall recognize the 2-character sequenence "OR" in any combination of upper and lower caseletters as the keyword token OR</td></tr><tr><td valign="top">H41746</td><td valign="top"> SQLite shall recognize the 5-character sequenence "ORDER" in any combination of upper and lower caseletters as the keyword token ORDER</td></tr><tr><td valign="top">H41749</td><td valign="top"> SQLite shall recognize the 5-character sequenence "OUTER" in any combination of upper and lower caseletters as the keyword token JOIN_KW</td></tr><tr><td valign="top">H41752</td><td valign="top"> SQLite shall recognize the 4-character sequenence "PLAN" in any combination of upper and lower caseletters as the keyword token PLAN</td></tr><tr><td valign="top">H41755</td><td valign="top"> SQLite shall recognize the 6-character sequenence "PRAGMA" in any combination of upper and lower caseletters as the keyword token PRAGMA</td></tr><tr><td valign="top">H41758</td><td valign="top"> SQLite shall recognize the 7-character sequenence "PRIMARY" in any combination of upper and lower caseletters as the keyword token PRIMARY</td></tr><tr><td valign="top">H41761</td><td valign="top"> SQLite shall recognize the 5-character sequenence "QUERY" in any combination of upper and lower caseletters as the keyword token QUERY</td></tr><tr><td valign="top">H41764</td><td valign="top"> SQLite shall recognize the 5-character sequenence "RAISE" in any combination of upper and lower caseletters as the keyword token RAISE</td></tr><tr><td valign="top">H41767</td><td valign="top"> SQLite shall recognize the 10-character sequenence "REFERENCES" in any combination of upper and lower caseletters as the keyword token REFERENCES</td></tr><tr><td valign="top">H41770</td><td valign="top"> SQLite shall recognize the 6-character sequenence "REGEXP" in any combination of upper and lower caseletters as the keyword token LIKE_KW</td></tr><tr><td valign="top">H41773</td><td valign="top"> SQLite shall recognize the 7-character sequenence "REINDEX" in any combination of upper and lower caseletters as the keyword token REINDEX</td></tr><tr><td valign="top">H41776</td><td valign="top"> SQLite shall recognize the 6-character sequenence "RENAME" in any combination of upper and lower caseletters as the keyword token RENAME</td></tr><tr><td valign="top">H41779</td><td valign="top"> SQLite shall recognize the 7-character sequenence "REPLACE" in any combination of upper and lower caseletters as the keyword token REPLACE</td></tr><tr><td valign="top">H41782</td><td valign="top"> SQLite shall recognize the 8-character sequenence "RESTRICT" in any combination of upper and lower caseletters as the keyword token RESTRICT</td></tr><tr><td valign="top">H41785</td><td valign="top"> SQLite shall recognize the 5-character sequenence "RIGHT" in any combination of upper and lower caseletters as the keyword token JOIN_KW</td></tr><tr><td valign="top">H41788</td><td valign="top"> SQLite shall recognize the 8-character sequenence "ROLLBACK" in any combination of upper and lower caseletters as the keyword token ROLLBACK</td></tr><tr><td valign="top">H41791</td><td valign="top"> SQLite shall recognize the 3-character sequenence "ROW" in any combination of upper and lower caseletters as the keyword token ROW</td></tr><tr><td valign="top">H41794</td><td valign="top"> SQLite shall recognize the 6-character sequenence "SELECT" in any combination of upper and lower caseletters as the keyword token SELECT</td></tr><tr><td valign="top">H41797</td><td valign="top"> SQLite shall recognize the 3-character sequenence "SET" in any combination of upper and lower caseletters as the keyword token SET</td></tr><tr><td valign="top">H41800</td><td valign="top"> SQLite shall recognize the 5-character sequenence "TABLE" in any combination of upper and lower caseletters as the keyword token TABLE</td></tr><tr><td valign="top">H41803</td><td valign="top"> SQLite shall recognize the 4-character sequenence "TEMP" in any combination of upper and lower caseletters as the keyword token TEMP</td></tr><tr><td valign="top">H41806</td><td valign="top"> SQLite shall recognize the 9-character sequenence "TEMPORARY" in any combination of upper and lower caseletters as the keyword token TEMP</td></tr><tr><td valign="top">H41809</td><td valign="top"> SQLite shall recognize the 4-character sequenence "THEN" in any combination of upper and lower caseletters as the keyword token THEN</td></tr><tr><td valign="top">H41812</td><td valign="top"> SQLite shall recognize the 2-character sequenence "TO" in any combination of upper and lower caseletters as the keyword token TO</td></tr><tr><td valign="top">H41815</td><td valign="top"> SQLite shall recognize the 11-character sequenence "TRANSACTION" in any combination of upper and lower caseletters as the keyword token TRANSACTION</td></tr><tr><td valign="top">H41818</td><td valign="top"> SQLite shall recognize the 7-character sequenence "TRIGGER" in any combination of upper and lower caseletters as the keyword token TRIGGER</td></tr><tr><td valign="top">H41821</td><td valign="top"> SQLite shall recognize the 5-character sequenence "UNION" in any combination of upper and lower caseletters as the keyword token UNION</td></tr><tr><td valign="top">H41824</td><td valign="top"> SQLite shall recognize the 6-character sequenence "UNIQUE" in any combination of upper and lower caseletters as the keyword token UNIQUE</td></tr><tr><td valign="top">H41827</td><td valign="top"> SQLite shall recognize the 6-character sequenence "UPDATE" in any combination of upper and lower caseletters as the keyword token UPDATE</td></tr><tr><td valign="top">H41830</td><td valign="top"> SQLite shall recognize the 5-character sequenence "USING" in any combination of upper and lower caseletters as the keyword token USING</td></tr><tr><td valign="top">H41833</td><td valign="top"> SQLite shall recognize the 6-character sequenence "VACUUM" in any combination of upper and lower caseletters as the keyword token VACUUM</td></tr><tr><td valign="top">H41836</td><td valign="top"> SQLite shall recognize the 6-character sequenence "VALUES" in any combination of upper and lower caseletters as the keyword token VALUES</td></tr><tr><td valign="top">H41839</td><td valign="top"> SQLite shall recognize the 4-character sequenence "VIEW" in any combination of upper and lower caseletters as the keyword token VIEW</td></tr><tr><td valign="top">H41842</td><td valign="top"> SQLite shall recognize the 7-character sequenence "VIRTUAL" in any combination of upper and lower caseletters as the keyword token VIRTUAL</td></tr><tr><td valign="top">H41845</td><td valign="top"> SQLite shall recognize the 4-character sequenence "WHEN" in any combination of upper and lower caseletters as the keyword token WHEN</td></tr><tr><td valign="top">H41848</td><td valign="top"> SQLite shall recognize the 5-character sequenence "WHERE" in any combination of upper and lower caseletters as the keyword token WHERE</td></tr><tr><td valign="top">H42000</td><td valign="top">
+  The SQLite parser shall accept SQL statements consisting of an SQL command
+  followed by a semicolon.
+<blockquote><pre>
+sql_statement ::= cmd SEMI.
+</pre></blockquote></td></tr><tr><td valign="top">H420012</td><td valign="top">
+  A token received by the parser shall be converted into an ANY token
+  if the original token value would have resulted in a syntax error
+  and if a token value of ANY will allow the parse to continue.
+</td></tr><tr><td valign="top">H42002</td><td valign="top">
+  The preparation of an SQL statement that is not accepted by
+  the SQLite parser shall fail with an error.
+</td></tr><tr><td valign="top">H42004</td><td valign="top">
+  SQLite shall use the built-in NOCASE collating sequence when comparing
+  identifiers and datatype names within SQL statements during 
+  statement preparation.
+</td></tr><tr><td valign="top">H42008</td><td valign="top">
+  A token received by the parser shall be converted into an ID token
+  if the original token value would have resulted in a syntax error,
+  a token value of ID will allow the parse to continue,
+  and if the original token value was one of:
+     ABORT
+     AFTER
+     ANALYZE
+     ASC
+     ATTACH
+     BEFORE
+     BEGIN
+     CASCADE
+     CAST
+     CONFLICT
+     CTIME_KW
+     DATABASE
+     DEFERRED
+     DESC
+     DETACH
+     EACH
+     END
+     EXCEPT
+     EXCLUSIVE
+     EXPLAIN
+     FAIL
+     FOR
+     IF
+     IGNORE
+     IMMEDIATE
+     INITIALLY
+     INSTEAD
+     INTERSECT
+     KEY
+     LIKE_KW
+     MATCH
+     OF
+     OFFSET
+     PLAN
+     PRAGMA
+     QUERY
+     RAISE
+     REINDEX
+     RENAME
+     REPLACE
+     RESTRICT
+     ROW
+     TEMP
+     TRIGGER
+     UNION
+     VACUUM
+     VIEW
+     VIRTUAL
+</td></tr><tr><td valign="top">H42010</td><td valign="top">
+  The SQLite parser shall accept BEGIN statements
+  that conform to the following syntax:
+<blockquote><pre>
+cmd ::= BEGIN transaction_type transaction_name.
+transaction_type ::= .
+transaction_type ::= DEFERRED.
+transaction_type ::= IMMEDIATE.
+transaction_type ::= EXCLUSIVE.
+transaction_name ::= .
+transaction_name ::= TRANSACTION.
+transaction_name ::= TRANSACTION name.
+</pre></blockquote></td></tr><tr><td valign="top">H42013</td><td valign="top">
+  The successful evaluation of a BEGIN statement shall
+  cause the <a href="c3ref/sqlite3.html">database connection</a> to exit autocommit mode.
+</td></tr><tr><td valign="top">H42016</td><td valign="top">
+  The evaluation of a BEGIN TRANSACTION statement shall fail with an error
+  if the <a href="c3ref/sqlite3.html">database connection</a> is not in autocommit mode at the
+  start of evaluation.
+</td></tr><tr><td valign="top">H42019</td><td valign="top">
+  If the <i>transaction_type</i> keyword is omitted from a
+  BEGIN TRANSACTION statement then the behavior shall be the same
+  as if the DEFERRED keyword were used.
+</td></tr><tr><td valign="top">H42022</td><td valign="top">
+  When the DEFERRED keyword appears in a BEGIN statement
+  the locking state of the underlying database files shall be
+  the same before and after the statement is evaluated.
+</td></tr><tr><td valign="top">H42025</td><td valign="top">
+  When the IMMEDIATE keyword appears in a BEGIN statement
+  then successful evaluation of the statement shall cause a RESERVED
+  lock to be obtained for all underlying database files.
+</td></tr><tr><td valign="top">H42028</td><td valign="top">
+  When the EXCLUSIVE keyword appears in a BEGIN statement
+  then successful evaluation of the statement shall cause a EXCLUSIVE 
+  lock to be obtained for all underlying database files.
+</td></tr><tr><td valign="top">H42110</td><td valign="top">
+  SQLite shall accept the following COMMIT statement syntax:
+<blockquote><pre>
+cmd ::= COMMIT transaction_name.
+cmd ::= END transaction_name.
+</pre></blockquote></td></tr><tr><td valign="top">H42113</td><td valign="top">
+  The successful evaluation of COMMIT statement places the
+  <a href="c3ref/sqlite3.html">database connection</a> in autocommit mode.
+</td></tr><tr><td valign="top">H42116</td><td valign="top">
+  If a <a href="c3ref/sqlite3.html">database connection</a> is already in autocommit mode when
+  a COMMIT statement is evaluated, then the statement shall fail
+  with an error.
+</td></tr><tr><td valign="top">H42210</td><td valign="top">
+  The SQLite parser shall accept ROLLBACK statements
+  that conform to the following syntax:
+<blockquote><pre>
+cmd ::= ROLLBACK transaction_name.
+</pre></blockquote></td></tr><tr><td valign="top">H42213</td><td valign="top">
+  The successful evaluation of ROLLBACK statement places the
+  <a href="c3ref/sqlite3.html">database connection</a> in autocommit mode.
+</td></tr><tr><td valign="top">H42216</td><td valign="top">
+  If a <a href="c3ref/sqlite3.html">database connection</a> is already in autocommit mode when
+  a ROLLBACK statement is invoked, then the statement invocation
+  shall fail with an error.
+</td></tr><tr><td valign="top">H42222</td><td valign="top">
+  Other pending statements on the same <a href="c3ref/sqlite3.html">database connection</a>
+  as a successfully evaluated ROLLBACK statement shall be aborted.
+</td></tr><tr><td valign="top">H42225</td><td valign="top">
+  The successful evaluation of a ROLLBACK statement causes the
+  current transaction on the <a href="c3ref/sqlite3.html">database connection</a> to roll back.
+</td></tr><tr><td valign="top">H42310</td><td valign="top">
+  The SQLite parser shall accept CREATE TABLE statements
+  that conform to the following syntax:
+<blockquote><pre>
+cmd ::= CREATE temp TABLE ifnotexists fullname table_definition.
+temp ::= .
+temp ::= TEMP.
+ifnotexists ::= .
+ifnotexists ::= IF NOT EXISTS.
+</pre></blockquote></td></tr><tr><td valign="top">H42313</td><td valign="top">
+  When the TEMP keyword appears in a CREATE TABLE statement and the
+  <i>databasename</i> exists and is something other than "temp", then
+  the preparation of the CREATE TABLE statement shall fail with an error.
+</td></tr><tr><td valign="top">H42316</td><td valign="top">
+  When the TEMP keyword appears in a CREATE TABLE statement the behavior
+  shall be as if the <i>databasename</i> where "temp".
+</td></tr><tr><td valign="top">H42319</td><td valign="top">
+  The successful evaluation of a CREATE TABLE statement shall cause
+  a new SQL table whose name is given by the <i>objectname</i> to be
+  created in the schema of the database whose name is given by the
+  <i>databasename</i>.
+</td></tr><tr><td valign="top">H42322</td><td valign="top">
+  If a CREATE TABLE statement specifies no <i>databasename</i> and omits
+  the TEMP keyword then the behavior shall be as if a <i>databasename</i>
+  of "main" where used.
+</td></tr><tr><td valign="top">H42325</td><td valign="top">
+  The preparation of a CREATE TABLE statement shall fail with an 
+  error if the IF NOT EXISTS clause is omitted and the <i>objectname</i>
+  is the same as the name of a table or view
+  in the same database.
+</td></tr><tr><td valign="top">H42328</td><td valign="top">
+  The evaluation of a CREATE TABLE statement shall be a silent no-op if the
+  IF NOT EXISTS clause is present and the <i>objectname</i>
+  is the same as the name of a table or view
+  in the same database.
+</td></tr><tr><td valign="top">H42331</td><td valign="top">
+  The preparation of a CREATE TABLE statement shall fail with an error if the
+  the <i>objectname</i> is the same as the name of an index
+  in any database attached to the same <a href="c3ref/sqlite3.html">database connection</a>.
+</td></tr><tr><td valign="top">H42334</td><td valign="top">
+  The preparation of a CREATE TABLE statement shall fail with an error if the
+  the <i>databasename</i> references a database that is not
+  attached to the same <a href="c3ref/sqlite3.html">database connection</a>.
+</td></tr><tr><td valign="top">H42410</td><td valign="top">
+  The SQLite parser shall accept the following syntax for the 
+  <i>table_definition</i> section of a CREATE TABLE statement:
+<blockquote><pre>
+table_definition ::= LP columnlist constraint_opt RP.
+columnlist ::= column.
+columnlist ::= columnlist COMMON column.
+constraint_opt ::= .
+constraint_opt ::= COMMA constraint_list.
+</pre></blockquote></td></tr><tr><td valign="top">H42413</td><td valign="top">
+  The SQLite parser shall accept the following syntax
+  for the <i>column</i> component of a <i>table_definition</i>.
+<blockquote><pre>
+column ::= name column_type column_constraint_list.
+column_type ::= .
+column_type ::= typename.
+column_type ::= typename LP signed_int RP.
+column_type ::= typename LP signed_int COMMA signed_int RP.
+typename ::= identifier.
+typename ::= typename identifier.
+signed_int ::= INTEGER.
+signed_int ::= MINUS INTEGER.
+signed_int ::= PLUS INTEGER.
+</pre></blockquote></td></tr><tr><td valign="top">H42416</td><td valign="top">
+  The preparation of an <a href="syntax.html#D1">ordinary CREATE TABLE statement</a> shall fail 
+  with an error if it specifies two or more columns with the same name.
+</td></tr><tr><td valign="top">H42419</td><td valign="top">
+  The datatype affinity of each column in a table generate by an
+  <a href="syntax.html#D1">ordinary CREATE TABLE statement</a>
+  shall be determined from the <i>column_type</i>
+  text using the following 5-step algorithm:
+  <ol>
+  <li><p> If the <i>column_type</i> contains the string "INT"
+          then the affinity is INTEGER.</p></li>
+
+  <li><p> Else if the <i>column_type</i> contains one of the strings
+         "CHAR", "CLOB", or "TEXT" then the affinity is TEXT. </p></li>
+
+  <li><p> Else if the <i>column_type</i> contains the string "BLOB" 
+          or is omitted then the affinity is NONE. </p></li>
+
+  <li><p> Else if the <i>column_type</i> constains one of the strings
+          "REAL", "FLOA", or "DOUB" then the affinity
+          is REAL. </p></li>
+
+  <li><p> Otherwise the affinity is NUMERIC. </p></li>
+  </ol>
+</td></tr><tr><td valign="top">H42450</td><td valign="top">
+  The SQLite parser shall accept the following syntax for the list of column
+  constraints and modifiers that follows a column definition in 
+  an <a href="syntax.html#D1">ordinary CREATE TABLE statement</a>.
+<blockquote><pre>
+column_constraint_list ::= .
+column_constraint_list ::= column_constraint_list named_column_constraint.
+named_column_constraint ::= CONSTRAINT name column_constraint.
+named_column_constraint ::= column_constraint.
+column_constraint ::= DEFAULT term.
+column_constraint ::= DEFAULT identifier.
+column_constraint ::= DEFAULT PLUS term.
+column_constraint ::= DEFAULT MINUS term.
+column_constraint ::= DEFAULT LP expr RP.
+column_constraint ::= NULL conflict.
+column_constraint ::= NOT NULL conflict.
+column_constraint ::= PRIMARY KEY sortorder conflict autoincr.
+column_constraint ::= UNIQUE conflict.
+column_constraint ::= CHECK LP expr RP.
+column_constraint ::= COLLATE identifier.
+column_constraint ::= foreign_key_constraint.
+column_constraint ::= deferrable_constraint.
+autoincr ::= .
+autoincr ::= AUTOINCR.
+indexlist_opt ::= .
+indexlist_opt ::= LP indexlist RP.
+conflict ::= .
+conflict ::= ON CONFLICT IGNORE.
+conflict ::= ON CONFLICT REPLACE.
+conflict ::= ON CONFLICT ABORT.
+conflict ::= ON CONFLICT FAIL.
+conflict ::= ON CONFLICT ROLLBACK.
+</pre></blockquote></td></tr><tr><td valign="top">H42453</td><td valign="top">
+  When a column as a DEFAULT constraint, the default value for the
+  column shall be the value specified by that constraint.
+</td></tr><tr><td valign="top">H42456</td><td valign="top">
+  If a column has no DEFAULT constraint then the default value for
+  that column shall be NULL.
+</td></tr><tr><td valign="top">H42459</td><td valign="top">
+  If a column has no NOT NULL constraint then the NULL conflict
+  resolution behavior for the column shall be NONE.
+</td></tr><tr><td valign="top">H42462</td><td valign="top">
+  If a column has a NOT NULL constraint and that constrait lacks
+  an ON CONFLICT clause
+  then the null-conflict resolution behavior for the column shall
+  be ABORT.
+</td></tr><tr><td valign="top">H42465</td><td valign="top">
+  If a column has a NOT NULL constraint and that constraint
+  has an ON CONFLICT clause
+  then the null-conflict resolution behavior for the column shall
+  be the behavior specified by the ON CONFLICT clause.
+</td></tr><tr><td valign="top">H42467</td><td valign="top">
+  A column without a COLLATE constraint shall have a default
+  collating sequence of BINARY.
+</td></tr><tr><td valign="top">H42468</td><td valign="top">
+  A column with a COLLATE constraint shall have a default
+  collating sequence as specified by the COLLATE constraint.
+</td></tr><tr><td valign="top">H42470</td><td valign="top">
+  If the datatype of a single-column PRIMARY KEY is
+  exactly "INTEGER" then the name of that column shall be
+  an alias for the table rowid.
+</td></tr><tr><td valign="top">H42472</td><td valign="top">
+  If a table contains no column named "ROWID" then "ROWID" shall be
+  an alias for the table rowid.
+</td></tr><tr><td valign="top">H42474</td><td valign="top">
+  If a table contains no column named "OID" then "OID" shall be
+  an alias for the table rowid.
+</td></tr><tr><td valign="top">H42476</td><td valign="top">
+  If a table contains no column named "_ROWID_" then "_ROWID_" shall be
+  an alias for the table rowid.
+</td></tr><tr><td valign="top">H42478</td><td valign="top">
+  A table shall have an autoincrementing rowid if and only if
+  the PRIMARY KEY for the table is an alias for the rowid and
+  the PRIMARY KEY declaration uses the AUTOINCR keyword.
+</td></tr><tr><td valign="top">H42480</td><td valign="top">
+  Successful evaluation of a CREATE TABLE statement shall create
+  an index for every UNIQUE constraint where the created index has
+  a conflict resolution algorithm as specified by the ON CONFLICT
+  clause of the UNIQUE constraint or a conflict resolution algorithm
+  of ABORT if there is no ON CONFLICT clause on the constraint.
+</td></tr><tr><td valign="top">H42510</td><td valign="top">
+  The SQLite parser shall accept the following syntax for the list of table
+  contraints that occurs at the end of an <a href="syntax.html#D1">ordinary CREATE TABLE statement</a>.
+<blockquote><pre>
+constraint_list ::= constraint.
+constraint_list ::= constraint_list constraint.
+constraint_list ::= constraint_list COMMA constraint.
+constraint ::= CHECK LP expr RP conflict.
+constraint ::= CONSTRAINT name.
+constraint ::= FOREIGN KEY LP columnlist RP foreign_key_constraint defer_opt.
+constraint ::= PRIMARY KEY LP indexlist autoinc RP conflict.
+constraint ::= UNIQUE LP indexlist RP conflict.
+</pre></blockquote></td></tr><tr><td valign="top">H42513</td><td valign="top">
+  The preparation of a CREATE TABLE statement that contains more
+  than one PRIMARY KEY constraint shall fail with an error.
+</td></tr><tr><td valign="top">H42516</td><td valign="top">
+  The preparation of a CREATE TABLE statement that contains a
+  CHECK constraint that uses a subquery shall fail with an error.
+</td></tr><tr><td valign="top">H42517</td><td valign="top">
+  The preparation of a CREATE TABLE statement that contains a
+  CHECK constraint that uses a parameter shall fail with an error.
+</td></tr><tr><td valign="top">H42518</td><td valign="top">
+  Name resolution of the <i>expr</i> with each CHECK constraint of
+  a CREATE TABLE statement shall be carried out using a name context
+  with an empty result set and a source set holding
+  single source element that is the
+  table being created.
+</td></tr><tr><td valign="top">H42521</td><td valign="top">
+  The preparation of a CREATE TABLE statement that contains a
+  DEFAULT constraint with an non-constant expression
+  shall fail with an error.
+</td></tr><tr><td valign="top">H42536</td><td valign="top">
+  A PRIMARY KEY constraint that does not result in a rowid alias
+  shall have the same effect as a UNIQUE constraint.
+</td></tr><tr><td valign="top">H42539</td><td valign="top">
+  Preparation of a CREATE TABLE statement shall fail with an
+  error if the <i>indexlist</i> of either a table PRIMARY KEY
+  or a table UNIQUE constraint references a column that is not
+  a column in the table.
+</td></tr><tr><td valign="top">H42570</td><td valign="top">
+  The SQLite parser shall accept the following syntax for a foreign
+  key constraint as either a separate constraint or as part of a 
+  column constraint in an <a href="syntax.html#D1">ordinary CREATE TABLE statement</a>.
+<blockquote><pre>
+foreign_key_constraint ::= REFERENCES name indexlist_opt fkarglist.
+defer_opt ::= .
+defer_opt ::= deferrable_constraint.
+deferrable_constraint ::= NOT DEFERRABLE initially_deferred_clause.
+deferrable_constraint ::= DEFERRABLE initially_deferred_clause.
+fkarglist ::= .
+fkarglist ::= fkarglist fkarg.
+fkarg ::= MATCH name.
+fkarg ::= ON DELETE fkaction.
+fkarg ::= ON UPDATE fkaction.
+fkarg ::= ON INSERT fkaction.
+fkaction ::= SET NULL.
+fkaction ::= SET DEFAULT.
+fkaction ::= CASCADE.
+fkaction ::= RESTRICT.
+initially_deferred_clause ::= .
+initially_deferred_clause ::= INITIALLY DEFERRED.
+initially_deferred_clause ::= INITIALLY IMMEDIATE.
+</pre></blockquote></td></tr><tr><td valign="top">H42610</td><td valign="top">
+  The SQLite parser shall accept the following syntax for creating new
+  database tables from the result set of SELECT statements.
+<blockquote><pre>
+table_definition ::= AS select.
+</pre></blockquote></td></tr><tr><td valign="top">H42613</td><td valign="top">
+  The table generated by a CREATE TABLE AS statement shall have the
+  same number of columns as the result set of the SELECT.
+</td></tr><tr><td valign="top">H42616</td><td valign="top">
+  The names of the columns in a table generated by a CREATE TABLE AS
+  statement shall have base names which are the names of the columns
+  in the result set of the SELECT statement
+</td></tr><tr><td valign="top">H42617</td><td valign="top">
+  Each column name in a table generated by a CREATE TABLE AS
+  statement shall have an arbitrary suffix appended to its basename
+  if and only if such a suffix is necessary to make the name
+  distinct from all preceding column names in the table.
+</td></tr><tr><td valign="top">H42619</td><td valign="top">
+  All columns in a table generated by a CREATE TABLE AS statement
+  shall have a default value of NULL.
+</td></tr><tr><td valign="top">H42622</td><td valign="top">
+  All columns in a table generated by a CREATE TABLE AS statement
+  shall have a NULL conflict resolution behavior of NONE.
+</td></tr><tr><td valign="top">H42625</td><td valign="top">
+  All columns in a table generated by a CREATE TABLE AS statement
+  shall have an affinity of NONE.
+</td></tr><tr><td valign="top">H42628</td><td valign="top">
+  All columns in a table generated by a CREATE TABLE AS statement
+  shall have a default collating sequence of BINARY.
+</td></tr><tr><td valign="top">H42700</td><td valign="top">
+  The SQLite parser shall accept DROP TABLE statements
+  that conform to the following syntax.
+<blockquote><pre>
+cmd ::= DROP TABLE ifexists fullname.
+ifexists ::= .
+ifexists ::= IF EXISTS.
+</pre></blockquote></td></tr><tr><td valign="top">H42710</td><td valign="top">
+  The preparation of a DROP TABLE statement shall fail with an
+  error if the statement lacks an IF EXISTS clause and the
+  <i>fullname</i> does not reference a existing table.
+</td></tr><tr><td valign="top">H42713</td><td valign="top">
+  The evaluation of a DROP TABLE statement shall be a silent no-op
+  if the the statement has an IF EXISTS clause and the
+  <i>fullname</i> does not reference a existing table.
+</td></tr><tr><td valign="top">H42716</td><td valign="top">
+  The successful evaluation of a DROP TABLE statement shall cause
+  the table identified by <i>fullname</i> to be removed from its
+  database and discarded.
+</td></tr><tr><td valign="top">H42719</td><td valign="top">
+  The successful evaluation of a DROP TABLE statement shall cause
+  all indices attached to the table identified by <i>fullname</i>
+  to be removed from their database and discarded.
+</td></tr><tr><td valign="top">H42721</td><td valign="top">
+  The successful evaluation of a DROP TABLE statement shall cause
+  all triggers attached to the table identified by <i>fullname</i>
+  to be removed from their database and discarded.
+</td></tr><tr><td valign="top">H42724</td><td valign="top">
+  The preparation of a DROP TABLE statement shall fail with an
+  error if <i>fullname</i> is a system table.
+</td></tr><tr><td valign="top">H42800</td><td valign="top">
+  The SQLite parser shall accept CREATE INDEX statements that 
+  conform to the following syntax:
+<blockquote><pre>
+cmd ::= CREATE unique INDEX ifnotexists fullname ON tablename LP indexlist RP.
+tablename ::= name.
+indexlist ::= indexlist COMMA columnname collate sortorder.
+indexlist ::= columnname collate sortorder.
+columnname ::= name.
+collate ::= .
+collate ::= COLLATE identifier.
+sortorder ::= .
+sortorder ::= ASC.
+sortorder ::= DESC.
+</pre></blockquote></td></tr><tr><td valign="top">H42803</td><td valign="top">
+  The target database of a CREATE INDEX statement shall be the 
+  <i>databasename</i> specified in the <i>fullname</i> term of the
+  statement if the <i>databasename</i> exists.
+</td></tr><tr><td valign="top">H42806</td><td valign="top">
+  If the <i>fullname</i> term of a CREATE INDEX statement does not
+  specify a <i>databasename</i> and the <i>tablename</i> references a table 
+  that is in the "temp" database, then the target database for the statement
+  shall be "temp".
+</td></tr><tr><td valign="top">H42809</td><td valign="top">
+  If the <i>fullname</i> term of a CREATE INDEX statement does not
+  specify a <i>databasename</i> and the <i>tablename</i> references a table
+  that is not in the "temp" database, then the target database for the
+  statement shall be "main".
+</td></tr><tr><td valign="top">H42812</td><td valign="top">
+  The preparation of a CREATE INDEX statement shall fail with an error if the
+  <i>databasename</i> of the <i>fullname</i> exists and references a database 
+  that is not attached to the same <a href="c3ref/sqlite3.html">database connection</a>.
+</td></tr><tr><td valign="top">H42815</td><td valign="top">
+  The preparation of a CREATE INDEX statement shall fail with an error if the
+  <i>tablename</i> does not reference an ordinary table in the
+  database of the statement.
+</td></tr><tr><td valign="top">H42818</td><td valign="top">
+  A successful evaluation of a CREATE INDEX statement shall create a 
+  new index called <i>objectname</i>
+  in the database of the statement and attached to the
+  table identified by <i>tablename</i> in that same database.
+</td></tr><tr><td valign="top">H42821</td><td valign="top">
+  An index generated by a CREATE INDEX statement that omits the
+  UNIQUE keyword shall have a conflict resolution behavior
+  of NONE.
+</td></tr><tr><td valign="top">H42824</td><td valign="top">
+  An index generated by a CREATE INDEX statement that includes the
+  UNIQUE keyword shall have a conflict resolution behavior
+  of ABORT.
+</td></tr><tr><td valign="top">H42830</td><td valign="top">
+  The preparation of a CREATE INDEX statement shall fail with an error if any
+  <i>columnname</i> value within the <i>indexlist</i> is not the
+  name of one of the columns of the <i>tablename</i> table.
+</td></tr><tr><td valign="top">H42833</td><td valign="top">
+  The collating sequence for each column of an index shall be the
+  collating sequence specified in the <i>indexlist</i>.
+</td></tr><tr><td valign="top">H42836</td><td valign="top">
+  If an index column does not specify a collating sequence then
+  the collating sequence shall be
+  the default collating sequence of the corresponding table column.
+</td></tr><tr><td valign="top">H42839</td><td valign="top">
+  The sort order for an index column shall be descending if and only
+  if the DESC keyword is used in the <i>indexlist</i> entry for that
+  term.
+</td></tr><tr><td valign="top">H42842</td><td valign="top">
+  The preparation of a CREATE INDEX statement shall fail with an error
+  if the <i>tablename</i> refers to a system table.
+</td></tr><tr><td valign="top">H42900</td><td valign="top">
+  The SQLite parser shall accept DROP INDEX statements 
+  that conform to the following syntax:
+<blockquote><pre>
+cmd ::= DROP INDEX ifexists fullname.
+</pre></blockquote></td></tr><tr><td valign="top">H42910</td><td valign="top">
+  The preparation of a DROP INDEX statement shall fail with an
+  error if the statement lacks an IF EXISTS clause and the
+  <i>fullname</i> does not reference a existing index.
+</td></tr><tr><td valign="top">H42913</td><td valign="top">
+  The evaluation of a DROP INDEX statement shall be a silent no-op
+  if the the statement has an IF EXISTS clause and the
+  <i>fullname</i> does not reference a existing index.
+</td></tr><tr><td valign="top">H42916</td><td valign="top">
+  The successful evaluation of a DROP INDEX statement shall cause
+  the index identified by <i>fullname</i> to be removed from its
+  database and discarded.
+</td></tr><tr><td valign="top">H43100</td><td valign="top">
+  The SQLite parser shall accept CREATE VIEW statements 
+  that conform to the following syntax:
+<blockquote><pre>
+cmd ::= CREATE temp VIEW ifnotexists fullname AS select.
+</pre></blockquote></td></tr><tr><td valign="top">H43113</td><td valign="top">
+  When the TEMP keyword appears in a CREATE VIEW statement and the
+  <i>databasename</i> exists and is something other than "temp", then
+  the preparation of the CREATE VIEW statement shall fail with an error.
+</td></tr><tr><td valign="top">H43116</td><td valign="top">
+  When the TEMP keyword appears in a CREATE VIEW statement the behavior
+  shall be as if the <i>databasename</i> where "temp".
+</td></tr><tr><td valign="top">H43119</td><td valign="top">
+  The successful evaluation of a CREATE VIEW statement shall cause
+  a new view whose name is given by the <i>objectname</i> and is located
+  in the schema of the database whose name is given by the
+  <i>databasename</i>.
+</td></tr><tr><td valign="top">H43122</td><td valign="top">
+  If a CREATE VIEW statement specifies no <i>databasename</i> and omits
+  the TEMP keyword then the behavior shall be as if a <i>databasename</i>
+  of "main" where used.
+</td></tr><tr><td valign="top">H43125</td><td valign="top">
+  The preparation of a CREATE VIEW statement shall fail with an 
+  error if the IF NOT EXISTS clause is omitted and the <i>objectname</i>
+  is the same as the name of a table or view
+  in the same database.
+</td></tr><tr><td valign="top">H43128</td><td valign="top">
+  The evaluation of a CREATE VIEW statement shall be a silent no-op if the
+  IF NOT EXISTS clause is present and the <i>objectname</i>
+  is the same as the name of a table or view
+  in the same database.
+</td></tr><tr><td valign="top">H43131</td><td valign="top">
+  The preparation of a CREATE VIEW statement shall fail with an error if the
+  the <i>objectname</i> is the same as the name of an index
+  in any database attached to the same <a href="c3ref/sqlite3.html">database connection</a>.
+</td></tr><tr><td valign="top">H43200</td><td valign="top">
+  The SQLite parser shall accept DROP VIEW statements
+  that conform to the following syntax:
+<blockquote><pre>
+cmd ::= DROP VIEW ifexists fullname.
+</pre></blockquote></td></tr><tr><td valign="top">H43204</td><td valign="top">
+  The preparation of a DROP VIEW statement shall fail with an
+  error if the statement lacks an IF EXISTS clause and the
+  <i>fullname</i> does not reference a existing view.
+</td></tr><tr><td valign="top">H43207</td><td valign="top">
+  The evaluation of a DROP VIEW statement shall be a silent no-op
+  if the the statement has an IF EXISTS clause and the
+  <i>fullname</i> does not reference a existing view.
+</td></tr><tr><td valign="top">H43211</td><td valign="top">
+  The successful evaluation of a DROP VIEW statement shall cause
+  the view identified by <i>fullname</i> to be removed from its
+  database and discarded.
+</td></tr><tr><td valign="top">H43214</td><td valign="top">
+  The successful evaluation of a DROP VIEW statement shall cause
+  all triggers attached to the view identified by <i>fullname</i>
+  to be removed from their database and discarded.
+</td></tr><tr><td valign="top">H43234</td><td valign="top">
+  The preparation of a CREATE VIEW statement shall fail with an error if the
+  the <i>databasename</i> references a database that is not
+  attached to the same <a href="c3ref/sqlite3.html">database connection</a>.
+</td></tr><tr><td valign="top">H43237</td><td valign="top">
+  The view generated by a CREATE VIEW statement shall have the
+  same number of columns as the result set of the SELECT.
+</td></tr><tr><td valign="top">H43241</td><td valign="top">
+  The names of the columns in a view generated by a CREATE VIEW
+  statement shall have base names which are the names of the columns
+  in the result set of the SELECT statement
+</td></tr><tr><td valign="top">H43244</td><td valign="top">
+  Each column name in a table generated by a CREATE VIEW
+  statement shall have an arbitrary suffix appended to its basename
+  if and only if such a suffix is necessary to make the name
+  distinct from all preceding column names in the view.
+</td></tr><tr><td valign="top">H43300</td><td valign="top">
+  The SQLite parser shall accept CREATE TRIGGER statements
+  that conform to the following syntax:
+<blockquote><pre>
+cmd ::= CREATE temp TRIGGER ifnotexists fullname trigger trigger_body.
+trigger ::= trigger_time trigger_event foreach_clause when_clause.
+trigger_body ::= BEGIN trigger_cmd_list END.
+trigger_cmd_list ::= trigger_cmd_list trigger_cmd SEMI.
+trigger_cmd_list ::= trigger_cmd_list.
+trigger_cmd ::= DELETE FROM tablename where.
+trigger_cmd ::= update_cmd tablename SET setlist where.
+trigger_cmd ::= insert_cmd INTO tablename columnlist_opt VALUES LP exprlist RP.
+trigger_cmd ::= insert_cmd INTO tablename columnlist_opt select.
+trigger_cmd ::= select.
+trigger_event ::= DELETE ON trigger_target.
+trigger_event ::= INSERT ON trigger_target.
+trigger_event ::= UPDATE OF columnlist ON trigger_target.
+trigger_event ::= UPDATE ON trigger_target.
+trigger_target ::= fullname.
+trigger_time ::= AFTER.
+trigger_time ::= BEFORE.
+trigger_time ::= INSTEAD OF.
+trigger_time ::=.
+foreach_clause ::= FOR EACH ROW.
+foreach_clause ::=.
+when_clause ::= WHEN expr.
+when_clause ::=.
+</pre></blockquote></td></tr><tr><td valign="top">H43303</td><td valign="top">
+  When the TEMP keyword appears in a CREATE TRIGGER statement and the
+  <i>databasename</i> of the <i>fullname</i> exists
+  then the preparation of the statement
+  shall fail with an error.
+</td></tr><tr><td valign="top">H43306</td><td valign="top">
+  When the TEMP keyword appears in a CREATE TRIGGER statement 
+  the target database of the trigger shall be "temp".
+</td></tr><tr><td valign="top">H43309</td><td valign="top">
+  When the TEMP keyword is omitted in a CREATE TRIGGER statement and the
+  <i>databasename</i> of the <i>fullname</i> is
+  omitted then the target database of the trigger shall be "main".
+</td></tr><tr><td valign="top">H43312</td><td valign="top">
+  When the <i>databasename</i> of <i>fullname</i> in a CREATE TRIGGER
+  statement exists, then the target database shall be the database
+  named by <i>databasename</i>.
+</td></tr><tr><td valign="top">H43315</td><td valign="top">
+  If a CREATE TRIGGER does not specify a <i>trigger_time</i> then
+  the <i>trigger_time</i> shall be BEFORE.
+</td></tr><tr><td valign="top">H43318</td><td valign="top">
+  The preparation of a CREATE TRIGGER statement shall fail with an error
+  the <i>trigger_time</i> is INSTEAD OF and <i>trigger_target</i> is not
+  the name of view in the target database.
+</td></tr><tr><td valign="top">H43321</td><td valign="top">
+  The preparation of a CREATE TRIGGER statement shall fail with an error
+  the <i>trigger_time</i> is not INSTEAD OF and <i>trigger_target</i> is not
+  the name of an ordinary table in the target database.
+</td></tr><tr><td valign="top">H43324</td><td valign="top">
+  The preparation of a CREATE TRIGGER statement shall fail with an error
+  if the <i>trigger_target</i> is a system table.
+</td></tr><tr><td valign="top">H43500</td><td valign="top">
+  The SQLite parser shall accept DROP TRIGGER statements
+  that conform to the following syntax:
+<blockquote><pre>
+cmd ::= DROP TRIGGER ifexists fullname.
+</pre></blockquote></td></tr><tr><td valign="top">H43504</td><td valign="top">
+  The preparation of a DROP TRIGGER statement shall fail with an
+  error if the statement lacks an IF EXISTS clause and the
+  <i>fullname</i> does not reference a existing trigger.
+</td></tr><tr><td valign="top">H43507</td><td valign="top">
+  The evaluation of a DROP TRIGGER statement shall be a silent no-op
+  if the the statement has an IF EXISTS clause and the
+  <i>fullname</i> does not reference a existing trigger.
+</td></tr><tr><td valign="top">H43511</td><td valign="top">
+  The successful evaluation of a DROP TRIGGER statement shall cause
+  the trigger identified by <i>fullname</i> to be removed from its
+  database and discarded.
+</td></tr><tr><td valign="top">H43514</td><td valign="top">
+  The successful evaluation of a DROP TRIGGER statement shall cause
+  all triggers attached to the trigger identified by <i>fullname</i>
+  to be removed from their database and discarded.
+</td></tr><tr><td valign="top">H43600</td><td valign="top">
+  The SQLite parser shall accept CREATE VIRTUAL TABLE statements
+  that conform to the following syntax.
+<blockquote><pre>
+cmd ::= CREATE VIRTUAL TABLE fullname USING name vtab_arg_list.
+vtab_arg_list ::= .
+vtab_arg_list ::= LP vtab_arg_token RP.
+vtab_arg_token ::= ANY.
+vtab_arg_token ::= LP anylist RP.
+anylist ::= .
+anylist ::= anylist ANY.
+</pre></blockquote></td></tr><tr><td valign="top">H43700</td><td valign="top">
+  The SQLite parser shall accept ALTER TABLE RENAME statements
+  that conform to the following syntax:
+<blockquote><pre>
+cmd ::= ALTER TABLE fullname RENAME TO name.
+</pre></blockquote></td></tr><tr><td valign="top">H43750</td><td valign="top">
+  The SQLite parser shall accept ALTER TABLE ADD COLUMN statements
+  that conform to the following syntax:
+<blockquote><pre>
+cmd ::= ALTER TABLE fullname ADD column_keyword column.
+column_keyword ::= .
+column_keyword ::= COLUMNKW.
+</pre></blockquote></td></tr><tr><td valign="top">H43810</td><td valign="top">
+  The SQLite parser shall accept INSERT statements that
+  conform to the following syntax:
+<blockquote><pre>
+cmd ::= insert_cmd INTO fullname columnlist_opt insert_content.
+insert_cmd ::= INSERT.
+insert_cmd ::= REPLACE.
+insert_cmd ::= INSERT OR REPLACE.
+insert_cmd ::= INSERT OR IGNORE.
+insert_cmd ::= INSERT OR ABORT.
+insert_cmd ::= INSERT OR FAIL.
+insert_cmd ::= INSERT OR ROLLBACK.
+columnlist_opt ::= .
+columnlist_opt ::= LP columnlist RP.
+columnlist ::= columnname.
+columnlist ::= columnlist COMMA columnname.
+</pre></blockquote></td></tr><tr><td valign="top">H43813</td><td valign="top">
+  The preparation of an INSERT statement shall fail with an error
+  if the <i>instcolist</i> contains a reference to a column which
+  is not a column in the table identified by <i>fullname</i> and is
+  not one of the special column named "ROWID", "OID", or "_ROWID_".
+</td></tr><tr><td valign="top">H43816</td><td valign="top">
+  The preparation of an INSERT statement shall fail with an error
+  if <i>fullname</i> does not identify either a view with an
+  INSTEAD OF INSERT trigger or a table.
+</td></tr><tr><td valign="top">H43819</td><td valign="top">
+  The preparation of an INSERT statement shall fail with an error
+  if the <i>objectname</i> of the <i>fullname</i> is "sqlite_master"
+  or "sqlite_temp_master" and the database connection is not in
+  writeable schema mode.
+</td></tr><tr><td valign="top">H43821</td><td valign="top">
+  When the form of an INSERT statement is simply "INSERT" then the
+  default null- and uniqueness-conflict resolution algorithms shall
+  be used.
+</td></tr><tr><td valign="top">H43824</td><td valign="top">
+  When the form of an INSERT statement is simply "REPLACE" then the
+  null- and uniqueness-conflict resolution algorithms shall all
+  change to REPLACE.
+</td></tr><tr><td valign="top">H43827</td><td valign="top">
+  When the form of an INSERT statement is "INSERT OR <i>algorithm</i>" 
+  then the null- and uniqueness-conflict resolution algorithms shall all
+  change to <i>algorithm</i>.
+</td></tr><tr><td valign="top">H43831</td><td valign="top">
+  Name resolution in the <i>insert_content</i> term of an INSERT statement
+  shall be carried out using a name context
+  with an empty result set and a source set holding
+  single source element that is the <i>fullname</i> table.
+</td></tr><tr><td valign="top">H43840</td><td valign="top">
+  The SQLite parser shall accept INSERT VALUE statements that
+  conform to the following syntax:
+<blockquote><pre>
+insert_content ::= VALUES LP exprlist RP.
+</pre></blockquote></td></tr><tr><td valign="top">H43843</td><td valign="top">
+  The preparation of an INSERT VALUE statement shall fail with an
+  error if the <i>columnlist</i> element exists and the number of 
+  entries in the <i>instcollist</i> is different
+  from the number of entries in the <i>exprlist</i>.
+</td></tr><tr><td valign="top">H43846</td><td valign="top">
+  The preparation of an INSERT VALUE statement shall fail with an
+  error if the <i>columnlist</i> element does not exists and the number of 
+  entries in the <i>exprlist</i> is different
+  from the number of columns in the table or view identified by
+  <i>fullname</i>.
+</td></tr><tr><td valign="top">H43890</td><td valign="top">
+  The SQLite parser shall accept INSERT DEFAULT statements that
+  conform to the following syntax:
+<blockquote><pre>
+insert_contents ::= DEFAULT VALUES.
+</pre></blockquote></td></tr><tr><td valign="top">H43900</td><td valign="top">
+  The SQLite parser shall accept DELETE statements that
+  conform to the following syntax:
+<blockquote><pre>
+cmd ::= DELETE FROM fullname where.
+where ::= .
+where ::= WHERE expr.
+</pre></blockquote></td></tr><tr><td valign="top">H43904</td><td valign="top">
+  The preparation of a DELETE statement shall fail with an error if
+  the <i>fullname</i> element does not identify a view with an
+  INSTEAD OF DELETE trigger or a table.
+</td></tr><tr><td valign="top">H43907</td><td valign="top">
+  The preparation of a DELETE statement shall fail with an error if
+  the <i>objectname</i> of the <i>fullname</i> element is "sqlite_master"
+  or "sqlite_temp_master" and the database connection is not in
+  writeable_schema mode.
+</td></tr><tr><td valign="top">H43911</td><td valign="top">
+  Name resolution in the <i>where</i> term of a DELETE statement
+  shall be carried out using a name context
+  with an empty result set and a source set holding
+  single source element that is the <i>fullname</i> table.
+</td></tr><tr><td valign="top">H44100</td><td valign="top">
+  The SQLite parser shall accept UPDATE statements that
+  conform to the following syntax:
+<blockquote><pre>
+cmd ::= update_cmd fullname SET setlist where.
+update_cmd ::= UPDATE.
+update_cmd ::= UPDATE OR IGNORE.
+update_cmd ::= UPDATE OR REPLACE.
+update_cmd ::= UPDATE OR ABORT.
+update_cmd ::= UPDATE OR FAIL.
+update_cmd ::= UPDATE OR ROLLBACK.
+setlist ::= setting.
+setlist ::= setlist COMMA setting.
+setting ::= columnname EQ expr.
+</pre></blockquote></td></tr><tr><td valign="top">H44113</td><td valign="top">
+  The preparation of an UPDATE statement shall fail with an error
+  if any <i>columnname</i>
+  is not a column in the table identified by <i>fullname</i> and is
+  not one of the special columns named "ROWID", "OID", or "_ROWID_".
+</td></tr><tr><td valign="top">H44116</td><td valign="top">
+  The preparation of an UPDATE statement shall fail with an error
+  if <i>fullname</i> does not identify either a view with an
+  INSTEAD OF UPDATE trigger that covers all <i>columnname</i>s or a table.
+</td></tr><tr><td valign="top">H44119</td><td valign="top">
+  The preparation of an UPDATE statement shall fail with an error
+  if the <i>objectname</i> of the <i>fullname</i> is "sqlite_master"
+  or "sqlite_temp_master" and the database connection is not in
+  writeable schema mode.
+</td></tr><tr><td valign="top">H44121</td><td valign="top">
+  When the form of an UPDATE statement is simply "UPDATE" then the
+  default null- and uniqueness-conflict resolution algorithms shall
+  be used.
+</td></tr><tr><td valign="top">H44127</td><td valign="top">
+  When the form of an UPDATE statement is "UPDATE OR <i>algorithm</i>" 
+  then the null- and uniqueness-conflict resolution algorithms shall all
+  change to <i>algorithm</i>.
+</td></tr><tr><td valign="top">H44131</td><td valign="top">
+  Name resolution in the <i>where</i> term of a DELETE statement
+  shall be carried out using a name context
+  with an empty result set and a source set holding
+  single source element that is the <i>fullname</i> table.
+</td></tr><tr><td valign="top">H44200</td><td valign="top">
+  The SQLite parser shall accept VACUUM statements that
+  conform to the following syntax:
+<blockquote><pre>
+cmd ::= VACUUM.
+cmd ::= VACUUM name.
+</pre></blockquote></td></tr><tr><td valign="top">H44300</td><td valign="top">
+  The SQLite parser shall accept ANALYZE statements
+  that conform to the following syntax:
+<blockquote><pre>
+cmd ::= ANALYZE.
+cmd ::= ANALYZE fullname.
+</pre></blockquote></td></tr><tr><td valign="top">H44303</td><td valign="top">
+  The preparation of an ANALYZE statement
+  shall fail with an error if
+  the <i>fullname</i> is included and does not evaluate to
+  either an individual table name or the name of a database.
+</td></tr><tr><td valign="top">H44400</td><td valign="top">
+  The SQLite parser shall accept REINDEX statements
+  that conform to the following syntax:
+<blockquote><pre>
+cmd ::= REINDEX.
+cmd ::= REINDEX fullname.
+</pre></blockquote></td></tr><tr><td valign="top">H44403</td><td valign="top">
+  The preparation of an ANALYZE statement
+  shall fail with an error if
+  the <i>fullname</i> is included and does not evaluate to
+  either an individual table name or the name of a database
+  or the name of a collating sequence.	
+</td></tr><tr><td valign="top">H44500</td><td valign="top">
+  cmd ::= ATTACH database_kw expr AS expr.
+  database_kw ::= .
+  database_kw ::= DATABASE.
+</td></tr><tr><td valign="top">H44503</td><td valign="top">
+  The <i>expr</i> terms of an ATTACH statement that are
+  identifiers shall be interpreted as string literals.
+</td></tr><tr><td valign="top">H44506</td><td valign="top">
+  The preparation of an ATTACH statement shall fail with an error
+  if either <i>expr</i> is not a constant expression.
+</td></tr><tr><td valign="top">H44509</td><td valign="top">
+  The preparation of an ATTACH statement shall fail with an error
+  if the second <i>expr</i> evaluates to the name of a database
+  that is already attached to the database connection.
+</td></tr><tr><td valign="top">H44600</td><td valign="top">
+  The SQLite parser shall accept DETACH statements
+  that conform to the following syntax:
+<blockquote><pre>
+cmd ::= DETACH database_kw expr.
+</pre></blockquote></td></tr><tr><td valign="top">H44603</td><td valign="top">
+  The <i>expr</i> term of an DETACH statement that is an
+  identifier shall be interpreted as string literals.
+</td></tr><tr><td valign="top">H44606</td><td valign="top">
+  The preparation of an DETACH statement shall fail with an error
+  if the <i>expr</i> is not a constant expression.
+</td></tr><tr><td valign="top">H44609</td><td valign="top">
+  The preparation of an DETACH statement shall fail with an error
+  if the <i>expr</i> does not evaluate to the 
+  name of an attached database other than "temp" or "main".
+</td></tr><tr><td valign="top">H44700</td><td valign="top">
+  The SQLite parser shall accept the EXPLAIN keyword as a prefix
+  to other valid SQL statements, as shown by the following syntax:
+<blockquote><pre>
+sql_statement ::= EXPLAIN cmd SEMI.
+</pre></blockquote></td></tr><tr><td valign="top">H44800</td><td valign="top">
+  The SQLite parser shall accept EXPLAIN QUERY PLAY as a prefix
+  to other valid SQL statements, as shown by the following syntax:
+<blockquote><pre>
+sql_statement ::= EXPLAIN QUERY PLAN cmd SEMI.
+</pre></blockquote></td></tr><tr><td valign="top">H45000</td><td valign="top">
+  The SQLite parser shall accept SELECT statements that
+  conform to the following syntax:
+<blockquote><pre>
+cmd ::= select.
+select ::= query.
+select ::= select UNION query.
+select ::= select UNION ALL query.
+select ::= select EXCEPT query.
+select ::= select INTERSECT query.
+query ::= SELECT distinct resultset from where groupby having orderby limit.
+distinct ::= .
+distinct ::= DISTINCT.
+groupby ::= .
+groupby ::= GROUP BY exprlist.
+having ::= .
+having ::= HAVING expr.
+orderby ::= .
+orderby ::= ORDER BY exprlist.
+limit ::=.
+limit ::= LIMIT expr.
+limit ::= LIMIT expr COMMA expr.
+limit ::= LIMIT expr OFFSET expr.
+resultset ::= result.
+resultset ::= resultset COMMA result.
+result ::= STAR.
+result ::= tablename DOT STAR.
+result ::= expr as.
+from ::= .
+from ::= FROM sourceset.
+sourceset ::= source.
+sourceset ::= sourceset joinop source.
+source ::= fullname as on using.
+source ::= LP select RP as on using.
+as ::= .
+as ::= AS name.
+as ::= identifier.
+on ::= .
+on ::= ON expr.
+using ::= .
+using ::= USING LP columnlist RP.
+joinop ::= COMMA.
+joinop ::= JOIN.
+joinop ::= JOIN_KW JOIN.
+joinop ::= JOIN_KW JOIN_KW JOIN.
+joinop ::= JOIN_KW JOIN_KW JOIN_KW JOIN.
+</pre></blockquote></td></tr><tr><td valign="top">H45003</td><td valign="top">
+  The preparation of a statement containing a <i>select</i>
+  shall fail with an error if the <i>select</i> contains
+  two terms of the same compound query having a different number of columns
+  in their result sets.
+</td></tr><tr><td valign="top">H45006</td><td valign="top">
+  The preparation of a statement containing a <i>select</i>
+  shall fail with an error if the <i>select</i> contains a compound query that
+  has an ORDER BY, GROUP BY, HAVING, or LIMIT clause on any term of than
+  the right-most.
+</td></tr><tr><td valign="top">H45009</td><td valign="top">
+  The preparation of a statement containing a <i>select</i>
+  shall fail with an error if the <i>select</i> contains a compound query with
+  an ORDER BY or GROUP BY clause with a term that is not either
+  a token-by-token duplicate of the result columns of one of the
+  compound query terms, or the "AS" name of one of the compound
+  query terms, or a compile-time integer between 1 and N where N is
+  the number of columns in each compound query term.
+</td></tr><tr><td valign="top">H45012</td><td valign="top">
+  The preparation of a statement containing a <i>select</i>
+  shall fail with an error if the <i>select</i> contains a join with two
+  or more of the following properties:
+  <ol>
+  <li> The NATURAL keyword in the <i>joinop</i> </li>
+  <li> An ON clause </li>
+  <li> A USING clause</li>
+  </ol>
+</td></tr><tr><td valign="top">H45015</td><td valign="top">
+  The preparation of a statement containing a <i>select</i>
+  shall fail with an error if the <i>select</i> contains a <i>joinop</i>
+  that uses the keywords RIGHT or FULL.
+</td></tr><tr><td valign="top">H45018</td><td valign="top">
+  The preparation of a statement containing a <i>select</i>
+  shall fail with an error if the <i>select</i> contains a <i>joinop</i>
+  that uses either of the keywords OUTER or LEFT
+  together with either INNER or CROSS.
+</td></tr><tr><td valign="top">H45021</td><td valign="top">
+  The preparation of a statement containing a <i>select</i>
+  shall fail with an error if the <i>select</i> contains a <i>using</i>
+  that names columns that are not found in both the table to the
+  immediate right of the join and in the result set of all tables
+  to the left of the join.
+</td></tr><tr><td valign="top">H45024</td><td valign="top">
+  The preparation of a statement containing a <i>select</i>
+  shall fail with an error if the <i>fullname</i> of a <i>source</i>
+  does not refer to an existing table or view.
+</td></tr><tr><td valign="top">H45027</td><td valign="top">
+  The preparation of a statement containing a <i>limit</i>
+  shall fail with an error if any <i>expr</i> within the <i>limit</i>
+  does not evaluate to a compile-time integer.
+</td></tr><tr><td valign="top">H45103</td><td valign="top">
+  Name resolution of a top-level SELECT statement shall use an
+  empty name context.
+</td></tr><tr><td valign="top">H45106</td><td valign="top">
+  Name context of a <i>query</i> term shall be
+  constructed by adding a new inner name context layer
+  to the name context of the construct containing the <i>query</i>
+  term.
+</td></tr><tr><td valign="top">H45109</td><td valign="top">
+  Name resolution of the <i>resultset</i> of a <i>query</i> shall
+  use the name context of the <i>query</i> with an empty result
+  set and the source set
+  configured to the <i>from</i> clause of the query.
+</td></tr><tr><td valign="top">H45112</td><td valign="top">
+  Name resolution of all child terms of a <i>query</i> other than
+  <i>resultset</i> child shall use the name context of the <i>query</i>
+  with the result set configured to be the <i>resultset</i> clause of the
+  <i>query</i> and with the source set configured to be the
+  <i>from</i> clause of the query.
+</td></tr><tr><td valign="top">H46000</td><td valign="top">
+  The SQLite parser shall accept PRAGMA statements
+  that conform to the following syntax:
+<blockquote><pre>
+cmd ::= PRAGMA fullname EQ DELETE.
+cmd ::= PRAGMA fullname EQ ON.
+cmd ::= PRAGMA fullname EQ name.
+cmd ::= PRAGMA fullname EQ expr.
+cmd ::= PRAGMA fullname LP name RP.
+cmd ::= PRAGMA fullname LP expr RP.
+cmd ::= PRAGMA fullname.
+</pre></blockquote></td></tr><tr><td valign="top">H46003</td><td valign="top">
+  The evaluation of a PRAGMA statement with an unknown verb shall
+  be a silent no-op.
+</td></tr><tr><td valign="top">H47000</td><td valign="top">
+  The SQLite parser shall accept expressions that
+  conform to the following syntax:
+<blockquote><pre>
+expr ::= BITNOT expr.
+expr ::= CASE case_operand case_exprlist case_else END.
+expr ::= CAST LP expr AS typetoken RP.
+expr ::= EXISTS LP select RP.
+expr ::= function_name LP STAR RP.
+expr ::= function_name LP distinct exprlist RP.
+expr ::= LP expr RP.
+expr ::= LP select RP.
+expr ::= MINUS expr.
+expr ::= NOT expr.
+expr ::= PLUS expr.
+expr ::= RAISE LP IGNORE RP.
+expr ::= RAISE LP ABORT COMMA name RP.
+expr ::= RAISE LP FAIL COMMA name RP.
+expr ::= RAISE LP ROLLBACK COMMA name RP.
+expr ::= VARIABLE.
+expr ::= expr AND expr.
+expr ::= expr BITAND expr.
+expr ::= expr BITOR expr.
+expr ::= expr LSHIFT expr.
+expr ::= expr RSHIFT expr.
+expr ::= expr COLLATE ids.
+expr ::= expr CONCAT expr.
+expr ::= expr EQ expr.
+expr ::= expr NE expr.
+expr ::= expr IS NOT NULL.
+expr ::= expr IS NULL.
+expr ::= expr ISNULL
+expr ::= expr NOTNULL.
+expr ::= expr LT expr.
+expr ::= expr GT expr.
+expr ::= expr GE expr.
+expr ::= expr LE expr.
+expr ::= expr NOT NULL.
+expr ::= expr OR expr.
+expr ::= expr PLUS expr.
+expr ::= expr MINUS expr.
+expr ::= expr STAR expr.
+expr ::= expr SLASH expr.
+expr ::= expr REM expr.
+expr ::= expr BETWEEN expr AND expr.
+expr ::= expr NOT BETWEEN expr AND expr.
+expr ::= expr IN LP exprlist RP.
+expr ::= expr IN LP select RP.
+expr ::= expr IN fullname.
+expr ::= expr NOT IN LP exprlist RP.
+expr ::= expr NOT IN LP select RP.
+expr ::= expr NOT IN fullname.
+expr ::= expr LIKE_KW expr escape.
+expr ::= expr MATCH expr escape.
+expr ::= expr NOT LIKE_KW expr escape.
+expr ::= expr NOT MATCH expr escape.
+expr ::= rtvalue.
+expr ::= term.
+term ::= CTIME_KW.
+term ::= INTEGER.
+term ::= FLOAT
+term ::= BLOB.
+term ::= NULL.
+term ::= STRING.
+exprlist ::= expr.
+exprlist ::= exprlist COMMA expr.
+case_else ::= ELSE expr.
+case_else ::= .
+case_exprlist ::= WHEN expr THEN expr.
+case_exprlist ::= case_exprlist WHEN expr THEN expr.
+case_operand ::= expr.
+case_operand ::= .
+function_name ::= ID.
+escape ::= .
+escape ::= ESCAPE expr.
+</pre></blockquote></td></tr><tr><td valign="top">H47003</td><td valign="top">
+  The unary PLUS, unary MINUS, and BITNOT operators shall have
+  precedence over the COLLATE operator.
+</td></tr><tr><td valign="top">H47006</td><td valign="top">
+  The COLLATE operator shall have precedence over the CONCAT
+  operator.
+</td></tr><tr><td valign="top">H47009</td><td valign="top">
+  The CONCAT operator shall have precedence over the STAR, SLASH,
+  and REM operators.
+</td></tr><tr><td valign="top">H47012</td><td valign="top">
+  The STAR, SLASH, and REM operator shall have equal precedence.
+</td></tr><tr><td valign="top">H47015</td><td valign="top">
+  The STAR, SLASH, and REM operators shall have precedence over the
+  binary PLUS and binary MINUS operators.
+</td></tr><tr><td valign="top">H47018</td><td valign="top">
+  The binary PLUS and binary MINUS operators shall have equal precedence.
+</td></tr><tr><td valign="top">H47021</td><td valign="top">
+  The binary PLUS and binary MINUS operators shall have precedence
+  over the BITAND, BITOR, LSHIFT, and RSHIFT operators.
+</td></tr><tr><td valign="top">H47024</td><td valign="top">
+  The BITAND, BITOR, LSHIFT, and RSHIFT operators shall have equal
+  precendence.
+</td></tr><tr><td valign="top">H47027</td><td valign="top">
+  The BITAND, BITOR, LSHIFT, and RSHIFT operators shall have precedence
+  over the ESCAPE operator.
+</td></tr><tr><td valign="top">H47029</td><td valign="top">
+  The ESCAPE operator shall have precedence over
+  the GT, LE, LT, and GE operators.
+</td></tr><tr><td valign="top">H47033</td><td valign="top">
+  The GT, LE, LT, and GE operators shall have equal precedence.
+</td></tr><tr><td valign="top">H47036</td><td valign="top">
+  The GT, LE, LT, and GE operators shall have precedence over
+  the IS, MATCH, LIKE_KW, BETWEEN, IN, ISNULL, NOTNULL, NE, and EQ
+  operators shall have equal precedence.
+</td></tr><tr><td valign="top">H47039</td><td valign="top">
+  The IS, MATCH, LIKE_KW, BETWEEN, IN, ISNULL, NOTNULL, NE, and EQ
+  operators shall have equal precedence.
+</td></tr><tr><td valign="top">H47042</td><td valign="top">
+  The IS, MATCH, LIKE_KW, BETWEEN, IN, ISNULL, NOTNULL, NE, and EQ
+  operators shall have precedence over the unary NOT operator.
+</td></tr><tr><td valign="top">H47045</td><td valign="top">
+  The unary NOT operator shall have precedence over the AND operator.
+</td></tr><tr><td valign="top">H47048</td><td valign="top">
+  The AND operator shall have precedence over the OR operator.
+</td></tr><tr><td valign="top">H47051</td><td valign="top">
+  Operators of equal precedence shall group from right to left.
+</td></tr><tr><td valign="top">H49100</td><td valign="top">
+  The SQLite parser shall accept names, fullnames, and identifiers
+  that conform to the following syntax:
+<blockquote><pre>
+name ::= ID.
+name ::= JOIN_KW.
+name ::= STRING.
+fullname ::= objectname.
+fullname ::= databasename DOT objectname.
+objectname ::= name.
+databasename ::= name.
+columnname ::= name.
+identifier ::= ID.
+identifier ::= STRING.
+</pre></blockquote></td></tr><tr><td valign="top">H49103</td><td valign="top">
+  The SQLite parser shall accept <i>rtvalue</i> elements of an
+  <i>expr</i> that conform to the following syntax:
+<blockquote><pre>
+rtvalue ::= databasename DOT tablename DOT columnname.
+rtvalue ::= tablename DOT columnname.
+rtvalue ::= ID.
+rtvalue ::= JOIN_KW.
+</pre></blockquote></td></tr>
 </table>
 <hr><small><i>
 This page last modified 2008/07/22 18:15:32 UTC

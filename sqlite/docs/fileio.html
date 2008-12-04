@@ -86,7 +86,7 @@ a:visited { color: #734559 }
   </b>
 </div>
 <!-- End of standard rt docs header -->
-<h1>Overview</h1>
+<h1 id=overview>Overview</h1>
   <p>
     SQLite stores an entire database within a single file, the format of
     which is described in the <i>SQLite File Database File Format</i> 
@@ -110,22 +110,22 @@ a:visited { color: #734559 }
     to be addressed by such a system:
   <ol>
     <li><p>SQLite is required to <b>implement atomic and durable
-	transactions</b> (the 'A' and 'D' from the ACID acronym), even if an
-	application, operating system or power failure occurs midway through or
+        transactions</b> (the 'A' and 'D' from the ACID acronym), even if an
+        application, operating system or power failure occurs midway through or
         shortly after updating a database file.
-	<p>To implement atomic transactions in the face of potential 
-	application, operating system or power failures, database writers write
-	a copy of those portions of the database file that they are going to
-	modify into a second file, the <i>journal file</i>, before writing
+        <p>To implement atomic transactions in the face of potential 
+        application, operating system or power failures, database writers write
+        a copy of those portions of the database file that they are going to
+        modify into a second file, the <i>journal file</i>, before writing
         to the database file. If a failure does occur while modifying the 
         database file, SQLite can reconstruct the original database 
         (before the modifications were attempted) based on the contents of 
         the <i>journal file</i>.
     <li><p>SQLite is required to <b>implement isolated transactions</b> (the 'I'
         from the ACID acronym). 
-	<p>This is done by using the file locking facililities provided by the
-	VFS adaptor to serialize writers (write transactions) and preventing
-	readers (read transactions) from accessing database files while writers
+        <p>This is done by using the file locking facililities provided by the
+        VFS adaptor to serialize writers (write transactions) and preventing
+        readers (read transactions) from accessing database files while writers
         are midway through updating them.
     <li><p>For performance reasons, it is advantageous to <b>minimize the 
         quantity of data read and written</b> to and from the file-system.
@@ -133,7 +133,7 @@ a:visited { color: #734559 }
         file is minimized by caching portions of the database file in main 
         memory. Additionally, multiple updates to the database file that
         are part of the same <i>write transaction</i> may be cached in
-        main memory and written to the file periodically, allowing for
+        main memory and written to the file together, allowing for
         more efficient IO patterns and eliminating the redundant write 
         operations that could take place if part of the database file is
         modified more than once within a single <i>write transaction</i>.
@@ -195,18 +195,27 @@ a:visited { color: #734559 }
       After this document is ready, make the vocabulary consistent and
       then add a glossary here.
 <h1 id=vfs_assumptions>VFS Adaptor Related Assumptions</h1>
+  <p>
+    This section documents those assumptions made about the system that
+    the VFS adaptor provides access to. The assumptions noted in section
+    <cite>fs_characteristics</cite> are particularly important. If these
+    assumptions are not true, then a power or operating system failure
+    may cause SQLite databases to become corrupted.
   <h2>Performance Related Assumptions</h2>
+    <p>
+      SQLite uses the assumptions in this section to try to speed up 
+      reading from and writing to the database file.
 <p class=req id=A21010>      It is assumed that writing a series of sequential blocks of data to 
       a file in order is faster than writing the same blocks in an arbitrary
       order.
 </p>  <h2 id=fs_characteristics>System Failure Related Assumptions</h2>
     <p>
       In the event of an operating system or power failure, the various 
-      combinations of file-system and storage hardware available provide
-      varying levels of guarantee as to the integrity of the data written
-      to the file system just before or during the failure. The exact
-      combination of IO operations that SQLite is required to perform
-      in order to safely modify a database file depend on the exact 
+      combinations of file-system software and storage hardware available
+      provide varying levels of guarantee as to the integrity of the data
+      written to the file system just before or during the failure. The exact
+      combination of IO operations that SQLite is required to perform in 
+      order to safely modify a database file depend on the exact 
       characteristics of the target platform.
     <p>
       This section describes the assumptions that SQLite makes about the
@@ -320,9 +329,6 @@ a:visited { color: #734559 }
           </ol> 
     </ul>
     <h3>Failure Related Assumption Details</h3>
-    <p class=todo>
-      Modify assumptions in this section to take the <i>sequential-write</i>
-      characteristic into account.
     <p>
       This section describes how the assumptions presented in the parent
       section apply to the individual API functions and operations provided 
@@ -336,7 +342,7 @@ a:visited { color: #734559 }
            within the file-system by invoking the xOpen() method of
            the sqlite3_io_methods object.
       <li> <b>Delete file</b> operations. SQLite may remove files from the
-	   file system by calling the xDelete() method of the
+           file system by calling the xDelete() method of the
            sqlite3_io_methods object.
       <li> <b>Truncate file</b> operations. SQLite may truncate existing 
            files by invoking the xTruncate() method of the sqlite3_file 
@@ -426,8 +432,8 @@ a:visited { color: #734559 }
       recovery. This includes regions of the sectors that were not
       actually modified by the write file operation.
 </p><p class=req id=A21011>      If a system failure occurs on a system that supports the 
-      <i>atomic-write</i> property for blocks of size <i>N</i> bytes,
-      and a system failure occurs following an aligned write of <i>N</i> 
+      <i>atomic-write</i> property for blocks of size <i>N</i> bytes
+      following an aligned write of <i>N</i> 
       bytes to a file but before the file has been succesfully <i>synced</i>,
       then is is assumed following recovery that all sectors spanned by the
       write operation were correctly updated, or that none of the sectors were
@@ -447,16 +453,32 @@ a:visited { color: #734559 }
       assumed that it is possible for such a sector to be written 
       correctly, not written at all, populated with garbage data or any
       combination thereof.
-</p>    <p class=todo>
-      Fix the requirement below. The idea is to say that extending a file
-      cannot cause the file size to become corrupted and thereby cause the
-      whole file to be lost.
-<p class=req id=A21009>      If a system failure occurs during or after a "write file"
+</p><p class=req id=A21009>      If a system failure occurs during or after a "write file"
       operation that causes the file to grow, but before the corresponding 
       file has been <i>synced</i>, then it is assumed that the size of 
-      the file following recovery is as large or larger than it was before 
-      the "write file" operation that, if successful, would cause the file 
-      to grow.
+      the file following recovery is as large or larger than it was when
+      it was most recently <i>synced</i>.
+</p>    <p>
+      If a system supports the <i>sequential-write</i> property, then further
+      assumptions may be made with respect to the state of the file-system
+      following recovery from a <i>system failure</i>. Specifically, it is
+      assumed that create, truncate, delete and write file operations are
+      applied to the persistent representation in the same order as they 
+      are performed by SQLite. Furthermore, it is assumed that the 
+      file-system waits until one operation is safely written to the 
+      persistent media before the next is attempted, just as if the relevant
+      file were <i>synced</i> following each operation.
+<p class=req id=A21014>      If a system failure occurs on a system that supports the
+      <i>sequential-write</i> property, then it is assumed that all 
+      operations completed before the last time any file was <i>synced</i> 
+      have been successfully committed to persistent media.
+</p><p class=req id=A21015>      If a system failure occurs on a system that supports the
+      <i>sequential-write</i> property, then it is assumed that the set
+      of possible states that the file-system may be in following recovery
+      is the same as if each of the write operations performed since the most
+      recent time a file was <i>synced</i> was itself followed by a <i>sync
+      file</i> operation, and that the system failure may have occured during
+      any of the write or <i>sync file</i> operations.
 </p><!--
     <p>
       The return value of the xSectorSize() method, the <i>sector-size</i>, is
@@ -514,75 +536,35 @@ a:visited { color: #734559 }
     APIs (<span class=todo>reference</span>) are referred to as <i>database
     handles</i>.  A <i>database connection</i> is a connection to a single
     database file using a single file-handle, which is held open for the
-    lifetime of the connection. Using the "ATTACH" syntax, multiple <i>database
-    connections</i> may be accessed via a single <i>database handle</i>. Or,
-    using SQLite's <i>shared-cache mode</i> feature, multiple <i>database
-    handles</i> may access a single <i>database connection</i>.
-    <center><img src="images/fileformat/db_connection.gif">
-    <p><i>Figure <span class=fig id=figure_db_connection></span> - Relationship between Database Connections and Database Handles.</i>
-      </center>
+    lifetime of the connection. Using the SQL ATTACH syntax, multiple
+    <i>database connections</i> may be accessed via a single <i>database
+    handle</i>. Or, using SQLite's <i>shared-cache mode</i> feature, multiple
+    <i>database handles</i> may access a single <i>database connection</i>.
   <p>
-    As well as a file-handle open on the database file, each
-    <i>database connection</i> has a <i>page cache</i> associated with it.
-    The <i>page cache</i> is used to cache data read from the database file
-    to reduce the amount of data that must be read from the file-handle. It
-    is also used to accumulate data written to the database file so that 
-    write operations can be batched for greater efficiency. Figure 
-    <cite>figure_db_connection</cite> illustrates a system containing two
-    database connections, each to a separate database file. The leftmost of
-    the two depicted <i>database connections</i> is shared between two 
-    <i>database handles</i>. The connection illustrated towards the right of
-    the diagram is used by a single <i>database handle</i>.
+    Usually, a new <i>database connection</i> is opened whenever the user opens
+    new <i>database handle</i> on a real database file (not an in-memory
+    database) or when a database file is attached to an existing <i>database
+    connection</i> using the SQL ATTACH syntax. However if the <i>shared-cache
+    mode</i> feature is enabled, then the database file may be accessed through
+    an existing <i>database connection</i>. For more information on
+    <i>shared-cache mode</i>, refer to <span class=todo>Reference</span>.  The
+    various IO operations required to open a new connection are detailed in
+    section <cite>open_new_connection</cite> of this document.
   <p>
-    It may at first seem odd to mention the <i>page cache</i>, primarily
-    an implementation detail, in this document. However, it is necessary to 
-    acknowledge and describe the <i>page cache</i> in order to provide a
-    more complete explanation of the nature and quantity of IO performed
-    by SQLite. Further description of the <i>page cache</i> is provided in 
-    section <cite>page_cache_descripton</cite>.
-<!--
-  <p>
-    A database connection is always in one of the following states:
-  <ol>
-    <li><i>Unlocked state</i> (no transaction).
-    <li><i>Shared lock state</i> (read-only transaction).
-    <li><i>Reserved lock state</i> (read/write transaction).
-    <li><i>Pending lock state</i> (read/write transaction).
-    <li><i>Exclusive lock state</i> (read/write transaction).
-  </ol>
-  <p> Obviously, each state corresponds to the type of lock held on the
-      database file. In some cases, various actions apart from simply obtaining
-      the file-system lock must take place when a <i>database connection</i>
-      transitions from one state to another.
+    Similarly, a <i>database connection</i> is usually closed when the user
+    closes a <i>database handle</i> that is open on a real database file or
+    has had one or more real database files attached to it using the ATTACH
+    mechanism, or when a real database file is detached from a <i>database
+    connection</i> using the DETACH syntax. Again, the exception is if
+    <i>shared-cache mode</i> is enabled. In this case, a <i>database
+    connection</i> is not closed until its number of users reaches zero.
+    The IO related steps required to close a <i>database connection</i> are
+    described in section <cite>closing_database_connection</cite>.
   <p class=todo>
-    Maybe a state diagram will be possible...
- -->
-  <h2 id=page_cache_descripton>The Page Cache</h2>
-    <p>
-      The contents of an SQLite database file is formatted as a set of 
-      fixed size pages (see <cite>ff_sqlitert_requirements</cite>) for a
-      complete description of the format used. The <i>page size</i> used
-      for a particular database is stored as part of the database file
-      header at a well-known offset within the first 100 bytes of the 
-      file.
-    <p>
-      As one might imagine, the <i>page cache</i> caches data read from the
-      database file on a page basis. Whenever data is read from the database
-      file to satisfy user queries, it is loaded in units of a page at a
-      time (see section <cite>reading_data</cite> for further details). 
-      After being read, page content is stored by the <i>page cache</i> in
-      main memory. The next time the page data is required, it may be read
-      from the <i>page cache</i> instead of from the database file.
-    <p>
-      Data is also cached within the <i>page cache</i> before it is written
-      to the database file. Usually, when a user issues a command that modifies
-      the content of the database file, only the cached version of the 
-      page within the connection's <i>page cache</i> is modified. When the
-      containing <i>write transaction</i> is committed, the content of all
-      modified pages within the <i>page cache</i> are copied into the
-      database file.
-    <p class=todo>
-      Some kind of reference to the 'page cache algorithms' section.
+    After sections 4 and 5 are finished, come back here and see if we can add a
+    list of state items associated with each database connection to make things
+    easier to understand. i.e each database connection has a file handle, a set
+    of entries in the page cache, an expected page size etc.
   <h2 id=open_new_connection>Opening a New Connection</h2>
     <p>
       This section describes the VFS operations that take place when a
@@ -592,7 +574,7 @@ a:visited { color: #734559 }
     <ol>
       <li> A file-handle is opened on the database file.
       <li> If step 1 was successful, an attempt is made to read the 
-	   <i>database file header</i> from the database file using the 
+           <i>database file header</i> from the database file using the 
            new file-handle.
     </ol>
     <p>
@@ -624,7 +606,7 @@ a:visited { color: #734559 }
       database file (because the file is less than 100 bytes in size), the 
       connections <i>expected page-size</i> shall be set to the compile time
       value of the SQLITE_DEFAULT_PAGESIZE option.
-</p>  <h2>Closing a Connection</h2>
+</p>  <h2 id=closing_database_connection>Closing a Connection</h2>
     <p>
       This section describes the VFS operations that take place when an
       existing database connection is closed (destroyed). 
@@ -634,6 +616,8 @@ a:visited { color: #734559 }
       are released. 
 <p class=req id=H21040>      When a <i>database connection</i> is closed, SQLite shall close the 
       associated file handle at the VFS level.
+</p><p class=req id=H21043>      When a <i>database connection</i> is closed, all associated <i>page
+      cache</i> entries shall be discarded.
 </p><h1 id=reading_data>Reading Data</h1>
   <p>
     In order to return data from the database to the user, for example as
@@ -645,48 +629,58 @@ a:visited { color: #734559 }
   <p>
     With two exceptions, a <i>database connection</i> must have an open 
     transaction (either a <i>read-only transaction</i> or a 
-    <i>read/write transaction</i>) on the database file before data may be 
-    read from the database connection. In this case, data "read from the 
-    database connection" includes data that is read from the database file 
-    and data that is already present in the <i>page cache</i>. Without an 
-    open transaction on the database file, the contents of the 
-    <i>page cache</i> may not be trusted.
+    <i>read/write transaction</i>) on the database before data may be 
+    read from the database file. 
   <p>
     The two exceptions are:
   <ul>
     <li> When an attempt is made to read the 100 byte <i>database file
-	 header</i> immediately after opening the <i>database connection</i>
-	 (see section <cite>open_new_connection</cite>). When this occurs
+         header</i> immediately after opening the <i>database connection</i>
+         (see section <cite>open_new_connection</cite>). When this occurs
          no lock is held on the database file.
     <li> Data read while in the process of opening a read-only transaction
-         (see section <cite>open_read_only_trans</cite>). These occur after
-         a <i>shared lock</i> is held on the database file.
+         (see section <cite>open_read_only_trans</cite>). These read 
+         operations occur after a <i>shared lock</i> is held on the database
+         file.
   </ul>
   <p>
     Once a transaction has been opened, reading data from a database 
     connection is a simple operation. Using the xRead() method of the 
     file-handle open on the database file, the required database file 
     pages are read one at a time. SQLite never reads partial pages and
-    always uses a single call to xRead() for each required page. After
-    reading the data for a database page, SQLite adds it to the connections
-    <i>page cache</i> so that it does not have to be read if required
-    again. Refer to section <cite>page_cache_algorithms</cite> for a
-    description of how this affects the IO performed by SQLite.
+    always uses a single call to xRead() for each required page. 
+   <p>
+    After reading the data for a database page, SQLite stores the raw
+    page of data in the <i>page cache</i>. Each time a page of data is 
+    required by the upper layers, the <i>page cache</i> is queried
+    to see if it contains a copy of the required page stored by
+    the current <i>database connection</i>. If such an entry can be
+    found, then the required data is read from the <i>page cache</i> instead
+    of the database file. Only a connection with an open transaction
+    transaction (either a <i>read-only transaction</i> or a 
+    <i>read/write transaction</i>) on the database may read data from the
+    <i>page cache</i>. In this sense reading from the <i>page cache</i> is no
+    different to reading from the <i>database file</i>.
+   <p>
+    Refer to section <cite>page_cache_algorithms</cite> for a description 
+    of exactly how and for how long page data is stored in the 
+    <i>page cache</i>.
 <p class=req id=H21001>    Except for the read operation required by H21007 and those reads made
-    as part of opening a read-only transaction, SQLite shall only read
-    data from a <i>database connection</i> while the 
-    <i>database connection</i> has an open read-only or read/write transaction.
-</p>  <p>
-    In the above requirement, reading data from a database connection
-    includes retrieving data from the connections <i>page cache</i>.
-<p class=req id=H21002>    Aside from those read operations described by H21007 and H21XXX, SQLite
-    shall read data from the database in aligned blocks of <i>page-size</i>
-    bytes, where <i>page-size</i> is the database page size used by the
-    database file.
+    as part of opening a read-only transaction, SQLite shall ensure that
+    a <i>database connection</i> has an open read-only or read/write 
+    transaction when any data is read from the <i>database file</i>.
+</p><p class=req id=H21002>    Aside from those read operations described by H21007 and H21XXX, SQLite
+    shall read data from the database file in aligned blocks of 
+    <i>page-size</i> bytes, where <i>page-size</i> is the database page size 
+    used by the database file.
+</p><p class=req id=H21042>    SQLite shall ensure that a <i>database connection</i> has an open
+    read-only or read/write transaction before using data stored in the <i>page
+    cache</i> to satisfy user queries.
 </p>  <h2 id=open_read_only_trans>Opening a Read-Only Transaction</h2>
     <p>
-      Before data may be read from a <i>database connection</i>, a 
-      <i>read-only transaction</i> must be successfully opened (this is true
+      Before data may be read from a <i>database file</i> or queried from
+      the <i>page cache</i>, a <i>read-only transaction</i> must be
+      successfully opened by the associated database connection (this is true
       even if the connection will eventually write to the database, as a
       <i>read/write transaction</i> may only be opened by upgrading from a
       <i>read-only transaction</i>). This section describes the procedure
@@ -700,13 +694,15 @@ a:visited { color: #734559 }
       a <i>shared-lock</i> no other connection may hold an 
       <i>exclusive-lock</i>, holding a <i>shared-lock</i> guarantees that
       no other process may modify the database file while the <i>read-only
-      transaction</i> remains open.
+      transaction</i> remains open. This ensures that <i>read-only
+      transactions</i> are sufficiently isolated from the transactions of
+      other database users (see section <cite>overview</cite>).
     <p>Obtaining the <i>shared lock</i> itself on the database file is quite
        simple, SQLite just calls the xLock() method of the database file 
        handle. Some of the other processes that take place as part of 
-       opening the <i>read-only transaction</i> are quite complex. The list
-       of steps SQLite is required to take to open a <i>read-only
-       transaction</i>, in the order in which the must occur, is as follows:
+       opening the <i>read-only transaction</i> are quite complex. The 
+       steps that SQLite is required to take to open a <i>read-only
+       transaction</i>, in the order in which they must occur, is as follows:
     <ol>
       <li>A <i>shared-lock</i> is obtained on the database file.
       <li>The connection checks if a <i>hot journal file</i> exists in the
@@ -714,7 +710,7 @@ a:visited { color: #734559 }
       <li>The connection checks if the data in the <i>page cache</i> may 
           still be trusted. If not, all page cache data is discarded.
       <li>If the file-size is not zero bytes and the page cache does not
-	  contain valid data for the first page of the database, then the
+          contain valid data for the first page of the database, then the
           data for the first page must be read from the database.
     </ol>
     <p>
@@ -735,8 +731,8 @@ a:visited { color: #734559 }
       The most common reason an attempt to obtain a <i>shared-lock</i> may
       fail is that some other connection is holding an <i>exclusive</i> or
       <i>pending lock</i>. However it may also fail because some other
-      error (e.g. IO, comms related) occurs within the call to the xLock()
-      method.
+      error (e.g. an IO or comms related error) occurs within the call to the
+      xLock() method.
 <p class=req id=H21003>      While opening a <i>read-only transaction</i>, after successfully
       obtaining a <i>shared lock</i> on the database file, SQLite shall 
       attempt to detect and roll back a <i>hot journal file</i> associated 
@@ -750,20 +746,36 @@ a:visited { color: #734559 }
       and requirements governing the detection of a hot-journal file refered
       to in the above requirements.
 <p class=req id=H21004>      Assuming no errors have occured, then after attempting to detect and
-      roll back a <i>hot journal file</i>, if the connections 
-      <i>page cache</i> is not empty, then SQLite shall validate the contents 
-      of the <i>page cache</i> by testing the <i>file change counter</i>. 
-      This procedure is known as <i>cache validiation</i>.
-</p><p class=req id=H21005>      If the contents of the <i>page cache</i> are found to be invalid by
-      the check prescribed by F20040, SQLite shall discard the cache contents
-      before continuing.
-</p>  <h3 id=hot_journal_detection>Hot Journal Detection</h3>
+      roll back a <i>hot journal file</i>, if the <i>page cache</i> contains
+      any entries associated with the current <i>database connection</i>,
+      then SQLite shall validate the contents of the <i>page cache</i> by
+      testing the <i>file change counter</i>.  This procedure is known as
+      <i>cache validiation</i>.
+</p>    <p>
+      The <i>cache validiation</i> process is described in detail in section
+      <cite>cache_validation</cite>
+<p class=req id=H21005>      If the cache validiate procedure prescribed by H21004 is required and
+      does not prove that the <i>page cache</i> entries associated with the
+      current <i>database connection</i> are valid, then SQLite shall discard
+      all entries associated with the current <i>database connection</i> from
+      the <i>page cache</i>.
+</p>    <p>
+      The numbered list above notes that the data for the first page of the
+      database file, if it exists and is not already loaded into the <i>page
+      cache</i>, must be read from the database file before the <i>read-only
+      transaction</i> may be considered opened. This is handled by 
+      requirement H21024.
+  <h3 id=hot_journal_detection>Hot Journal Detection</h3>
     <p>
       This section describes the procedure that SQLite uses to detect a
       <i>hot journal file</i>. If a <i>hot journal file</i> is detected,
       this indicates that at some point the process of writing a 
       transaction to the database was interrupted and a recovery operation
-      (<i>hot journal rollback</i>) needs to take place.
+      (<i>hot journal rollback</i>) needs to take place. This section does
+      not describe the process of <i>hot journal rollback</i> (see section
+      <cite>hot_journal_rollback</cite>) or the processes by which a
+      <i>hot journal file</i> may be created (see section
+      <cite>writing_data</cite>).
     <p>
       The procedure used to detect a <i>hot-journal file</i> is quite
       complex. The following steps take place:
@@ -771,12 +783,12 @@ a:visited { color: #734559 }
         <li>Using the VFS xAccess() method, SQLite queries the file-system 
             to see if the journal file associated with the database exists. 
             If it does not, then there is no hot-journal file.
-	<li>By invoking the xCheckReservedLock() method of the file-handle
-	    opened on the database file, SQLite checks if some other connection
-	    holds a <i>reserved lock</i> or greater. If some other connection
-	    does hold a <i>reserved lock</i>, this indicates that the other
-	    connection is midway through a <i>read/write transaction</i> (see
-	    section <cite>writing_data</cite>). In this case the 
+        <li>By invoking the xCheckReservedLock() method of the file-handle
+            opened on the database file, SQLite checks if some other connection
+            holds a <i>reserved lock</i> or greater. If some other connection
+            does hold a <i>reserved lock</i>, this indicates that the other
+            connection is midway through a <i>read/write transaction</i> (see
+            section <cite>writing_data</cite>). In this case the 
             <i>journal file</i> is not a <i>hot-journal</i> and must not be 
             rolled back.
         <li>Using the xFileSize() method of the file-handle opened
@@ -791,21 +803,21 @@ a:visited { color: #734559 }
             database file. If the attempt fails, then all locks, including 
             the recently obtained <i>shared lock</i> are dropped. The attempt
             to open a <i>read-only transaction</i> has failed. This occurs
-	    when some other connection is also attempting to open a 
-	    <i>read-only transaction</i> and the attempt to gain the
-	    <i>exclusive lock</i> fails because the other connection is also
-	    holding a <i>shared lock</i>. It is left to the other connection 
+            when some other connection is also attempting to open a 
+            <i>read-only transaction</i> and the attempt to gain the
+            <i>exclusive lock</i> fails because the other connection is also
+            holding a <i>shared lock</i>. It is left to the other connection 
             to roll back the <i>hot journal</i>.
             <div style="margin-top:0.5em"></div>
             It is important that the file-handle lock is upgraded 
-	    directly from <i>shared</i> to <i>exclusive</i> in this case,
+            directly from <i>shared</i> to <i>exclusive</i> in this case,
             instead of first upgrading to <i>reserved</i> or </i>pending</i>
             locks as is required when obtaining an <i>exclusive lock</i> to
             write to the database file (section <cite>writing_data</cite>).
-	    If SQLite were to first upgrade to a <i>reserved</i> or
-	    <i>pending</i> lock in this scenario, then a second process also
+            If SQLite were to first upgrade to a <i>reserved</i> or
+            <i>pending</i> lock in this scenario, then a second process also
             trying to open a <i>read-transaction</i> on the database file might
-	    detect the <i>reserved</i> lock in step 2 of this process, 
+            detect the <i>reserved</i> lock in step 2 of this process, 
             conclude that there was no <i>hot journal</i>, and commence
             reading data from the <i>database file</i>.
         <li>The xAccess() method is invoked again to detect if the journal 
@@ -813,16 +825,22 @@ a:visited { color: #734559 }
             hot-journal file and SQLite tries to roll it back (see section
             <cite>rollback</cite>).
       </ol>
+    <p class=todo> Master journal file pointers?
     <p>
       The following requirements describe step 1 of the above procedure in
       more detail.
 <p class=req id=H21014>      When required to attempt to detect a <i>hot-journal file</i>, SQLite
       shall first use the xAccess() method of the VFS layer to check if a
       journal file exists in the file-system.
+</p><p class=req id=H21051>      If the call to xAccess() required by H21014 fails (due to an IO error or
+      similar), then SQLite shall abandon the attempt to open a <i>read-only
+      transaction</i>, relinquish the <i>shared lock</i> held on the database
+      file and return an error to the user.
 </p><p class=req id=H21015>      When required to attempt to detect a <i>hot-journal file</i>, if the
       call to xAccess() required by H21014 indicates that a journal file does
-      not exist, then the attempt to detect a <i>hot-journal file</i> is
-      finished. A <i>hot-journal file</i> was not detected.
+      not exist, then SQLite shall conclude that there is no <i>hot-journal
+      file</i> in the file system and therefore that no <i>hot journal
+      rollback</i> is required.
 </p>    <p>
       The following requirements describe step 2 of the above procedure in
       more detail.
@@ -832,38 +850,107 @@ a:visited { color: #734559 }
       file-handle is invoked to determine whether or not some other 
       process is holding a <i>reserved</i> or greater lock on the database 
       file.
+</p><p class=req id=H21052>      If the call to xCheckReservedLock() required by H21016 fails (due to an
+      IO or other internal VFS error), then SQLite shall abandon the attempt
+      to open a <i>read-only transaction</i>, relinquish the <i>shared lock</i>
+      held on the database file and return an error to the user.
 </p><p class=req id=H21017>      If the call to xCheckReservedLock() required by H21016 indicates that
       some other <i>database connection</i> is holding a <i>reserved</i>
-      or greater lock on the database file, 
-</p>    <p class=todo>
-      Finish this section.
-  <h3 id=cache_validation>Cache Validation</h3>
+      or greater lock on the database file, then SQLite shall conclude that
+      there is no <i>hot journal file</i>. In this case the attempt to detect 
+      a <i>hot journal file</i> is concluded.
+</p>    <p>
+      The following requirements describe step 3 of the above procedure in
+      more detail.
+<p class=req id=H21044>      If while attempting to detect a <i>hot-journal file</i> the call to
+      xCheckReservedLock() indicates that no process holds a <i>reserved</i>
+      or greater lock on the <i>database file</i>, then SQLite shall open
+      a file handle on the potentially hot journal file using the VFS xOpen()
+      method.
+</p><p class=req id=H21053>      If the call to xOpen() required by H21044 fails (due to an IO or other
+      internal VFS error), then SQLite shall abandon the attempt to open a
+      <i>read-only transaction</i>, relinquish the <i>shared lock</i> held on
+      the database file and return an error to the user.
+</p><p class=req id=H21045>      After successfully opening a file-handle on a potentially hot journal
+      file, SQLite shall query the file for its size in bytes using the
+      xFileSize() method of the open file handle. 
+</p><p class=req id=H21054>      If the call to xFileSize() required by H21045 fails (due to an IO or
+      other internal VFS error), then SQLite shall abandon the attempt to open
+      a <i>read-only transaction</i>, relinquish the <i>shared lock</i> held on
+      the database file, close the file handle opened on the journal file and
+      return an error to the user.
+</p><p class=req id=H21046>      If the size of a potentially hot journal file is revealed to be zero
+      bytes by a query required by H21045, then SQLite shall close the
+      file handle opened on the journal file and delete the journal file using
+      a call to the VFS xDelete() method. In this case SQLite shall conclude
+      that there is no <i>hot journal file</i>.
+</p><p class=req id=H21055>      If the call to xDelete() required by H21045 fails (due to an IO or
+      other internal VFS error), then SQLite shall abandon the attempt to open
+      a <i>read-only transaction</i>, relinquish the <i>shared lock</i> held on
+      the database file and return an error to the user.
+</p>    <p>
+      The following requirements describe step 4 of the above procedure in
+      more detail.
+<p class=req id=H21047>      If the size of a potentially hot journal file is revealed to be greater
+      than zero bytes by a query required by H21045, then SQLite shall attempt
+      to upgrade the <i>shared lock</i> held by the <i>database connection</i>
+      on the <i>database file</i> directly to an <i>exclusive lock</i>.
+</p><p class=req id=H21048>      If an attempt to upgrade to an <i>exclusive lock</i> prescribed by 
+      H21047 fails for any reason, then SQLite shall release all locks held by
+      the <i>database connection</i> and close the file handle opened on the
+      <i>journal file</i>. The attempt to open a <i>read-only transaction</i>
+      shall be deemed to have failed and an error returned to the user.
+</p>    <p>
+      Finally, the following requirements describe step 5 of the above
+      procedure in more detail.
+<p class=req id=H21049>      If, as part of the <i>hot journal file</i> detection process, the
+      attempt to upgrade to an <i>exclusive lock</i> mandated by H21047 is
+      successful, then SQLite shall query the file-system using the xAccess()
+      method of the VFS implementation to test whether or not the journal
+      file is still present in the file-system.
+</p><p class=req id=H21056>      If the call to xAccess() required by H21049 fails (due to an IO or
+      other internal VFS error), then SQLite shall abandon the attempt to open
+      a <i>read-only transaction</i>, relinquish the lock held on the 
+      database file, close the file handle opened on the journal file and
+      return an error to the user.
+</p><p class=req id=H21057>      If the call to xAccess() required by H21049 reveals that the journal
+      file is no longer present in the file system, then SQLite shall abandon 
+      the attempt to open a <i>read-only transaction</i>, relinquish the 
+      lock held on the database file, close the file handle opened on the 
+      journal file and return an SQLITE_BUSY error to the user.
+</p><p class=req id=H21050>      If the xAccess() query required by H21049 reveals that the journal
+      file is still present in the file system, then SQLite shall conclude
+      that the journal file is a <i>hot journal file</i> that needs to
+      be rolled back. SQLite shall immediately begin <i>hot journal
+      rollback</i>.
+</p>  <h3 id=cache_validation>Cache Validation</h3>
     <p>
       When a <i>database connection</i> opens a <i>read transaction</i>, the
-      associated <i>page cache</i> may already contain data. However, if
-      another process has modified the database file since the cached pages
-      were loaded it is possible that the cached data is invalid.
+      <i>page cache</i> may already contain data associated with the
+      <i>database connection</i>. However, if another process has modified 
+      the database file since the cached pages were loaded it is possible that
+      the cached data is invalid.
     <p>
-      SQLite determines whether or not the contents of a <i>page cache</i>
-      are valid or not using the <i>file change counter</i>, a field
-      in the <i>database file header</i>. The <i>file change counter</i>
-      is a 4-byte big-endian integer field stored starting at byte offset
-      24 of the <i>database file header</i>. Before the conclusion of a 
-      <i>read/write transaction</i> that modifies the contents of the
-      database file in any way (see section <cite>writing_data</cite>),
-      the value stored in the <i>file change counter</i> is incremented.
-      When a <i>database connection</i> unlocks the database file, it stores
-      the current value of the <i>file change counter</i>. Later, while
-      opening a new <i>read-only transaction</i>, SQLite checks the value
-      of the <i>file change counter</i> stored in the database file. If the
-      value has not changed since the database file was unlocked, then the
-      contents of the <i>page cache</i> can be trusted. If the value has
-      changed, then the <i>page cache</i> cannot be trusted and all data
-      is discarded.
+      SQLite determines whether or not the <i>page cache</i> entries belonging
+      to the <i>database connection</i> are valid or not using the <i>file
+      change counter</i>, a field in the <i>database file header</i>. The
+      <i>file change counter</i> is a 4-byte big-endian integer field stored
+      starting at byte offset 24 of the <i>database file header</i>. Before the
+      conclusion of a <i>read/write transaction</i> that modifies the contents
+      of the database file in any way (see section <cite>writing_data</cite>),
+      the value stored in the <i>file change counter</i> is incremented.  When
+      a <i>database connection</i> unlocks the database file, it stores the
+      current value of the <i>file change counter</i>. Later, while opening a
+      new <i>read-only transaction</i>, SQLite checks the value of the <i>file
+      change counter</i> stored in the database file. If the value has not
+      changed since the database file was unlocked, then the <i>page cache</i>
+      entries can be trusted. If the value has changed, then the <i>page
+      cache</i> entries cannot be trusted and all entries associated with
+      the current <i>database connection</i> are discarded.
 <p class=req id=H21018>      When a file-handle open on a database file is unlocked, if the
-      <i>page cache</i> belonging to the associated <i>database connection</i>
-      is not empty, SQLite shall store the value of the <i>file change
-      counter</i> internally.
+      <i>page cache</i> contains one or more entries belonging to the
+      associated <i>database connection</i>, SQLite shall store the value 
+      of the <i>file change counter</i> internally.
 </p><p class=req id=H21019>      When required to perform <i>cache validation</i> as part of opening
       a <i>read transaction</i>, SQLite shall read a 16 byte block 
       starting at byte offset 24 of the <i>database file</i> using the xRead()
@@ -895,9 +982,8 @@ a:visited { color: #734559 }
       is the value of the <i>page-size</i> field read from the 
       <i>database file header</i> while opening the database connection 
       (see section <cite>open_new_connection</cite>), or the <i>page-size</i>
-      stored of the database file when the most <i>read transaction</i> was
-      concluded.
-<p class=req id=H21021>      During the conclusing of a <i>read transaction</i>, before unlocking
+      of the database file when the most <i>read transaction</i> was concluded.
+<p class=req id=H21021>      During the conclusion of a <i>read transaction</i>, before unlocking
       the database file, SQLite shall set the connections 
       <i>expected page size</i> to the current database <i>page-size</i>.
 </p><p class=req id=H21022>      As part of opening a new <i>read transaction</i>, immediately after 
@@ -917,8 +1003,11 @@ a:visited { color: #734559 }
       <i>page-size</i> field that appears in the database file header that
       consumes the first 100 bytes of the read block is the same as the
       connections current <i>expected page size</i>, then the block of data
-      read is added to the connections <i>page cache</i> as page 1.
-</p>  <h2>Ending a Read-only Transaction</h2>
+      read is stored in the <i>page cache</i> as page 1.
+</p>  <h2>Reading Database Data</h2>
+  <p class=todo>
+    Add something about checking the page-cache first etc.
+  <h2>Ending a Read-only Transaction</h2>
     <p>
       To end a <i>read-only transaction</i>, SQLite simply relinquishes the
       <i>shared lock</i> on the file-handle open on the database file. No
@@ -930,59 +1019,91 @@ a:visited { color: #734559 }
       See also requirements H21018 and H21021 above.
 <h1 id=writing_data>Writing Data</h1>
   <p>
-    Safely writing data to a database file is also a complex procedure. The
-    database file must be updated in such a way that if a power failure,
-    operating system crash or application fault occurs while SQLite is midway
-    through writing to the database file the database contents are still
-    accessible and correct after system recovery.
+    Using DDL or DML SQL statements, SQLite users may modify the contents and
+    size of a database file. From the point of view of the sub-systems
+    described in this document, each DDL or DML statement executed results in 
+    the contents of zero or more of the pages that make up the database file
+    (see <cite>ff_sqlitert_requirements</cite>) being overwritten with new
+    data. A DDL or DML statement may also append or truncate one or more pages
+    to or from the end of the database file. One or more DDL and/or DML 
+    statements are grouped together to make up a single <i>write
+    transaction</i>. A <i>write transaction</i> is required to have the 
+    special properties described in section <cite>overview</cite>: a <i>write
+    transaction</i> must be isolated, durable and atomic.
   <p>
-    Logically, an SQLite database file is modified using 
-    <i>write transactions</i>. Each <i>write transaction</i> may contain any
-    number of modifications to the database files content or size. From the
-    point of view of an external observer (a second 
-    <i>database connection</i>) an entire <i>write transaction</i> is applied
-    to the database file atomically. If a failure of some sort occurs while
-    SQLite is midway through applying a <i>write transaction</i> to a database
-    file, then it must appear from the point of view of the next <i>database
-    connection</i> that reads data from the <i>database file</i> that the 
-    aborted transaction was not applied.
-  <p>
-    SQLite accomplishes these goals using two techniques:
-  <ul class=spacedlist>
-    <li>While modifying the content or size of a <i>database file</i> to
-        apply a <i>write transaction</i>, SQLite maintains an <i>exclusive
-        lock</i> on the <i>database file</i>. Because reading from the 
-        <i>database file</i> requires a <i>shared lock</i> (see section 
-        <cite>reading_data</cite>), and because holding an <i>exclusive lock</i>
-        guarantees that no other <i>database connection</i> is holding
-        or can obtain a <i>shared lock</i>, this ensures that no other 
-        connection may read data from the <i>database file</i> at a point
-        when a <i>write transaction</i> has been partially applied. This
-        alone ensures that the absence of an application or system failure
-        <i>write transactions</i> appear to be atomically applied from the
-        point of view of a second <i>database connection</i>.
-    <li>In almost all cases, before the contents of a page of the <i>database
-	file</i> may be modified or deleted by file truncation, the original
-	contents of that page is stored in the <i>journal file</i>.
-        Similarly, before the size of the <i>database file</i> may be modifed
-        (either by extending or truncating the file), then the original size
-        of the database file is stored in the <i>journal file</i>. If an
-        application or system failure occurs while updating the <i>database
-        file</i>, then the database file content may be restored based on the 
-        contents of the <i>journal file</i> before data is next read from it.
-        Restoring the contents of a <i>database file</i> using the contents
-        of the <i>journal file</i> after an application or system failure
-        occurs is known as <i>hot-journal rollback</i> and is described in
-        section <cite>hot_journal_rollback</cite>. The methods used by
-        SQLite for detecting that <i>hot-journal rollback</i> is required is 
-        detailed in section <cite>hot_journal_detection</cite>.
+    SQLite accomplishes these goals using the following techniques:
+  <ul>
+    <li><p>
+        To ensure that <i>write transactions</i> are <b>isolated</b>, before
+        beginning to modify the contents of the database file to reflect the
+        results of a <i>write transaction</i>, SQLite obtains an <i>exclusive
+        lock</i> on the <i>database file</i>. The lock is not relinquished
+        until the <i>write transaction</i> is concluded. Because reading from
+        the <i>database file</i> requires a <i>shared lock</i> (see section
+        <cite>reading_data</cite>), and because holding an <i>exclusive
+        lock</i> guarantees that no other <i>database connection</i> is holding
+        or can obtain a <i>shared lock</i>, this ensures that no other
+        connection may read data from the <i>database file</i> at a point when
+        a <i>write transaction</i> has been partially applied. 
+    <li><p>
+        So that <i>write transactions</i> are <b>durable</b> in the face of
+        a system failure, SQLite executes a <i>sync file</i> operation on the
+        database file before concluding the <i>write transaction</i>
+    <li><p>Ensuring that <i>write transactions</i> are <b>atomic</b> is the most
+        complex task required of the system. In this case, <i>atomic</i> means
+        that even if a system failure occurs, an attempt to commit a <i>write
+        transaction</i> to the database file either results in all changes
+        that are a part of the transaction being successfully applied to the
+        database file, or none of the changes are successfully applied. There
+        is no chance that a subset of the changes only are applied. Hence from
+        the point of view of an external observer, the <i>write transaction</i>
+        appears to be an atomic event. 
+        <p>
+        Of course, it is usually not possible to atomically apply all the
+        changes required by a <i>write transaction</i> to a database file
+        within the file-system. For example, if a <i>write transaction</i>
+        requires ten pages of a database file to be modified, and a power
+        outage causes a system failure after sqlite has modified only five
+        pages, then the database file will almost certainly be in an
+        inconsistent state following system recovery.
+        <p>
+        SQLite solves this problem by using a <i>journal file</i>. In almost
+        all cases, before the <i>database file</i> is modified in any way, 
+        SQLite stores sufficient information in the <i>journal file</i> to
+        allow the original the database file to be reconstructed if a system
+        failure occurs while the database file is being updated to reflect
+        the modifications made by the <i>write transaction</i>. Each time
+        SQLite opens a database file, it checks if such a system failure has
+        occured and, if so, reconstructs the database file based on the contents
+        of the journal file. The procedure used to detect whether or not this
+        process, coined <i>hot journal rollback</i>, is required is described
+        in section <cite>hot_journal_detection</cite>. <i>Hot journal rollback
+        </i> itself is described in section <cite>hot_journal_rollback</cite>.
+        <p>
+        The same technique ensures that an SQLite database file cannot be
+        corrupted by a system failure that occurs at an inopportune moment.
+        If a system failure does occur before SQLite has had a chance to
+        execute sufficient <i>sync file</i> operations to ensure that the
+        changes that make up a <i>write transaction</i> have made it safely
+        to persistent storage, then the <i>journal file</i> will be used
+        to restore the database to a known good state following system
+        recovery.
   </ul>
   <p>
-    The <i>page cache</i> belonging to the <i>database connection</i> is 
-    used to buffer writes before they are written to the <i>database file</i>.
-    Often, all changes for an entire <i>write transaction</i> are accumulated
-    within the <i>page cache</i>. In this case no write operations are 
-    performed on the database file until the user commits the transaction.
+    The <i>page cache</i> is used to buffer modifications to the database
+    file image before they are written to the <i>database file</i>. When
+    the contents of a page is required to be modified as the results of
+    an operation within a <i>write transaction</i>, the modified copy is
+    stored in the <i>page cache</i>. Similarly, if new pages are appended
+    to the end of a database file, they are added to the <i>page cache</i>
+    instead of being immediately written to the database file within the
+    file-system. Often, all changes for an entire <i>write transaction</i> 
+    are accumulated within the <i>page cache</i>. In this case no write 
+    operations are performed on the database file until the user commits 
+    the transaction. Otherwise, changes are buffered within the <i>page
+    cache</i> until some internal limit or condition is reached (see section
+    <cite>page_cache_algorithms</cite>), and then written to the database
+    file.
   <p>
     Even if an application or system failure does not occur while a
     <i>write transaction</i> is in progress, a rollback operation to restore
@@ -993,6 +1114,7 @@ a:visited { color: #734559 }
     <cite>sql_sqlitert_requirements</cite>). For this reason, the original
     page content is stored in the <i>journal file</i> before the page is 
     even modified within the <i>page cache</i>.
+  <p class=todo> From here on this section needs changing
 <p class=req id=H21025>    Before modifying or adding any in-memory <i>page cache</i> pages in 
     preparation for writing to the <i>database file</i>, the 
     <i>database connection</i> shall open a <i>write transaction</i> on 
@@ -1040,21 +1162,136 @@ a:visited { color: #734559 }
     <p><i>Figure <span class=fig id=figure_write_transaction></span> - Progression of a Write Transaction</i>
       </center>
   <h2>Journal File Format</h2>
+    <p>
+      This section describes the format used by an SQLite <i>journal file</i>.
+    <p>
+      A journal file consists of one or more <i>journal headers</i>, zero
+      or more <i>journal records</i> and optionally a <i>master journal
+      pointer</i>. Each journal file always begins with a
+      <i>journal header</i>, followed by zero or more <i>journal records</i>.
+      Following this may be a second <i>journal header</i> followed by a
+      seconds set of zero or more <i>journal records</i> and so on. There
+      is no limit to the number of <i>journal headers</i> a journal file
+      may contain. Following the <i>journal headers</i> and their accompanying
+      sets of <i>journal records</i> may be the optional <i>master journal
+      pointer</i>. Or, the file may simply end.
+    <p>
+      This section only describes the format of the journal file and the
+      various objects that make it up. But because a journal file may be
+      read by an SQLite process following recovery from a system failure
+      (<i>hot journal rollback</i>, see section
+      <cite>hot_journal_rollback</cite>) it is also important to describe
+      the way the file is created and populated within the file-system
+      using a combination of <i>write file</i>, <i>sync file</i> and
+      <i>truncate file</i> operations. These are described in section
+      <cite>write_transactions</cite>.
     <h3 id=journal_header_format>Journal Header Format</h3>
     <p>
       A <i>journal header</i> is <i>sector-size</i> bytes in size, where <i>
       sector-size</i> is the value returned by the xSectorSize method of
-      the file handle opened on the database file.
+      the file handle opened on the database file. Only the first 28 bytes
+      of the <i>journal header</i> are used, the remainder may contain garbage
+      data. The first 28 bytes of each <i>journal header</i> consists of an 
+      eight byte block set to a well-known value, followed by five big-endian 
+      32-bit unsigned integer fields.
     <center><img src="images/fileformat/journal_header.gif">
-    <p><i>Figure <span class=fig id=figure_journal_record></span> - Journal Header Format</i>
+    <p><i>Figure <span class=fig id=figure_journal_header></span> - Journal Header Format</i>
       </center>
+    <p>
+      Figure <cite>figure_journal_header</cite> graphically depicts the layout
+      of a <i>journal header</i>. The individual fields are described in
+      the following table. The offsets in the 'byte offset' column of the
+      table are relative to the start of the <i>journal header</i>.
+    <table class=striped>
+      <tr><th>Byte offset<th>Size in bytes<th width=100%>Description
+      <tr><td>0<td>8<td>The <b>journal magic</b> field always contains a
+                        well-known 8-byte string value used to identify SQLite
+                        journal files. The well-known sequence of byte values
+                        is:
+                        <pre>0xd9 0xd5 0x05 0xf9 0x20 0xa1 0x63 0xd7</pre>
+      <tr><td>8<td>4<td>This field, the <b>record count</b>, is set to the
+                        number of <i>journal records</i> that follow this
+			<i>journal header</i> in the <i>journal file</i>.
+      <tr><td>12<td>4<td>This field, the <b>database page count</b>, is set
+                         to the number of pages that the <i>database file</i>
+			 contained before any modifications associated with
+			 <i>write transaction</i> are applied.
+      <tr><td>16<td>4<td>The <b>checksum initializer</b> field is set to a 
+			 pseudo-random value. It is used as part of the
+			 algorithm to calculate the checksum for all <i>journal
+			 records</i> that follow this <i>journal header</i>.
+      <tr><td>20<td>4<td>This field, the <b>sector size</b>, is set to the
+                         <i>sector size</i> of the device on which the 
+			 <i>journal file</i> was created, in bytes. This value
+			 is required when reading the journal file to determine
+			 the size of each <i>journal header</i>.
+      <tr><td>24<td>4<td>The <b>page size</b> field contains the database page
+			 size used by the corresponding <i>database file</i>
+			 when the <i>journal file</i> was created, in bytes.
+    </table>
+    <p>
+      All <i>journal headers</i> are positioned in the file so that they 
+      start at a <i>sector size</i> aligned offset. To achieve this, unused
+      space may be left between the start of the second and subsequent
+      <i>journal headers</i> and the end of the <i>journal records</i>
+      associated with the previous header.
   <h3 id=journal_record_format>Journal Record Format</h3>
+    <p>
+      Each <i>journal record</i> contains the original data for a database page
+      modified by the <i>write transaction</i>. If a rollback is required, then
+      this data may be used to restore the contents of the database page to the
+      state it was in before the <i>write transaction</i> was started.
     <center><img src="images/fileformat/journal_record.gif">
     <p><i>Figure <span class=fig id=figure_journal_record></span> - Journal Record Format</i>
       </center>
+    <p>
+      A <i>journal record</i>, depicted graphically by figure
+      <cite>figure_journal_record</cite>, contains three fields, as described
+      in the following table. Byte offsets are relative to the start of the
+      <i>journal record</i>.
+    <table class=striped>
+      <tr><th>Byte offset<th>Size in bytes<th width=100%>Description
+      <tr><td>0<td>4<td>The page number of the database page associated with
+			this <i>journal record</i>, stored as a 4 byte
+			big-endian unsigned integer.
+      <tr><td>4<td><i>page-size<td>
+			This field contains the original data for the page,
+			exactly as it appeared in the database file before the
+			<i>write transaction</i> began.
+      <tr><td style="white-space: nowrap">4 + <i>page-size</i><td>4<td>
+			This field contains a checksum value, calculated based
+			on the contents of the journaled database page data
+			(the previous field) and the values stored in the
+			<i>checksum initializer</i> field of the preceding
+			<i>journal header</i>.
+    </table>
+    <p>
+      The set of <i>journal records</i> that follow a <i>journal header</i>
+      in a <i>journal file</i> are packed tightly together. There are no
+      alignment requirements for <i>journal records</i> as there are for
+      <i>journal headers</i>.
   <h3>Master Journal Pointer</h3>
-  <h2>Write Transactions</h2>
-  <h3>Beginning a Write Transaction</h3>
+    <p class=todo>
+      Come back and do this....
+  <h2 id=write_transactions>Write Transactions</h2>
+    <p>
+      This section describes the progression of an SQLite <i>write
+      transaction</i>. From the point of view of the systems described in
+      this document, most <i>write transactions</i> consist of three steps:
+    <ol>
+      <li>The <i>write transaction</i> is opened. This process is described
+          in section <cite>opening_a_write_transaction</cite>.
+      <li>The end-user executes DML or DDL SQL statements that require the
+          structure of the database file of the database file to be modified.
+	  These modifications may be any combination of operations to modify 
+	  the content of existing database pages, append new database pages
+	  to the end of the file, or truncate (discard) database pages from
+	  the end of the database file. This is described in detail in 
+	  section <cite>journalling_a_page</cite>.
+      <li>The <i>write transaction</i> is concluded and the changes made
+          permanently committed to the database.
+    </ol>
+  <h3 id=opening_a_write_transaction>Beginning a Write Transaction</h3>
     <p>
       Before any database pages may be modified within the <i>page cache</i>,
       the <i>database connection</i> must open a <i>write transaction</i>. 
@@ -1115,7 +1352,7 @@ a:visited { color: #734559 }
       Reqirements describing the details of opening a <i>write transaction</i>.
     <p class=todo>
       Reqirement for error handling?
-  <h3 id=journalling_a_page>Journalling a Database Page</h3>
+  <h3 id=journalling_a_page>Modifying, Adding or Truncating a Database Page</h3>
     <p>
       Before modifying a database page within the <i>page cache</i>, the
       page must be <i>journalled</i>. <i>Journalling a page</i> is the
@@ -1269,6 +1506,37 @@ a:visited { color: #734559 }
   <h2>Transaction Rollback</h2>
   <h2>Statement Rollback</h2>
 <h1 id=page_cache_algorithms>Page Cache Algorithms</h1>
+  <p>
+    The contents of an SQLite database file are formatted as a set of 
+    fixed size pages. See <cite>ff_sqlitert_requirements</cite> for a
+    complete description of the format used. The <i>page size</i> used
+    for a particular database is stored as part of the database file
+    header at a well-known offset within the first 100 bytes of the 
+    file.
+  <p>
+    As one might imagine, the <i>page cache</i> caches data read from the
+    database file on a page basis. Whenever data is read from the database
+    file to satisfy user queries, it is loaded in units of a page at a
+    time (see section <cite>reading_data</cite> for further details). 
+    After being read, page content is stored by the <i>page cache</i> in
+    main memory. The next time the page data is required, it may be retrieved
+    from the <i>page cache</i> instead of from the database file.
+<p class=req id=H21041>    After reading a page of data from a database file, SQLite shall 
+    store the data in the <i>page cache</i>.
+</p>  <p>
+    Data is also cached within the <i>page cache</i> before it is written
+    to the database file. Usually, when a user issues a command that modifies
+    the content of the database file, only the cached version of the 
+    page within the connection's <i>page cache</i> is modified. When the
+    containing <i>write transaction</i> is committed, the content of all
+    modified pages within the <i>page cache</i> are copied into the
+    database file.
+  <p>
+    It may at first seem odd to mention the <i>page cache</i>, primarily
+    an implementation detail, in this document. However, it is necessary to 
+    acknowledge and describe the <i>page cache</i> in order to provide a
+    more complete explanation of the nature and quantity of IO performed
+    by SQLite. 
 <h1>References</h1>
   <table id="refs" style="width:auto; margin: 1em 5ex">
     <tr><td style="width:5ex" id="capi_sqlitert_requirements">[1]<td>
@@ -1281,5 +1549,5 @@ a:visited { color: #734559 }
 
 
 <hr><small><i>
-This page last modified 2008/07/31 17:12:54 UTC
+This page last modified 2008/09/26 21:08:30 UTC
 </i></small></div></body></html>

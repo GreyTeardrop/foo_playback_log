@@ -70,13 +70,14 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a><h3>DROP TABLE</h3><table cellpadding="10"><tr><td align="right" valign="top"><i><font color="#ff3434">sql-command</font></i>&nbsp;::=</td><td><b><font color="#2c2cf0">DROP TABLE </font></b>[<b><font color="#2c2cf0">IF EXISTS</font></b>]<b><font color="#2c2cf0"> </font></b>[<b><font color="#2c2cf0"></font></b><i><font color="#ff3434">database-name</font></i><b><font color="#2c2cf0"><big>.</big></font></b>]<b><font color="#2c2cf0"> </font></b><i><font color="#ff3434">table-name</font></i><b><font color="#2c2cf0"></font></b></td></tr></table>
+<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a><h3>DROP TABLE</h3><h4><a href="syntaxdiagrams.html#drop-table-stmt">drop-table-stmt:</a></h4><blockquote> <img src="images/syntax/drop-table-stmt.gif"></img> </blockquote>
+
 
 <p>The DROP TABLE statement removes a table added with the
 <a href="lang_createtable.html">CREATE TABLE</a> statement.  The name specified is the
 table name.  It is completely removed from the database schema and the 
-disk file.  The table can not be recovered.  All indices associated 
-with the table are also deleted.</p>
+disk file.  The table can not be recovered.  All indices and triggers
+associated with the table are also deleted.</p>
 
 <p>The DROP TABLE statement does not reduce the size of the database 
 file in the default mode.  Empty space in the database is retained for
@@ -90,5 +91,5 @@ will be freed automatically by DROP TABLE.</p>
 result if the table does not exist.</p>
 
 <hr><small><i>
-This page last modified 2008/07/18 18:34:10 UTC
+This page last modified 2008/10/10 23:40:04 UTC
 </i></small></div></body></html>

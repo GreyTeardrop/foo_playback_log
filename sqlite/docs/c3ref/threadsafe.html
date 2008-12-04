@@ -73,8 +73,9 @@ a:visited { color: #734559 }
 <a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Test To See If The Library Is Threadsafe</h2><blockquote><pre>int sqlite3_threadsafe(void);
 </pre></blockquote><p>
 SQLite can be compiled with or without mutexes.  When
-the <a href="../compile.html#threadsafe">SQLITE_THREADSAFE</a> C preprocessor macro is true, mutexes
-are enabled and SQLite is threadsafe.  When that macro is false,
+the <a href="../compile.html#threadsafe">SQLITE_THREADSAFE</a> C preprocessor macro 1 or 2, mutexes
+are enabled and SQLite is threadsafe.  When the
+<a href="../compile.html#threadsafe">SQLITE_THREADSAFE</a> macro is 0,
 the mutexes are omitted.  Without the mutexes, it is not safe
 to use SQLite concurrently from more than one thread.</p>
 
@@ -96,26 +97,22 @@ or <a href="../c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_MUTEX</a>.  The ret
 only the default compile-time setting, not any run-time changes
 to that setting.</p>
 
+<p>See the <a href="../threadsafe.html">threading mode</a> documentation for additional information.</p>
+
 <p><h3>Invariants:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
 <tr><td valign="top">H10101</td> 
 <td valign="top">
-The <a href="../c3ref/threadsafe.html">sqlite3_threadsafe()</a> function shall return nonzero if
-SQLite was compiled with the its mutexes enabled by default
-or zero if SQLite was compiled such that mutexes are
-permanently disabled.</td></tr>
+The <a href="../c3ref/threadsafe.html">sqlite3_threadsafe()</a> function shall return zero if
+and only if SQLite was compiled with mutexing code omitted.</td></tr>
 <tr><td valign="top">H10102</td> 
 <td valign="top">
 The value returned by the <a href="../c3ref/threadsafe.html">sqlite3_threadsafe()</a> function
-shall not change when mutex setting are modified at
-runtime using the <a href="../c3ref/config.html">sqlite3_config()</a> interface and
-especially the <a href="../c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_SINGLETHREAD</a>,
-<a href="../c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_MULTITHREAD</a>, <a href="../c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_SERIALIZED</a>,
-and <a href="../c3ref/c_config_chunkalloc.html">SQLITE_CONFIG_MUTEX</a> verbs.</td></tr>
+shall remain the same across calls to <a href="../c3ref/config.html">sqlite3_config()</a>.</td></tr>
 </table>
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
   <a href="funclist.html">Functions</a>.</p><hr><small><i>
-This page last modified 2008/08/04 14:33:39 UTC
+This page last modified 2008/08/11 17:57:43 UTC
 </i></small></div></body></html>

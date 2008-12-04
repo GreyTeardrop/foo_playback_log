@@ -97,6 +97,13 @@ an update, this is the rowid after the update takes place.</p>
 <p>The update hook is not invoked when internal system tables are
 modified (i.e. sqlite_master and sqlite_sequence).</p>
 
+<p>The update hook implementation must not do anything that will modify
+the database connection that invoked the update hook.  Any actions
+to modify the database connection must be deferred until after the
+completion of the <a href="../c3ref/step.html">sqlite3_step()</a> call that triggered the update hook.
+Note that <a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a> and <a href="../c3ref/step.html">sqlite3_step()</a> both modify their
+database connections for the meaning of "modify" in this paragraph.</p>
+
 <p>If another function was previously registered, its pArg value
 is returned.  Otherwise NULL is returned.</p>
 
@@ -144,5 +151,5 @@ the change occurs.</td></tr>
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
   <a href="funclist.html">Functions</a>.</p><hr><small><i>
-This page last modified 2008/08/04 14:33:39 UTC
+This page last modified 2008/08/11 17:57:43 UTC
 </i></small></div></body></html>

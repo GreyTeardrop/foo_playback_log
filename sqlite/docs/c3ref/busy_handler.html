@@ -126,6 +126,10 @@ this is important.</p>
 previously set handler.  Note that calling <a href="../c3ref/busy_timeout.html">sqlite3_busy_timeout()</a>
 will also set or clear the busy handler.</p>
 
+<p>The busy callback should not take any actions which modify the
+database connection that invoked the busy handler.  Any such actions
+result in undefined behavior.</p>
+
 <p><h3>Invariants:</h3>
 <table border="0" cellpadding="5" cellspacing="0">
 <tr><td valign="top">H12311</td> 
@@ -166,5 +170,5 @@ or <a href="../c3ref/stmt.html">prepared statement</a> that invoked the busy han
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
   <a href="funclist.html">Functions</a>.</p><hr><small><i>
-This page last modified 2008/08/04 14:33:39 UTC
+This page last modified 2008/08/11 17:57:43 UTC
 </i></small></div></body></html>

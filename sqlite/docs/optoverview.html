@@ -394,8 +394,19 @@ a:visited { color: #734559 }
 <blockquote><pre>
   SELECT z FROM ex2 WHERE +x=5 AND y=6;
 </pre></blockquote><p>
-  The <tt><b><big>+</big></b></tt> operator on the <tt><b><big>x</big></b></tt> column would prevent that term from 
+  The <tt><b><big>+</big></b></tt> operator on the <tt><b><big>x</big></b></tt> column will prevent that term from 
   constraining an index.  This would force the use of the ex2i2 index.
+</p>
+<p>
+  Note that the unary <tt><b><big>+</big></b></tt> operator also removes 
+  <a href="datatype3.html#affinity">type affinity</a> from
+  an expression, and in some cases this can cause subtle changes in
+  the meaning of an expression.
+  In the example above,
+  if column <tt><b><big>x</big></b></tt> has <a href="datatype3.html#affinity">TEXT affinity</a>
+  then the comparison "x=5" will be done as text.  But the <tt><b><big>+</big></b></tt> operator
+  removes the affinity.  So the comparison "+x=5" will compare the text
+  in column <tt><b><big>x</big></b></tt> with the numeric value 5 and will always be false.
 </p>
 <a name="index_only"></a>
 <h2>7.0 Avoidance of table lookups</h2><p>
@@ -495,5 +506,5 @@ a:visited { color: #734559 }
 </p>
 
 <hr><small><i>
-This page last modified 2007/12/20 02:18:57 UTC
+This page last modified 2008/09/22 12:39:49 UTC
 </i></small></div></body></html>

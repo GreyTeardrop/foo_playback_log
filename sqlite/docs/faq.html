@@ -78,7 +78,7 @@ a:visited { color: #734559 }
   smaller.  Is this a bug?</a></li><li><a href="#q13">Can I use SQLite in my commercial product without paying royalties?</a></li><li><a href="#q14">How do I use a string literal that contains an embedded single-quote (')
   character?</a></li><li><a href="#q15">What is an SQLITE_SCHEMA error, and why am I getting one?</a></li><li><a href="#q16">Why does ROUND(9.95,1)  return 9.9 instead of 10.0?
   Shouldn't 9.95 round up?</a></li><li><a href="#q17">I get hundreds of compiler warnings when I compile SQLite.
-  Isn't this a problem?  Doesn't it indicate poor code quality?</a></li></ol><a name="q1"></a>
+  Isn't this a problem?  Doesn't it indicate poor code quality?</a></li><li><a href="#q18">Case-insensitive matching of Unicode characters does not work.</a></li></ol><a name="q1"></a>
 <p><b>(1) How do I create an AUTOINCREMENT field.</b></p>
 <blockquote><p>Short answer: A column declared INTEGER PRIMARY KEY will
   autoincrement.</p>
@@ -145,7 +145,7 @@ INSERT INTO t1 VALUES((SELECT max(a) FROM t1)+1,123);
   that column, SQLite will attempt to convert the string into an
   integer.  If it can, it inserts the integer instead.  If not,
   it inserts the string.  This feature is sometimes
-  call <a href="datatype3.html#affinity">type affinity</a>.
+  called <a href="datatype3.html#affinity">type affinity</a>.
   </p></blockquote></li>
 <a name="q4"></a>
 <p><b>(4) Why doesn't SQLite allow me to use '0' and '0.0' as the primary
@@ -452,7 +452,30 @@ COMMIT;
   compilers used for SQLite development (various versions of GCC).
   Compiler warnings only arise from compilers that the developers do
   not have access to.</p></blockquote></li>
+<a name="q18"></a>
+<p><b>(18) Case-insensitive matching of Unicode characters does not work.</b></p>
+<blockquote>The default configuration of SQLite only supports case-insensitive
+  comparisons of ASCII characters.  The reason for this is that doing
+  full unicode case-insensitive comparisons and case conversions 
+  requires tables and logic that would nearly double the size of
+  the SQLite library.  The
+  SQLite developers reason that any application that needs full
+  unicode case support probably already has the necessary tables and
+  functions and so SQLite should not take up space to 
+  duplicate this ability.</p>
+
+  <p>Instead of providing full unicode case support by default, 
+  SQLite provides the ability to link against external
+  unicode comparison and conversion routines.
+  The application can overload the built-in <a href="datatype3.html#collation">NOCASE</a> collating
+  sequence (using <a href="c3ref/create_collation.html">sqlite3_create_collation()</a>) and the built-in
+  <a href="lang_corefunc.html#like">like()</a>, <a href="lang_corefunc.html#upper">upper()</a>, and <a href="lang_corefunc.html#lower">lower()</a> functions
+  (using <a href="c3ref/create_function.html">sqlite3_create_function()</a>).  
+  The SQLite source code includes an "ICU" extension that does 
+  these overloads.  Or, developers can write their own overloads
+  based on their own unicode-aware comparison routines already
+  contained within their project.</blockquote></li>
 </ol>
 <hr><small><i>
-This page last modified 2008/06/26 02:51:28 UTC
+This page last modified 2008/09/22 12:41:42 UTC
 </i></small></div></body></html>

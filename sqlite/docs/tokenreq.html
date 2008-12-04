@@ -1,0 +1,460 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>SQLite Tokenizer Requirements</title>
+<style type="text/css">
+body {
+    margin: auto;
+    font-family: "Verdana" "sans-serif";
+    padding: 8px 1%;
+}
+
+a { color: #45735f }
+a:visited { color: #734559 }
+
+.logo { position:absolute; margin:3px; }
+.tagline {
+  float:right;
+  text-align:right;
+  font-style:italic;
+  width:240px;
+  margin:12px;
+  margin-top:58px;
+}
+
+.toolbar {
+  font-variant: small-caps;
+  text-align: center;
+  line-height: 1.6em;
+  margin: 0;
+  padding:1px 8px;
+}
+.toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
+.toolbar a:visited { color: white; }
+.toolbar a:hover { color: #80a796; background: white; }
+
+.content    { margin: 5%; }
+.content dt { font-weight:bold; }
+.content dd { margin-bottom: 25px; margin-left:20%; }
+.content ul { padding:0px; padding-left: 15px; margin:0px; }
+
+/* rounded corners */
+.se  { background: url(images/se.png) 100% 100% no-repeat #80a796}
+.sw  { background: url(images/sw.png) 0% 100% no-repeat }
+.ne  { background: url(images/ne.png) 100% 0% no-repeat }
+.nw  { background: url(images/nw.png) 0% 0% no-repeat }
+
+</style>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  
+</head>
+<body>
+<div><!-- container div to satisfy validator -->
+
+<a href="index.html">
+<img class="logo" src="images/SQLite.gif" alt="SQLite Logo"
+ border="0"></a>
+<div><!-- IE hack to prevent disappearing logo--></div>
+<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
+
+<table width=100% style="clear:both"><tr><td>
+  <div class="se"><div class="sw"><div class="ne"><div class="nw">
+  <div class="toolbar">
+    <a href="about.html">About</a>
+    <a href="sitemap.html">Sitemap</a>
+    <a href="docs.html">Documentation</a>
+    <a href="download.html">Download</a>
+    <a href="copyright.html">License</a>
+    <a href="news.html">News</a>
+    <a href="http://www.sqlite.org/cvstrac/index">Developers</a>
+    <a href="support.html">Support</a>
+  </div></div></div></div></div>
+</td></tr></table>
+  
+
+
+<h1>Requirements For The SQLite Tokenizer</h1>
+
+<p>When processing SQL statements, SQLite (as does every other SQL
+database engine) breaks the SQL statement up into tokens which are
+then forwarded to the parser component.  SQL statements are split
+into tokens by the "tokenizer" component of SQLite. This document specifies
+requirements that precisely define the operation of the SQLite tokenizer.</p>
+
+<h2>Character classes</h2>
+
+<p>SQL statements are composed of unicode characters.  Specific
+individual characters many be described using a notation consisting of
+the character "u" followed by four hexadecimal digits.  For
+example, the lower-case letter "a" can be expressed as "u0061"
+and the dollar sign can be expressed as "u0024". 
+For notational convenience, the following character classes are
+defined:</p>
+
+<blockquote>
+<dl>
+<dt><b>WHITESPACE</b></dt>
+<dd><p>One of these five characters:  u0009, u000a, u000c, u000d, or u0020
+</p></dd>
+
+<dt><b>ALPHABETIC</b></dt>
+<dd><p>Any of the characters in the range u0041 through u005a (letters "A" 
+    through "Z") or in the range u0061 through u007a (letters "a" through
+    "z") or the character u005f ("_") or any other character larger than
+    u007f.</p></dd>
+
+<dt><b>NUMERIC</b></dt>
+<dd><p>Any of the characters in the range u0030 through u0039 (digits "0"
+    through "9")</p></dd>
+
+<dt><b>ALPHANUMERIC</b></dt>
+<dd><p>Any character which is either ALPHABETIC or NUMERIC</p></dd>
+
+<dt><b>HEXADECIMAL</b></dt>
+<dd><p>Any NUMERIC character or a characters in the range u0041 through u0046
+    ("A" through "F") or in the range u0061 through u0066 ("a" through "f")</p>
+</dd>
+
+<dt><b>SPECIAL</b></dt>
+<dd></p>Any character that is not WHITESPACE, ALPHABETIC, nor NUMERIC</p></dd>
+</dl>
+</blockquote>
+
+<h2>Token requirements</h2>
+
+<a name="H41010"></a>
+<p>
+  Processing is left-to-right.  This seems obvious, but it needs to be
+  explicitly stated.
+</p><blockquote><b>H41010:</b>
+  SQLite shall divide input SQL text into tokens working from left to
+  right.
+</b></blockquote><a name="H41020"></a>
+<p>
+  The standard practice in SQL, as with most context-free grammar based
+  programming languages, is to resolve ambiguities in tokenizing by
+  selecting the option that results in the longest tokens.
+</p><blockquote><b>H41020:</b>
+  At each step in the SQL tokenization process, SQLite shall extract
+  the longest possible token from the remaining input text.
+</b></blockquote><a name="H41030"></a>
+<p>
+  The tokenizer recognizes tokens one by one and passes them on to the
+  parser.  Except whitespace is ignored.  The only use for whitespace
+  is as a separator between tokens.
+</p><blockquote><b>H41030:</b>
+  The tokenizer shall pass each non-WHITESPACE token seen on to the
+  parser in the order in which the tokens are seen.
+</b></blockquote><a name="H41040"></a>
+<p>
+  The tokenizer appends a semicolon to the end of input if necessary.
+  This ensures that every SQL statement is terminated by a semicolon.
+</p><blockquote><b>H41040:</b>
+  When the tokenizer reaches the end of input where the last token sent
+  to the parser was not a SEMI token, it shall 
+  send a SEMI token to the parser.
+</b></blockquote><a name="H41050"></a>
+<p>
+  An unrecognized token generates an immediate error and aborts the parse.
+</p><blockquote><b>H41050:</b>
+  When the tokenizer encounters text that is not a valid token, it shall
+  cause an error to be returned to the application.
+</b></blockquote>
+<h3>Whitespace tokens</h3>
+<a name="H41100"></a>
+<p>
+  Whitespace has the usual definition.
+</p><blockquote><b>H41100:</b>
+  SQLite shall recognize a sequence of one or more WHITESPACE characters
+  as a WHITESPACE token.
+</b></blockquote><a name="H41110"></a>
+<p>
+  An SQL comment is "--" through the end of line and is understood as
+  whitespace.
+</p><blockquote><b>H41110:</b>
+  SQLite shall recognize as a WHITESPACE token the two-character sequence "--" 
+  (u002d, u002d) followed by any sequence of non-zero characters up through and
+  including the first u000a character or until end of input.
+</b></blockquote><a name="H41120"></a>
+<p>
+  A C-style comment "/*...*/" is also recognized as white-space.
+</p><blockquote><b>H41120:</b>
+  SQLite shall recognize as a WHITESPACE token the two-character sequence "/*"
+  (u002f, u002a) followed by any sequence of zero or more 
+  non-zero characters through with the first "*/" (u002a, u002f) sequence or 
+  until end of input.
+</b></blockquote>
+<h3>Identifier tokens</h3>
+<a name="H41130"></a>
+<p>
+  Identifiers follow the usual rules with the exception that SQLite
+  allows the dollar-sign symbol in the interior of an identifier.
+  The dollar-sign is for compatibility with Microsoft SQL-Server
+  and is not part of the SQL standard.
+</p><blockquote><b>H41130:</b>
+  SQLite shall recognize as an ID token 
+  any sequence of characters that begins with
+  an ALPHABETIC character and continue with zero or more
+  ALPHANUMERIC characters and/or "$" (u0024) characters and which is
+  not a keyword token.
+</b></blockquote><a name="H41140"></a>
+<p>
+  Identifiers can be arbitrary character strings within square brackets.
+  This feature is also for compatibility with Microsoft SQL-Server
+  and not a part of the SQL standard.
+</p><blockquote><b>H41140:</b>
+  SQLite shall recognize as an ID token
+  any sequence of non-zero characters that begins with "&#91;" (u005b) and
+  continuing through the first "&#93;" (u005d) character.
+</b></blockquote><a name="H41150"></a>
+<p>
+  The standard way of quoting SQL identifiers is to use double-quotes.
+</p><blockquote><b>H41150:</b>
+  SQLite shall recognize as an ID token
+  any sequence of characters
+  that begins with a double-quote (u0022), is followed by zero or
+  more non-zero characters and/or pairs of double-quotes (u0022)
+  and terminates with a double-quote (u0022) that
+  is not part of a pair.
+</b></blockquote><a name="H41160"></a>
+<p>
+  MySQL allows identifiers to be quoted using the grave accent character.
+  SQLite supports this for interoperability.
+</p><blockquote><b>H41160:</b>
+  SQLite shall recognize as an ID token
+  any sequence of characters
+  that begins with a grave accent (u0060), is followed by zero or
+  more non-zero characters and/or pairs ofgrave accents (u0060)
+  and terminates with a grave accent (u0022) that
+  is not part of a pair.
+</b></blockquote>
+<h3>Literals</h3>
+<a name="H41200"></a>
+<p>
+  This is the usual definition of string literals for SQL.
+  SQL uses the classic Pascal string literal format.
+</p><blockquote><b>H41200:</b>
+  SQLite shall recognize as a STRING token a sequence of characters
+  that begins with a single-quote (u0027), is followed by zero or
+  more non-zero characters and/or pairs of single-quotes (u0027)
+  and terminates with a single-quote (u0027) that
+  is not part of a pair.
+</b></blockquote><a name="H41210"></a>
+<p>
+  Blob literals are similar to string literals except that they
+  begin with a single "X" character and contain hexadecimal data.
+</p><blockquote><b>H41210:</b>
+  SQLite shall recognize as a BLOB token an upper or lower-case "X"
+  (u0058 or u0078) followed by a single-quote (u0027) followed by
+  a number of HEXADECIMAL character that is a multiple of two and
+  terminated by a single-quote (u0027).
+</b></blockquote><a name="H41220"></a>
+<p>
+  Integer literals are a string of digits.  The plus or minus sign
+  that might optionally preceed an integer is not part of the integer
+  token.
+</p><blockquote><b>H41220:</b>
+  SQLite shall recognize as an INTEGER token any squence of
+  one or more NUMERIC characters.
+</b></blockquote><a name="H41230"></a>
+<p>
+  An "exponentiation suffix" is defined to be an upper or lower
+  case "E" (u0045 or u0065) followed by one or more NUMERIC
+  characters.  The "E" and the NUMERIC characters may optionally
+  be separated by a plus-sign (u002b) or a minus-sign (u002d).
+  An exponentiation suffix is part of the definition of a FLOAT
+  token:
+</p><blockquote><b>H41230:</b>
+  SQLite shall recognize as a FLOAT token a sequence of one
+  or more NUMERIC characters together with zero or one period
+  (u002e) and followed by an exponentiation suffix.
+</b></blockquote><a name="H41240"></a>
+<blockquote><b>H41240:</b>
+  SQLite shall recognize as a FLOAT token a sequence of one
+  or more NUMERIC characters that includes exactly one period
+  (u002e) character.
+</b></blockquote>
+<h3>Variables</h3>
+<a name="H40310"></a>
+<p>
+  Variables are used as placeholders in SQL statements for constant
+  values that are to be bound at start-time.
+</p><blockquote><b>H40310:</b>
+  SQLite shall recognize as a VARIABLE token the a question-mark (u003f)
+  followed by zero or more NUMERIC characters.
+</b></blockquote><a name="H40320"></a>
+<p>
+  A "parameter name" is defined to be a sequence of one or more
+  characters that consists of
+  ALPHANUMERIC characters and/or dollar-signs (u0025) intermixed with
+  pairs of colons (u003a) and optionally followed by any sequence
+  of non-zero, non-WHITESPACE characters enclosed in parentheses
+  (u0028 and u0029).
+</p><blockquote><b>H40320:</b>
+  SQLite shall recognize as a VARIABLE token one of the characters
+  at-sign (u0040), dollar-sign (u0024), or colon (u003a) followed
+  by a parameter name.
+</b></blockquote><a name="H40330"></a>
+<blockquote><b>H40330:</b>
+  SQLite shall recognize as a VARIABLE token the shape-sign (u0023)
+  followed by a parameter name that does not begin with a
+  NUMERIC character.
+</b></blockquote><a name="L42040"></a>
+<p>
+  The REGISTER token is a special token used internally.  It does not
+  appear as part of the published user interface.  Hence, the following
+  is a low-level requirement:
+</p><blockquote><b>L42040:</b>
+  SQLite shall recognize as a REGISTER token a sharp-sign (u0023)
+  followed by one or more NUMERIC characters.
+</b></blockquote>
+<h3>Operator tokens</h3>
+
+<p>The following sequences of special characters are recognized as
+tokens:</p>
+<a name="H41403"></a>
+<blockquote><b>H41403:</b> SQLite shall recognize the 1-character sequenence "-" (u002d) as token MINUS</b></blockquote><a name="H41406"></a>
+<blockquote><b>H41406:</b> SQLite shall recognize the 1-character sequenence "(" (u0028) as token LP</b></blockquote><a name="H41409"></a>
+<blockquote><b>H41409:</b> SQLite shall recognize the 1-character sequenence ")" (u0029) as token RP</b></blockquote><a name="H41412"></a>
+<blockquote><b>H41412:</b> SQLite shall recognize the 1-character sequenence ";" (u003b) as token SEMI</b></blockquote><a name="H41415"></a>
+<blockquote><b>H41415:</b> SQLite shall recognize the 1-character sequenence "+" (u002b) as token PLUS</b></blockquote><a name="H41418"></a>
+<blockquote><b>H41418:</b> SQLite shall recognize the 1-character sequenence "*" (u002a) as token STAR</b></blockquote><a name="H41421"></a>
+<blockquote><b>H41421:</b> SQLite shall recognize the 1-character sequenence "/" (u002f) as token SLASH</b></blockquote><a name="H41424"></a>
+<blockquote><b>H41424:</b> SQLite shall recognize the 1-character sequenence "%" (u0025) as token REM</b></blockquote><a name="H41427"></a>
+<blockquote><b>H41427:</b> SQLite shall recognize the 1-character sequenence "=" (u003d) as token EQ</b></blockquote><a name="H41430"></a>
+<blockquote><b>H41430:</b> SQLite shall recognize the 2-character sequenence "==" (u003d u003d) as token EQ</b></blockquote><a name="H41433"></a>
+<blockquote><b>H41433:</b> SQLite shall recognize the 2-character sequenence "<=" (u003c u003d) as token LE</b></blockquote><a name="H41436"></a>
+<blockquote><b>H41436:</b> SQLite shall recognize the 2-character sequenence "<>" (u003c u003e) as token NE</b></blockquote><a name="H41439"></a>
+<blockquote><b>H41439:</b> SQLite shall recognize the 2-character sequenence "<<" (u003c u003c) as token LSHIFT</b></blockquote><a name="H41442"></a>
+<blockquote><b>H41442:</b> SQLite shall recognize the 1-character sequenence "<" (u003c) as token LT</b></blockquote><a name="H41445"></a>
+<blockquote><b>H41445:</b> SQLite shall recognize the 2-character sequenence ">=" (u003e u003d) as token GE</b></blockquote><a name="H41448"></a>
+<blockquote><b>H41448:</b> SQLite shall recognize the 2-character sequenence ">>" (u003e u003e) as token RSHIFT</b></blockquote><a name="H41451"></a>
+<blockquote><b>H41451:</b> SQLite shall recognize the 1-character sequenence ">" (u003e) as token GT</b></blockquote><a name="H41454"></a>
+<blockquote><b>H41454:</b> SQLite shall recognize the 2-character sequenence "!=" (u0021 u003d) as token NE</b></blockquote><a name="H41457"></a>
+<blockquote><b>H41457:</b> SQLite shall recognize the 1-character sequenence "," (u002c) as token COMMA</b></blockquote><a name="H41460"></a>
+<blockquote><b>H41460:</b> SQLite shall recognize the 1-character sequenence "&" (u0026) as token BITAND</b></blockquote><a name="H41463"></a>
+<blockquote><b>H41463:</b> SQLite shall recognize the 1-character sequenence "~" (u007e) as token BITNOT</b></blockquote><a name="H41466"></a>
+<blockquote><b>H41466:</b> SQLite shall recognize the 1-character sequenence "|" (u007c) as token BITOR</b></blockquote><a name="H41469"></a>
+<blockquote><b>H41469:</b> SQLite shall recognize the 2-character sequenence "||" (u007c u007c) as token CONCAT</b></blockquote><a name="H41472"></a>
+<blockquote><b>H41472:</b> SQLite shall recognize the 1-character sequenence "." (u002e) as token DOT</b></blockquote>
+<h3>Keyword tokens</h3>
+
+<p>The following keywords are recognized as distinct tokens:</p>
+<a name="H41503"></a>
+<blockquote><b>H41503:</b> SQLite shall recognize the 5-character sequenence "ABORT" in any combination of upper and lower caseletters as the keyword token ABORT</b></blockquote><a name="H41506"></a>
+<blockquote><b>H41506:</b> SQLite shall recognize the 3-character sequenence "ADD" in any combination of upper and lower caseletters as the keyword token ADD</b></blockquote><a name="H41509"></a>
+<blockquote><b>H41509:</b> SQLite shall recognize the 5-character sequenence "AFTER" in any combination of upper and lower caseletters as the keyword token AFTER</b></blockquote><a name="H41512"></a>
+<blockquote><b>H41512:</b> SQLite shall recognize the 3-character sequenence "ALL" in any combination of upper and lower caseletters as the keyword token ALL</b></blockquote><a name="H41515"></a>
+<blockquote><b>H41515:</b> SQLite shall recognize the 5-character sequenence "ALTER" in any combination of upper and lower caseletters as the keyword token ALTER</b></blockquote><a name="H41518"></a>
+<blockquote><b>H41518:</b> SQLite shall recognize the 7-character sequenence "ANALYZE" in any combination of upper and lower caseletters as the keyword token ANALYZE</b></blockquote><a name="H41521"></a>
+<blockquote><b>H41521:</b> SQLite shall recognize the 3-character sequenence "AND" in any combination of upper and lower caseletters as the keyword token AND</b></blockquote><a name="H41524"></a>
+<blockquote><b>H41524:</b> SQLite shall recognize the 2-character sequenence "AS" in any combination of upper and lower caseletters as the keyword token AS</b></blockquote><a name="H41527"></a>
+<blockquote><b>H41527:</b> SQLite shall recognize the 3-character sequenence "ASC" in any combination of upper and lower caseletters as the keyword token ASC</b></blockquote><a name="H41530"></a>
+<blockquote><b>H41530:</b> SQLite shall recognize the 6-character sequenence "ATTACH" in any combination of upper and lower caseletters as the keyword token ATTACH</b></blockquote><a name="H41533"></a>
+<blockquote><b>H41533:</b> SQLite shall recognize the 13-character sequenence "AUTOINCREMENT" in any combination of upper and lower caseletters as the keyword token AUTOINCR</b></blockquote><a name="H41536"></a>
+<blockquote><b>H41536:</b> SQLite shall recognize the 6-character sequenence "BEFORE" in any combination of upper and lower caseletters as the keyword token BEFORE</b></blockquote><a name="H41539"></a>
+<blockquote><b>H41539:</b> SQLite shall recognize the 5-character sequenence "BEGIN" in any combination of upper and lower caseletters as the keyword token BEGIN</b></blockquote><a name="H41542"></a>
+<blockquote><b>H41542:</b> SQLite shall recognize the 7-character sequenence "BETWEEN" in any combination of upper and lower caseletters as the keyword token BETWEEN</b></blockquote><a name="H41545"></a>
+<blockquote><b>H41545:</b> SQLite shall recognize the 2-character sequenence "BY" in any combination of upper and lower caseletters as the keyword token BY</b></blockquote><a name="H41548"></a>
+<blockquote><b>H41548:</b> SQLite shall recognize the 7-character sequenence "CASCADE" in any combination of upper and lower caseletters as the keyword token CASCADE</b></blockquote><a name="H41551"></a>
+<blockquote><b>H41551:</b> SQLite shall recognize the 4-character sequenence "CASE" in any combination of upper and lower caseletters as the keyword token CASE</b></blockquote><a name="H41554"></a>
+<blockquote><b>H41554:</b> SQLite shall recognize the 4-character sequenence "CAST" in any combination of upper and lower caseletters as the keyword token CAST</b></blockquote><a name="H41557"></a>
+<blockquote><b>H41557:</b> SQLite shall recognize the 5-character sequenence "CHECK" in any combination of upper and lower caseletters as the keyword token CHECK</b></blockquote><a name="H41560"></a>
+<blockquote><b>H41560:</b> SQLite shall recognize the 7-character sequenence "COLLATE" in any combination of upper and lower caseletters as the keyword token COLLATE</b></blockquote><a name="H41563"></a>
+<blockquote><b>H41563:</b> SQLite shall recognize the 6-character sequenence "COLUMN" in any combination of upper and lower caseletters as the keyword token COLUMNKW</b></blockquote><a name="H41566"></a>
+<blockquote><b>H41566:</b> SQLite shall recognize the 6-character sequenence "COMMIT" in any combination of upper and lower caseletters as the keyword token COMMIT</b></blockquote><a name="H41569"></a>
+<blockquote><b>H41569:</b> SQLite shall recognize the 8-character sequenence "CONFLICT" in any combination of upper and lower caseletters as the keyword token CONFLICT</b></blockquote><a name="H41572"></a>
+<blockquote><b>H41572:</b> SQLite shall recognize the 10-character sequenence "CONSTRAINT" in any combination of upper and lower caseletters as the keyword token CONSTRAINT</b></blockquote><a name="H41575"></a>
+<blockquote><b>H41575:</b> SQLite shall recognize the 6-character sequenence "CREATE" in any combination of upper and lower caseletters as the keyword token CREATE</b></blockquote><a name="H41578"></a>
+<blockquote><b>H41578:</b> SQLite shall recognize the 5-character sequenence "CROSS" in any combination of upper and lower caseletters as the keyword token JOIN_KW</b></blockquote><a name="H41581"></a>
+<blockquote><b>H41581:</b> SQLite shall recognize the 12-character sequenence "CURRENT_DATE" in any combination of upper and lower caseletters as the keyword token CTIME_KW</b></blockquote><a name="H41584"></a>
+<blockquote><b>H41584:</b> SQLite shall recognize the 12-character sequenence "CURRENT_TIME" in any combination of upper and lower caseletters as the keyword token CTIME_KW</b></blockquote><a name="H41587"></a>
+<blockquote><b>H41587:</b> SQLite shall recognize the 17-character sequenence "CURRENT_TIMESTAMP" in any combination of upper and lower caseletters as the keyword token CTIME_KW</b></blockquote><a name="H41590"></a>
+<blockquote><b>H41590:</b> SQLite shall recognize the 8-character sequenence "DATABASE" in any combination of upper and lower caseletters as the keyword token DATABASE</b></blockquote><a name="H41593"></a>
+<blockquote><b>H41593:</b> SQLite shall recognize the 7-character sequenence "DEFAULT" in any combination of upper and lower caseletters as the keyword token DEFAULT</b></blockquote><a name="H41596"></a>
+<blockquote><b>H41596:</b> SQLite shall recognize the 8-character sequenence "DEFERRED" in any combination of upper and lower caseletters as the keyword token DEFERRED</b></blockquote><a name="H41599"></a>
+<blockquote><b>H41599:</b> SQLite shall recognize the 10-character sequenence "DEFERRABLE" in any combination of upper and lower caseletters as the keyword token DEFERRABLE</b></blockquote><a name="H41602"></a>
+<blockquote><b>H41602:</b> SQLite shall recognize the 6-character sequenence "DELETE" in any combination of upper and lower caseletters as the keyword token DELETE</b></blockquote><a name="H41605"></a>
+<blockquote><b>H41605:</b> SQLite shall recognize the 4-character sequenence "DESC" in any combination of upper and lower caseletters as the keyword token DESC</b></blockquote><a name="H41608"></a>
+<blockquote><b>H41608:</b> SQLite shall recognize the 6-character sequenence "DETACH" in any combination of upper and lower caseletters as the keyword token DETACH</b></blockquote><a name="H41611"></a>
+<blockquote><b>H41611:</b> SQLite shall recognize the 8-character sequenence "DISTINCT" in any combination of upper and lower caseletters as the keyword token DISTINCT</b></blockquote><a name="H41614"></a>
+<blockquote><b>H41614:</b> SQLite shall recognize the 4-character sequenence "DROP" in any combination of upper and lower caseletters as the keyword token DROP</b></blockquote><a name="H41617"></a>
+<blockquote><b>H41617:</b> SQLite shall recognize the 3-character sequenence "END" in any combination of upper and lower caseletters as the keyword token END</b></blockquote><a name="H41620"></a>
+<blockquote><b>H41620:</b> SQLite shall recognize the 4-character sequenence "EACH" in any combination of upper and lower caseletters as the keyword token EACH</b></blockquote><a name="H41623"></a>
+<blockquote><b>H41623:</b> SQLite shall recognize the 4-character sequenence "ELSE" in any combination of upper and lower caseletters as the keyword token ELSE</b></blockquote><a name="H41626"></a>
+<blockquote><b>H41626:</b> SQLite shall recognize the 6-character sequenence "ESCAPE" in any combination of upper and lower caseletters as the keyword token ESCAPE</b></blockquote><a name="H41629"></a>
+<blockquote><b>H41629:</b> SQLite shall recognize the 6-character sequenence "EXCEPT" in any combination of upper and lower caseletters as the keyword token EXCEPT</b></blockquote><a name="H41632"></a>
+<blockquote><b>H41632:</b> SQLite shall recognize the 9-character sequenence "EXCLUSIVE" in any combination of upper and lower caseletters as the keyword token EXCLUSIVE</b></blockquote><a name="H41635"></a>
+<blockquote><b>H41635:</b> SQLite shall recognize the 6-character sequenence "EXISTS" in any combination of upper and lower caseletters as the keyword token EXISTS</b></blockquote><a name="H41638"></a>
+<blockquote><b>H41638:</b> SQLite shall recognize the 7-character sequenence "EXPLAIN" in any combination of upper and lower caseletters as the keyword token EXPLAIN</b></blockquote><a name="H41641"></a>
+<blockquote><b>H41641:</b> SQLite shall recognize the 4-character sequenence "FAIL" in any combination of upper and lower caseletters as the keyword token FAIL</b></blockquote><a name="H41644"></a>
+<blockquote><b>H41644:</b> SQLite shall recognize the 3-character sequenence "FOR" in any combination of upper and lower caseletters as the keyword token FOR</b></blockquote><a name="H41647"></a>
+<blockquote><b>H41647:</b> SQLite shall recognize the 7-character sequenence "FOREIGN" in any combination of upper and lower caseletters as the keyword token FOREIGN</b></blockquote><a name="H41650"></a>
+<blockquote><b>H41650:</b> SQLite shall recognize the 4-character sequenence "FROM" in any combination of upper and lower caseletters as the keyword token FROM</b></blockquote><a name="H41653"></a>
+<blockquote><b>H41653:</b> SQLite shall recognize the 4-character sequenence "FULL" in any combination of upper and lower caseletters as the keyword token JOIN_KW</b></blockquote><a name="H41656"></a>
+<blockquote><b>H41656:</b> SQLite shall recognize the 4-character sequenence "GLOB" in any combination of upper and lower caseletters as the keyword token LIKE_KW</b></blockquote><a name="H41659"></a>
+<blockquote><b>H41659:</b> SQLite shall recognize the 5-character sequenence "GROUP" in any combination of upper and lower caseletters as the keyword token GROUP</b></blockquote><a name="H41662"></a>
+<blockquote><b>H41662:</b> SQLite shall recognize the 6-character sequenence "HAVING" in any combination of upper and lower caseletters as the keyword token HAVING</b></blockquote><a name="H41665"></a>
+<blockquote><b>H41665:</b> SQLite shall recognize the 2-character sequenence "IF" in any combination of upper and lower caseletters as the keyword token IF</b></blockquote><a name="H41668"></a>
+<blockquote><b>H41668:</b> SQLite shall recognize the 6-character sequenence "IGNORE" in any combination of upper and lower caseletters as the keyword token IGNORE</b></blockquote><a name="H41671"></a>
+<blockquote><b>H41671:</b> SQLite shall recognize the 9-character sequenence "IMMEDIATE" in any combination of upper and lower caseletters as the keyword token IMMEDIATE</b></blockquote><a name="H41674"></a>
+<blockquote><b>H41674:</b> SQLite shall recognize the 2-character sequenence "IN" in any combination of upper and lower caseletters as the keyword token IN</b></blockquote><a name="H41677"></a>
+<blockquote><b>H41677:</b> SQLite shall recognize the 5-character sequenence "INDEX" in any combination of upper and lower caseletters as the keyword token INDEX</b></blockquote><a name="H41680"></a>
+<blockquote><b>H41680:</b> SQLite shall recognize the 9-character sequenence "INITIALLY" in any combination of upper and lower caseletters as the keyword token INITIALLY</b></blockquote><a name="H41683"></a>
+<blockquote><b>H41683:</b> SQLite shall recognize the 5-character sequenence "INNER" in any combination of upper and lower caseletters as the keyword token JOIN_KW</b></blockquote><a name="H41686"></a>
+<blockquote><b>H41686:</b> SQLite shall recognize the 6-character sequenence "INSERT" in any combination of upper and lower caseletters as the keyword token INSERT</b></blockquote><a name="H41689"></a>
+<blockquote><b>H41689:</b> SQLite shall recognize the 7-character sequenence "INSTEAD" in any combination of upper and lower caseletters as the keyword token INSTEAD</b></blockquote><a name="H41692"></a>
+<blockquote><b>H41692:</b> SQLite shall recognize the 9-character sequenence "INTERSECT" in any combination of upper and lower caseletters as the keyword token INTERSECT</b></blockquote><a name="H41695"></a>
+<blockquote><b>H41695:</b> SQLite shall recognize the 4-character sequenence "INTO" in any combination of upper and lower caseletters as the keyword token INTO</b></blockquote><a name="H41698"></a>
+<blockquote><b>H41698:</b> SQLite shall recognize the 2-character sequenence "IS" in any combination of upper and lower caseletters as the keyword token IS</b></blockquote><a name="H41701"></a>
+<blockquote><b>H41701:</b> SQLite shall recognize the 6-character sequenence "ISNULL" in any combination of upper and lower caseletters as the keyword token ISNULL</b></blockquote><a name="H41704"></a>
+<blockquote><b>H41704:</b> SQLite shall recognize the 4-character sequenence "JOIN" in any combination of upper and lower caseletters as the keyword token JOIN</b></blockquote><a name="H41707"></a>
+<blockquote><b>H41707:</b> SQLite shall recognize the 3-character sequenence "KEY" in any combination of upper and lower caseletters as the keyword token KEY</b></blockquote><a name="H41710"></a>
+<blockquote><b>H41710:</b> SQLite shall recognize the 4-character sequenence "LEFT" in any combination of upper and lower caseletters as the keyword token JOIN_KW</b></blockquote><a name="H41713"></a>
+<blockquote><b>H41713:</b> SQLite shall recognize the 4-character sequenence "LIKE" in any combination of upper and lower caseletters as the keyword token LIKE_KW</b></blockquote><a name="H41716"></a>
+<blockquote><b>H41716:</b> SQLite shall recognize the 5-character sequenence "LIMIT" in any combination of upper and lower caseletters as the keyword token LIMIT</b></blockquote><a name="H41719"></a>
+<blockquote><b>H41719:</b> SQLite shall recognize the 5-character sequenence "MATCH" in any combination of upper and lower caseletters as the keyword token MATCH</b></blockquote><a name="H41722"></a>
+<blockquote><b>H41722:</b> SQLite shall recognize the 7-character sequenence "NATURAL" in any combination of upper and lower caseletters as the keyword token JOIN_KW</b></blockquote><a name="H41725"></a>
+<blockquote><b>H41725:</b> SQLite shall recognize the 3-character sequenence "NOT" in any combination of upper and lower caseletters as the keyword token NOT</b></blockquote><a name="H41728"></a>
+<blockquote><b>H41728:</b> SQLite shall recognize the 7-character sequenence "NOTNULL" in any combination of upper and lower caseletters as the keyword token NOTNULL</b></blockquote><a name="H41731"></a>
+<blockquote><b>H41731:</b> SQLite shall recognize the 4-character sequenence "NULL" in any combination of upper and lower caseletters as the keyword token NULL</b></blockquote><a name="H41734"></a>
+<blockquote><b>H41734:</b> SQLite shall recognize the 2-character sequenence "OF" in any combination of upper and lower caseletters as the keyword token OF</b></blockquote><a name="H41737"></a>
+<blockquote><b>H41737:</b> SQLite shall recognize the 6-character sequenence "OFFSET" in any combination of upper and lower caseletters as the keyword token OFFSET</b></blockquote><a name="H41740"></a>
+<blockquote><b>H41740:</b> SQLite shall recognize the 2-character sequenence "ON" in any combination of upper and lower caseletters as the keyword token ON</b></blockquote><a name="H41743"></a>
+<blockquote><b>H41743:</b> SQLite shall recognize the 2-character sequenence "OR" in any combination of upper and lower caseletters as the keyword token OR</b></blockquote><a name="H41746"></a>
+<blockquote><b>H41746:</b> SQLite shall recognize the 5-character sequenence "ORDER" in any combination of upper and lower caseletters as the keyword token ORDER</b></blockquote><a name="H41749"></a>
+<blockquote><b>H41749:</b> SQLite shall recognize the 5-character sequenence "OUTER" in any combination of upper and lower caseletters as the keyword token JOIN_KW</b></blockquote><a name="H41752"></a>
+<blockquote><b>H41752:</b> SQLite shall recognize the 4-character sequenence "PLAN" in any combination of upper and lower caseletters as the keyword token PLAN</b></blockquote><a name="H41755"></a>
+<blockquote><b>H41755:</b> SQLite shall recognize the 6-character sequenence "PRAGMA" in any combination of upper and lower caseletters as the keyword token PRAGMA</b></blockquote><a name="H41758"></a>
+<blockquote><b>H41758:</b> SQLite shall recognize the 7-character sequenence "PRIMARY" in any combination of upper and lower caseletters as the keyword token PRIMARY</b></blockquote><a name="H41761"></a>
+<blockquote><b>H41761:</b> SQLite shall recognize the 5-character sequenence "QUERY" in any combination of upper and lower caseletters as the keyword token QUERY</b></blockquote><a name="H41764"></a>
+<blockquote><b>H41764:</b> SQLite shall recognize the 5-character sequenence "RAISE" in any combination of upper and lower caseletters as the keyword token RAISE</b></blockquote><a name="H41767"></a>
+<blockquote><b>H41767:</b> SQLite shall recognize the 10-character sequenence "REFERENCES" in any combination of upper and lower caseletters as the keyword token REFERENCES</b></blockquote><a name="H41770"></a>
+<blockquote><b>H41770:</b> SQLite shall recognize the 6-character sequenence "REGEXP" in any combination of upper and lower caseletters as the keyword token LIKE_KW</b></blockquote><a name="H41773"></a>
+<blockquote><b>H41773:</b> SQLite shall recognize the 7-character sequenence "REINDEX" in any combination of upper and lower caseletters as the keyword token REINDEX</b></blockquote><a name="H41776"></a>
+<blockquote><b>H41776:</b> SQLite shall recognize the 6-character sequenence "RENAME" in any combination of upper and lower caseletters as the keyword token RENAME</b></blockquote><a name="H41779"></a>
+<blockquote><b>H41779:</b> SQLite shall recognize the 7-character sequenence "REPLACE" in any combination of upper and lower caseletters as the keyword token REPLACE</b></blockquote><a name="H41782"></a>
+<blockquote><b>H41782:</b> SQLite shall recognize the 8-character sequenence "RESTRICT" in any combination of upper and lower caseletters as the keyword token RESTRICT</b></blockquote><a name="H41785"></a>
+<blockquote><b>H41785:</b> SQLite shall recognize the 5-character sequenence "RIGHT" in any combination of upper and lower caseletters as the keyword token JOIN_KW</b></blockquote><a name="H41788"></a>
+<blockquote><b>H41788:</b> SQLite shall recognize the 8-character sequenence "ROLLBACK" in any combination of upper and lower caseletters as the keyword token ROLLBACK</b></blockquote><a name="H41791"></a>
+<blockquote><b>H41791:</b> SQLite shall recognize the 3-character sequenence "ROW" in any combination of upper and lower caseletters as the keyword token ROW</b></blockquote><a name="H41794"></a>
+<blockquote><b>H41794:</b> SQLite shall recognize the 6-character sequenence "SELECT" in any combination of upper and lower caseletters as the keyword token SELECT</b></blockquote><a name="H41797"></a>
+<blockquote><b>H41797:</b> SQLite shall recognize the 3-character sequenence "SET" in any combination of upper and lower caseletters as the keyword token SET</b></blockquote><a name="H41800"></a>
+<blockquote><b>H41800:</b> SQLite shall recognize the 5-character sequenence "TABLE" in any combination of upper and lower caseletters as the keyword token TABLE</b></blockquote><a name="H41803"></a>
+<blockquote><b>H41803:</b> SQLite shall recognize the 4-character sequenence "TEMP" in any combination of upper and lower caseletters as the keyword token TEMP</b></blockquote><a name="H41806"></a>
+<blockquote><b>H41806:</b> SQLite shall recognize the 9-character sequenence "TEMPORARY" in any combination of upper and lower caseletters as the keyword token TEMP</b></blockquote><a name="H41809"></a>
+<blockquote><b>H41809:</b> SQLite shall recognize the 4-character sequenence "THEN" in any combination of upper and lower caseletters as the keyword token THEN</b></blockquote><a name="H41812"></a>
+<blockquote><b>H41812:</b> SQLite shall recognize the 2-character sequenence "TO" in any combination of upper and lower caseletters as the keyword token TO</b></blockquote><a name="H41815"></a>
+<blockquote><b>H41815:</b> SQLite shall recognize the 11-character sequenence "TRANSACTION" in any combination of upper and lower caseletters as the keyword token TRANSACTION</b></blockquote><a name="H41818"></a>
+<blockquote><b>H41818:</b> SQLite shall recognize the 7-character sequenence "TRIGGER" in any combination of upper and lower caseletters as the keyword token TRIGGER</b></blockquote><a name="H41821"></a>
+<blockquote><b>H41821:</b> SQLite shall recognize the 5-character sequenence "UNION" in any combination of upper and lower caseletters as the keyword token UNION</b></blockquote><a name="H41824"></a>
+<blockquote><b>H41824:</b> SQLite shall recognize the 6-character sequenence "UNIQUE" in any combination of upper and lower caseletters as the keyword token UNIQUE</b></blockquote><a name="H41827"></a>
+<blockquote><b>H41827:</b> SQLite shall recognize the 6-character sequenence "UPDATE" in any combination of upper and lower caseletters as the keyword token UPDATE</b></blockquote><a name="H41830"></a>
+<blockquote><b>H41830:</b> SQLite shall recognize the 5-character sequenence "USING" in any combination of upper and lower caseletters as the keyword token USING</b></blockquote><a name="H41833"></a>
+<blockquote><b>H41833:</b> SQLite shall recognize the 6-character sequenence "VACUUM" in any combination of upper and lower caseletters as the keyword token VACUUM</b></blockquote><a name="H41836"></a>
+<blockquote><b>H41836:</b> SQLite shall recognize the 6-character sequenence "VALUES" in any combination of upper and lower caseletters as the keyword token VALUES</b></blockquote><a name="H41839"></a>
+<blockquote><b>H41839:</b> SQLite shall recognize the 4-character sequenence "VIEW" in any combination of upper and lower caseletters as the keyword token VIEW</b></blockquote><a name="H41842"></a>
+<blockquote><b>H41842:</b> SQLite shall recognize the 7-character sequenence "VIRTUAL" in any combination of upper and lower caseletters as the keyword token VIRTUAL</b></blockquote><a name="H41845"></a>
+<blockquote><b>H41845:</b> SQLite shall recognize the 4-character sequenence "WHEN" in any combination of upper and lower caseletters as the keyword token WHEN</b></blockquote><a name="H41848"></a>
+<blockquote><b>H41848:</b> SQLite shall recognize the 5-character sequenence "WHERE" in any combination of upper and lower caseletters as the keyword token WHERE</b></blockquote><hr><small><i>
+This page last modified 2008/08/07 20:09:02 UTC
+</i></small></div></body></html>

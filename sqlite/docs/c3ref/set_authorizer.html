@@ -132,6 +132,16 @@ at a time.  Each call to sqlite3_set_authorizer overrides the
 previous call.  Disable the authorizer by installing a NULL callback.
 The authorizer is disabled by default.</p>
 
+<p>The authorizer callback must not do anything that will modify
+the database connection that invoked the authorizer callback.
+Note that <a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a> and <a href="../c3ref/step.html">sqlite3_step()</a> both modify their
+database connections for the meaning of "modify" in this paragraph.</p>
+
+<p>When <a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a> is used to prepare a statement, the
+statement might be reprepared during <a href="../c3ref/step.html">sqlite3_step()</a> due to a
+schema change.  Hence, the application should ensure that the
+correct authorizer callback remains in place during the <a href="../c3ref/step.html">sqlite3_step()</a>.</p>
+
 <p>Note that the authorizer callback is invoked only during
 <a href="../c3ref/prepare.html">sqlite3_prepare()</a> or its variants.  Authorization is not
 performed during statement evaluation in <a href="../c3ref/step.html">sqlite3_step()</a>.</p>
@@ -145,12 +155,12 @@ authorizer callback with database connection D.</td></tr>
 <tr><td valign="top">H12502</td> 
 <td valign="top">
 The authorizer callback is invoked as SQL statements are
-being compiled.</td></tr>
+being parseed and compiled.</td></tr>
 <tr><td valign="top">H12503</td> 
 <td valign="top">
 If the authorizer callback returns any value other than
 <a href="../c3ref/c_deny.html">SQLITE_IGNORE</a>, <a href="../c3ref/c_abort.html">SQLITE_OK</a>, or <a href="../c3ref/c_deny.html">SQLITE_DENY</a>, then
-the <a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a> or equivalent call that caused
+the application interface call that caused
 the authorizer callback to run shall fail with an
 <a href="../c3ref/c_abort.html">SQLITE_ERROR</a> error code and an appropriate error message.</td></tr>
 <tr><td valign="top">H12504</td> 
@@ -160,7 +170,7 @@ described is processed normally.</td></tr>
 <tr><td valign="top">H12505</td> 
 <td valign="top">
 When the authorizer callback returns <a href="../c3ref/c_deny.html">SQLITE_DENY</a>, the
-<a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a> or equivalent call that caused the
+application interface call that caused the
 authorizer callback to run shall fail
 with an <a href="../c3ref/c_abort.html">SQLITE_ERROR</a> error code and an error message
 explaining that access is denied.</td></tr>
@@ -206,5 +216,5 @@ The default authorizer is NULL.</td></tr>
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
   <a href="funclist.html">Functions</a>.</p><hr><small><i>
-This page last modified 2008/08/04 14:33:39 UTC
+This page last modified 2008/08/11 17:57:43 UTC
 </i></small></div></body></html>
